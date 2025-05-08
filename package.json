@@ -1,5 +1,21 @@
 {
   "dependencies": {
-    "@dnd-kit/core": "^6.3.1"
+    "@dnd-kit/core": "^6.3.1",
+    "axios": "^1.9.0",
+    "bcryptjs": "^3.0.2",
+    "bootstrap": "^5.3.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.14.1",
+    "morgan": "^1.10.0",
+    "react-router-dom": "^6.30.0",
+    "tailwindcss": "^4.1.5"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.10"
   }
 }
