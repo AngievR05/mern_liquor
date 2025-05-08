@@ -60,9 +60,9 @@ const GameScreen = () => {
     }
 
     if (correct && unsorted.length === 0) {
-      navigate('/game-success');
+      navigate('/gamesuccess');
     } else {
-      navigate('/game-failure');
+      navigate('/gamefailure');
     }
   };
 
