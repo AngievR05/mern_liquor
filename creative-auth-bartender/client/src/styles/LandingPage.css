@@ -1,4 +1,4 @@
-root {
+:root {
     --Old-Brick: #9a1c22;
     --Aubergine: #350a0e;
     --Anzac: #e1bb3e;
@@ -10,6 +10,144 @@ root {
     --font-family-body: 'Merriweather', serif;
   }
 
-body{
+  @import url('https://fonts.googleapis.com/css2?family=Gloock&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap');
+
+.landing-page {
     background-color: var(--Black);
+}
+
+nav{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: fit-content;
+  /* padding: 6px 28px; */
+  background-color: var(--Aubergine);
+  flex-shrink: 0;
+  box-shadow: 0px -4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+.logo-container{
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  height: 60px;
+}
+
+.logo-container img{
+  height: 48px;
+  margin-right: 10px;
+}
+
+body{
+  color: var(--White);
+}
+
+.navLinksMiddle{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.navLinksMiddle a{
+  color: var(--White);
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.navLinksRight{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  margin-right: 180px;
+}
+
+.gloock {
+  font-family: "Gloock", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.merriweather {
+  font-family: "Merriweather", serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
+
+h1{
+  font-family: "Gloock", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 48px;
+  margin: 0;
+  color: var(--White);
+}
+
+h2{
+  font-family: "Gloock", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 40px;
+  margin: 0;
+  color: var(--White);
+}
+
+h3{
+  font-family: "Gloock", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 32px;
+  margin: 0;
+  color: var(--White);
+}
+
+body{
+  font-family: "Merriweather", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  margin: 0;
+  letters-spacing: 0.6px;
+  line-height: normal;
+  color: var(--White);
+}
+
+.hero-section {
+  height: 743px;
+  aspect-ratio: 1300.25/743.00;
+  background: url("../assets/HeroImage.svg") no-repeat center center; /* Center the image */
+  background-size: cover; /* Ensure the image covers the section */
+  border-radius: 15px;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  margin: 0 auto; /* Center the section itself */
+}
+
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align text to the left */
+  justify-content: center; /* Center text vertically */
+  text-align: left; /* Align text within the container */
+
+  width: 100%; /* Allow the text container to take full width */
+}
+
+.hero-text h1 {
+  font-size: 94px; /* Adjust font size as needed */
+  margin: 0; /* Remove default margin */
+  color: var(--White); /* Set text color */
+  max-width: 420px; /* Set a max width for the text container */
+  margin-left: 115px; /* Add left margin for spacing */
 }
