@@ -1,60 +1,152 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import styles from './GameScreen.module.css';
 
-const GameScreen = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [bottles, setBottles] = useState([
-    { id: 1, name: 'Whiskey', shelf: null },
-    { id: 2, name: 'Wine', shelf: null },
-    { id: 3, name: 'Beer', shelf: null },
-  ]);
-  const [timeLeft, setTimeLeft] = useState(45);
+const initialBottles = [
+  { id: '1', name: 'Whiskey', type: 'whiskey' },
+  { id: '2', name: 'Wine', type: 'wine' },
+  { id: '3', name: 'Beer', type: 'beer' },
+];
 
-  useEffect(() => {
-    if (timeLeft > 0 && !isSubmitted) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
+const shelves = ['beer', 'wine', 'whiskey'];
+
+const GameScreen = () => {
+  const navigate = useNavigate();
+
+  const [unsorted, setUnsorted] = useState(initialBottles);
+  const [sorted, setSorted] = useState({
+    beer: [],
+    wine: [],
+    whiskey: [],
+  });
+
+  const handleDragEnd = (result) => {
+    const { source, destination } = result;
+    if (!destination) return;
+
+    if (source.droppableId === 'unsorted') {
+      const moved = [...unsorted];
+      const [item] = moved.splice(source.index, 1);
+      const shelfItems = Array.from(sorted[destination.droppableId]);
+      shelfItems.splice(destination.index, 0, item);
+
+      setUnsorted(moved);
+      setSorted({ ...sorted, [destination.droppableId]: shelfItems });
+    } else if (source.droppableId !== destination.droppableId) {
+      const sourceShelf = Array.from(sorted[source.droppableId]);
+      const destShelf = Array.from(sorted[destination.droppableId]);
+      const [item] = sourceShelf.splice(source.index, 1);
+      destShelf.splice(destination.index, 0, item);
+
+      setSorted({
+        ...sorted,
+        [source.droppableId]: sourceShelf,
+        [destination.droppableId]: destShelf,
+      });
     }
-  }, [timeLeft, isSubmitted]);
+  };
 
   const handleSubmit = () => {
-    setIsSubmitted(true);
-    // Here you would compare the bottles with correct shelves
-    // You can add your logic to check if the game was completed correctly
+    let correct = true;
+
+    for (const shelf of shelves) {
+      for (const bottle of sorted[shelf]) {
+        if (bottle.type !== shelf) {
+          correct = false;
+          break;
+        }
+      }
+    }
+
+    if (correct && unsorted.length === 0) {
+      navigate('/game-success');
+    } else {
+      navigate('/game-failure');
+    }
   };
 
   const handleReset = () => {
-    setBottles(bottles.map(bottle => ({ ...bottle, shelf: null })));
-    setTimeLeft(45);
-    setIsSubmitted(false);
+    setUnsorted(initialBottles);
+    setSorted({ beer: [], wine: [], whiskey: [] });
   };
 
   return (
     <div className={styles.gameContainer}>
-      <div className={styles.leftColumn}>
-        <h2 className={styles.title}>Sort These Spirits</h2>
-        <div className={styles.shelves}>
-          {['Beer', 'Wine', 'Whiskey'].map((shelf, index) => (
-            <div key={index} className={styles.shelf}>
-              <h3>{shelf}</h3>
-              {bottles.filter(bottle => bottle.shelf === shelf).map(bottle => (
-                <div key={bottle.id} className={styles.bottle}>
-                  {bottle.name}
-                </div>
-              ))}
-            </div>
-          ))}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className={styles.leftColumn}>
+          <h2 className={styles.title}>Sort These Spirits</h2>
+
+          <Droppable droppableId="unsorted" direction="horizontal">
+            {(provided) => (
+              <div
+                className={styles.tray}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {unsorted.map((bottle, index) => (
+                  <Draggable key={bottle.id} draggableId={bottle.id} index={index}>
+                    {(provided) => (
+                      <div
+                        className={styles.bottle}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        {bottle.name}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+
+          <div className={styles.shelves}>
+            {shelves.map((shelf) => (
+              <Droppable key={shelf} droppableId={shelf}>
+                {(provided) => (
+                  <div
+                    className={styles.shelf}
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    <h3>{shelf.charAt(0).toUpperCase() + shelf.slice(1)}</h3>
+                    {sorted[shelf].map((bottle, index) => (
+                      <Draggable key={bottle.id} draggableId={bottle.id} index={index}>
+                        {(provided) => (
+                          <div
+                            className={styles.bottle}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            {bottle.name}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className={styles.rightColumn}>
-        <p className={styles.instructions}>Drag each bottle to the correct shelf. When you're done, click Submit.</p>
-        <button className={styles.button} onClick={handleSubmit}>Submit</button>
-        <button className={styles.button} onClick={handleReset}>Reset Puzzle</button>
-        <p className={styles.timer}>Time left: {timeLeft}s</p>
-        <div className={styles.hintIcon}>🕵️‍♂️</div>
-      </div>
+
+        <div className={styles.rightColumn}>
+          <p className={styles.instructions}>
+            Drag each bottle to the correct shelf. When you're done, click Submit.
+          </p>
+          <button className={styles.button} onClick={handleSubmit}>
+            Submit
+          </button>
+          <button className={styles.button} onClick={handleReset}>
+            Reset Puzzle
+          </button>
+        </div>
+      </DragDropContext>
     </div>
   );
 };

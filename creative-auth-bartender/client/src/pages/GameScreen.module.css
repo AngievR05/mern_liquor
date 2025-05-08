@@ -74,4 +74,14 @@
     cursor: pointer;
     margin-top: 10px;
 }
+
+.tray {
+    background-color: #e9c4b4;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px dashed #350b0f;
+    display: flex;
+    gap: 10px;
+    border-radius: 10px;
+}
   
