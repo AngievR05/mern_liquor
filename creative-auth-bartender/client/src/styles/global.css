@@ -1,0 +1,29 @@
+:root {
+    --primary: #9B1C23;
+    --dark: #350B0F;
+    --gold: #E0BA3E;
+    --orange: #E35537;
+    --beige: #E9C4B4;
+  }
+  
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: var(--beige);
+    color: var(--dark);
+}
+  
+button {
+    padding: 0.6rem 1rem;
+    border: none;
+    cursor: pointer;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+}
+  
+button:hover {
+    background-color: var(--orange);
+}
+  

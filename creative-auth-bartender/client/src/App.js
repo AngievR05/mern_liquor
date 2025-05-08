@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Welcome from './pages/Welcome'
-import GameAuth from './pages/GameAuth'
+import GameAuth from './pages/GameScreen'
 import GameSuccess from './pages/GameSuccess'
 import GameFailure from './pages/GameFailure'
 import AccessibilityLogin from './pages/AccessibilityLogin'
