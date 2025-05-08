@@ -31,15 +31,16 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* <div className="our-story-section">
+      <div className="our-story-section">
+        <img src={OurStoryImage} alt="Our Story" className="our-story-image" />
         <div className="our-story-text">
           <h2>Our Story</h2>
           <p>
             At The Drunken Giraffe, we believe that every cocktail tells a story. Our journey began with a passion for mixology and a desire to share the art of cocktail-making with the world. Join us as we explore the vibrant world of flavors, ingredients, and creativity that make each drink a masterpiece.
           </p>
+          <button className="Read-more-button"><h3>Read More</h3></button>
         </div>
-        <img src={OurStoryImage} alt="Our Story" className="our-story-image" />
-        </div> */}
+        </div>
     </div>
   );
 };

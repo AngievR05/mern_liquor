@@ -151,3 +151,55 @@ body{
   max-width: 420px; /* Set a max width for the text container */
   margin-left: 115px; /* Add left margin for spacing */
 }
+
+.our-story-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  text-align: center; /* Center text within the container */
+  margin-top: 20px; /* Add top margin for spacing */
+}
+
+.our-story-text{
+  display: flex;
+  flex-direction: column;
+  align-items: left; /* Center text horizontally */
+  justify-content: center; /* Center text vertically */
+  text-align: left; /* Center text within the container */
+  margin-top: 20px; /* Add top margin for spacing */
+  max-width: 530px; /* Set a max width for the text container */
+  margin-left: 130px; /* Add left margin for spacing */
+}
+
+.our-story-text h2 {
+  margin-bottom: 40px; /* Add bottom margin for spacing */
+}
+
+.our-story-image{
+  height: 682px;
+  
+}
+
+.Read-more-button {
+  background-color: var(--Aubergine); /* Set button background color */
+  color: var(--Black); /* Set button text color */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Add rounded corners */
+  padding: 10px 20px; /* Add padding for button size */
+  font-size: 16px; /* Set font size */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  margin-top: 20px; /* Add top margin for spacing */
+  width: 200px;
+  height: 68px;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-radius: 15px;
+}
+
+.Read-more-button:hover {
+  background-color: var(--Old-Brick); /* Change background color on hover */
+  color: var(--White); /* Change text color on hover */
+  transition: background-color 0.3s ease; /* Add transition effect */
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.50); /* Add shadow effect */
+}
