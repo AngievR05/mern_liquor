@@ -17,6 +17,13 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('MongoDB connected'))
+  .catch((err => console.log(err)));
+
 // const express = require('express');
 // const dotenv = require('dotenv');
 // const cors = require('cors');
