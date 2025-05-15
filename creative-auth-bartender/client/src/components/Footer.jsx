@@ -24,13 +24,13 @@ const Footer = () => {
       <div className="footer-socials">
         <h3>Follow Us</h3>
         <div className="social-icons">
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.instagram.com/openwindowinstitute/?hl=en" target="_blank" rel="noopener noreferrer">
             <img src={InstaVector} alt="Instagram" className="social-icon" id='Insta' />
           </a>
-          <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.facebook.com/theopenwindow/" target="_blank" rel="noopener noreferrer">
             <img src={FacebookVector} alt="Facebook" className="social-icon" id='Facebook' />
           </a>
-          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.youtube.com/@theopenwindowschool" target="_blank" rel="noopener noreferrer">
             <img src={YouTubeVector} alt="YouTube" className="social-icon" id='YouTube' />
           </a>
         </div>

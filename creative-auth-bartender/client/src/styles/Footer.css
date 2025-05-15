@@ -29,7 +29,7 @@
 .footer-links a:hover{
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color:rgb(183, 77, 82);
-    -webkit-text-fill-color: var(--Old-Brick);
+    -webkit-text-fill-color: var(--Anzac);
 }
 
 .footer-logo{
@@ -54,4 +54,9 @@
 .social-icon{
     cursor: pointer;
     margin-top: 19px;
+}
+
+.social-icon:hover{
+    transform: scale(1.1);
+    transition: all 0.2s ease;
 }

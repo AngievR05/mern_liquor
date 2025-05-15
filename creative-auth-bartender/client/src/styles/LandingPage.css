@@ -27,6 +27,17 @@ nav{
   background-color: var(--Aubergine);
   flex-shrink: 0;
   box-shadow: 0px -4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+  
+}
+
+nav a{
+  color: var(--White);
+  text-decoration: none;
+  transition: 0.3s ease; /* Add transition effect */
+}
+
+nav a:hover{
+  color: var(--Anzac);
 }
 
 .logo-container{
@@ -65,6 +76,12 @@ body{
   flex-direction: row;
   margin-right: 180px;
 }
+.navLinksRight a{
+  color: var(--White);
+  text-decoration: none;
+  margin: 0 10px;
+}
+
 
 .gloock {
   font-family: "Gloock", serif;
@@ -195,13 +212,17 @@ body{
   flex-direction: column;
   flex-shrink: 0;
   border-radius: 15px;
+  box-shadow: inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7); /* Add shadow effect */
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .Read-more-button:hover {
   background-color: var(--Old-Brick); /* Change background color on hover */
   color: var(--White); /* Change text color on hover */
   transition: background-color 0.3s ease; /* Add transition effect */
-  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.50); /* Add shadow effect */
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.72), inset -2px -2px 10px rgba(255, 255, 255, 0.3); /* Add shadow effect */
+  color:rgb(57, 57, 57);
+  transform: scale(0.99);
 }
 
 .our-products-section{
