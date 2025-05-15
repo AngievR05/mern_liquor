@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from '../styles/LoginRegister.module.css'; 
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -8,20 +9,19 @@ export default function Register() {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    // Fake saving user to localStorage
     localStorage.setItem('user', JSON.stringify({ email, password }));
     alert('Account created! You can now log in.');
     navigate('/accessibility-login');
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-primary text-white px-4">
-      <h1 className="text-3xl font-bold mb-4">Create Account</h1>
-      <form className="flex flex-col gap-4 w-full max-w-sm" onSubmit={handleRegister}>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Create Account</h1>
+      <form className={styles.form} onSubmit={handleRegister}>
         <input
           type="email"
           placeholder="Email"
-          className="p-2 rounded text-dark"
+          className={styles.input}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -29,12 +29,14 @@ export default function Register() {
         <input
           type="password"
           placeholder="Password"
-          className="p-2 rounded text-dark"
+          className={styles.input}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button className="bg-accent text-dark font-semibold px-4 py-2 rounded-full">Register</button>
+        <button type="submit" className={styles.button}>
+          Register
+        </button>
       </form>
     </div>
   );

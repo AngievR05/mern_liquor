@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from '../styles/GameFeedback.module.css';
 
 const GameSuccess = () => {
   const navigate = useNavigate();
@@ -10,13 +11,13 @@ const GameSuccess = () => {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [navigate]); // ✅ Added navigate to dependency array
+  }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#E9C4B4] text-center p-6">
-      <div className="text-6xl mb-4">✅</div>
-      <h1 className="text-3xl font-bold mb-2 text-[#350B0F]">Nice job, bartender!</h1>
-      <p className="text-lg text-[#9B1C23]">You're in. Redirecting to your landing page...</p>
+    <div className={`${styles.container} ${styles.successBg}`}>
+      <div className={styles.icon}>✅</div>
+      <h1 className={styles.title}>Nice job, bartender!</h1>
+      <p className={styles.message}>You're in. Redirecting to your landing page...</p>
     </div>
   );
 };

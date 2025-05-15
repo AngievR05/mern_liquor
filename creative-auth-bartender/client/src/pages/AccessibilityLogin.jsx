@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styles from '../styles/LoginRegister.module.css'; 
 
 export default function AccessibilityLogin() {
   const [email, setEmail] = useState('');
@@ -18,13 +19,13 @@ export default function AccessibilityLogin() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-primary text-white px-4">
-      <h1 className="text-3xl font-bold mb-4">Accessibility Login</h1>
-      <form className="flex flex-col gap-4 w-full max-w-sm" onSubmit={handleLogin}>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Login Here</h1>
+      <form className={styles.form} onSubmit={handleLogin}>
         <input
           type="email"
           placeholder="Email"
-          className="p-2 rounded text-dark"
+          className={styles.input}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -32,12 +33,14 @@ export default function AccessibilityLogin() {
         <input
           type="password"
           placeholder="Password"
-          className="p-2 rounded text-dark"
+          className={styles.input}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button className="bg-accent text-dark font-semibold px-4 py-2 rounded-full">Login</button>
+        <button type="submit" className={styles.button}>
+          Login
+        </button>
       </form>
     </div>
   );
