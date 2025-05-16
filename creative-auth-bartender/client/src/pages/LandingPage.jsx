@@ -44,12 +44,12 @@ const LandingPage = () => {
           <button className="Read-more-button" ><a href="#"><h3>Read More</h3></a></button>
         </div>
       </div>
-        
-        
+
+
 
 
       <div className="our-products-section">
-        
+
         <div className="our-products-text">
           <h2>Our Products</h2>
           <p>
@@ -65,7 +65,6 @@ const LandingPage = () => {
       </div>
     </div>
 
-    
   );
 };
 

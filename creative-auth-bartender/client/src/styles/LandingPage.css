@@ -216,6 +216,10 @@ body{
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.Read-more-button a{
+  text-decoration: none; /* Remove underline from link */
+}
+
 .Read-more-button:hover {
   background-color: var(--Old-Brick); /* Change background color on hover */
   color: var(--White); /* Change text color on hover */
