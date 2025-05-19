@@ -1,19 +1,32 @@
 import mongoose from 'mongoose';
 
-const gameResultSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'User',
+const gameResultSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    success: {
+      type: Boolean,
+      required: true,
+    },
+    details: {
+      timeTaken: {
+        type: Number, // in seconds
+        required: false,
+      },
+      attempts: {
+        type: Number,
+        required: false,
+      },
+    },
   },
-  success: {
-    type: Boolean,
-    required: true,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
+  {
+    timestamps: true,
   }
-});
+);
 
-export default mongoose.model('GameResult', gameResultSchema);
+const GameResult = mongoose.model('GameResult', gameResultSchema);
+
+export default GameResult;
