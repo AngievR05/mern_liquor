@@ -33,6 +33,27 @@
   color: #350b0f;
 }
 
+/* Optional: Customize the file input look */
+.input[type="file"] {
+  background-color: #fff;
+  color: #350b0f;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #e0ba3e;
+  margin-top: 0.5rem;
+  align-self: center;
+  box-shadow: 0 0 10px rgba(224, 186, 62, 0.3);
+}
+
 .button {
   background-color: #e0ba3e;
   color: #350b0f;

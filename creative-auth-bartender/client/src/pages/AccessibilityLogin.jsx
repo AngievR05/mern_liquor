@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../styles/LoginRegister.module.css'; 
+import styles from '../styles/LoginRegister.module.css';
 
 export default function AccessibilityLogin() {
   const [email, setEmail] = useState('');
@@ -9,9 +9,18 @@ export default function AccessibilityLogin() {
 
   const handleLogin = (e) => {
     e.preventDefault();
+
     const savedUser = JSON.parse(localStorage.getItem('user'));
-    if (savedUser && savedUser.email === email && savedUser.password === password) {
-      alert('Login successful!');
+    
+    if (
+      savedUser &&
+      savedUser.email === email &&
+      savedUser.password === password
+    ) {
+      // Optionally save logged-in user to sessionStorage
+      sessionStorage.setItem('currentUser', JSON.stringify(savedUser));
+
+      alert(`Welcome back, ${savedUser.username || 'User'}!`);
       navigate('/game');
     } else {
       alert('Invalid credentials. Try again or register.');

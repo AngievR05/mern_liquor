@@ -1,23 +1,48 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../styles/LoginRegister.module.css'; 
+import styles from '../styles/LoginRegister.module.css';
 
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
-    localStorage.setItem('user', JSON.stringify({ email, password }));
+
+    const userData = {
+      email,
+      password,
+      username,
+      profilePhoto: profilePhoto ? URL.createObjectURL(profilePhoto) : null,
+    };
+
+    localStorage.setItem('user', JSON.stringify(userData));
     alert('Account created! You can now log in.');
     navigate('/accessibility-login');
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setProfilePhoto(file);
+    setPreview(URL.createObjectURL(file));
   };
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Create Account</h1>
       <form className={styles.form} onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="Username"
+          className={styles.input}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
         <input
           type="email"
           placeholder="Email"
@@ -34,6 +59,15 @@ export default function Register() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className={styles.input}
+        />
+        {preview && (
+          <img src={preview} alt="Profile Preview" className={styles.preview} />
+        )}
         <button type="submit" className={styles.button}>
           Register
         </button>
