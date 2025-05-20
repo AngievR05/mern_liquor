@@ -15,17 +15,7 @@ const LandingPage = () => {
   return (
     <div className="landing-page">
       <nav>
-        <div className="logo-container">
-          <img src={LogoNoText} alt="Logo" className="logo" />
-          <h3>The Drunken Giraffe</h3>
-        </div>
-        <div className="navLinksMiddle">
-          <a href="#">About</a>
-          <a href="#">Store</a>
-        </div>
-        <div className="navLinksRight">
-          <a href="#">Login</a>
-        </div>
+        <Navbar />
       </nav>
 
       <div className="hero-section">
