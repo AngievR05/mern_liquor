@@ -7,16 +7,15 @@ export default function Welcome() {
       <h1 className={styles.title}>Spirited Sign-In 🍸</h1>
       <p className={styles.subtitle}>Match the bottles to the right shelves to prove you're not a lightweight.</p>
       <Link to="/game" className={styles.button}>
-        Login with Bartender Game
+        <h3>Login with Bartender Game</h3>
       </Link>
       <br />
-            
       <Link to="/register" className={styles.link}>
         Create an Account
       </Link>
       <br />
       <Link to="/accessibility-login" className={styles.link}>
-        Already have an account? Login here
+        Already have an account? Log in here
       </Link>
     </div>
   );

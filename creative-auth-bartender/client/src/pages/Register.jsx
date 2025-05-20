@@ -69,7 +69,7 @@ export default function Register() {
           <img src={preview} alt="Profile Preview" className={styles.preview} />
         )}
         <button type="submit" className={styles.button}>
-          Register
+          <h5>Register</h5>
         </button>
       </form>
     </div>

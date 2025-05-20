@@ -140,10 +140,10 @@ const GameScreen = () => {
             Drag each bottle to the correct shelf. When you're done, click Submit.
           </p>
           <button className={styles.button} onClick={handleSubmit}>
-            Submit
+            <h5>Submit</h5>
           </button>
           <button className={styles.button} onClick={handleReset}>
-            Reset Puzzle
+            <h5>Reset Puzzle</h5>
           </button>
         </div>
       </DragDropContext>

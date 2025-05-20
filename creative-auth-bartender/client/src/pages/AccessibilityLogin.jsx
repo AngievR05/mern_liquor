@@ -29,7 +29,7 @@ export default function AccessibilityLogin() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Login Here</h1>
+      <h1 className={styles.title}>Log in Here</h1>
       <form className={styles.form} onSubmit={handleLogin}>
         <input
           type="email"
@@ -48,7 +48,7 @@ export default function AccessibilityLogin() {
           required
         />
         <button type="submit" className={styles.button}>
-          Login
+          <h5>Log in</h5>
         </button>
       </form>
     </div>
