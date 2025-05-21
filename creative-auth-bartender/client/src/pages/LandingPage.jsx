@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/LandingPage.css";
 
 // import BlackLogo from "../assets/BlackLogo.svg";
@@ -10,12 +10,15 @@ import LogoNoText from "../assets/Logo-no-text.svg";
 
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import AuthModal from "../components/AuthModal";
 
 const LandingPage = () => {
+  const [showAuthModal, setShowAuthModal] = useState(true);
+
   return (
     <div className="landing-page">
       <nav>
-        <Navbar />
+        <Navbar onLoginClick={() => setShowAuthModal(true)} />
       </nav>
 
       <div className="hero-section">
@@ -51,8 +54,11 @@ const LandingPage = () => {
       </div>
 
       <div className="footer-section">
-      <Footer />
+        <Footer />
       </div>
+      {showAuthModal && (
+        <AuthModal onClose={() => setShowAuthModal(false)} />
+      )}
     </div>
 
   );
