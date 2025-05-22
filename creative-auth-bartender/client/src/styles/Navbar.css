@@ -6,7 +6,8 @@ nav{
   width: 100%;
   height: fit-content;
   /* padding: 6px 28px; */
-  background-color: var(--Aubergine);
+  /* background-color: var(--Aubergine); */
+  background: linear-gradient(135deg, var(--Aubergine) 0%, #220609 40%, var(--Aubergine) 100%);
   flex-shrink: 0;
   box-shadow: 0px -4px 4px 0px rgba (0, 0, 0, 0.25) inset;
   
