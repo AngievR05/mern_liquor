@@ -8,8 +8,9 @@ import LandingPage from './pages/LandingPage'
 import Register from './pages/Register';
 import Store from './pages/Store';
 import About from './pages/About';
-import Checkout from './pages/Checkout'; 
+import Checkout from './pages/Checkout';
 import ProductDetails from './pages/ProductDetails';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function App() {
   return (
