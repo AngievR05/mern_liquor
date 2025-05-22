@@ -1,3 +1,5 @@
+import '../styles/SearchBar.css'; 
+
 const SearchBar = ({ searchQuery, setSearchQuery }) => {
   return (
     <div className="mb-4">

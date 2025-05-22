@@ -1,0 +1,25 @@
+.filter-panel {
+  width: 220px;
+  background-color: #f9f9f9;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  height: fit-content;
+}
+
+.filter-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.filter-option input[type="checkbox"] {
+  margin-right: 8px;
+}

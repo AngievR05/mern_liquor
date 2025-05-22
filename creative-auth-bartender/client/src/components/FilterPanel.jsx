@@ -1,3 +1,5 @@
+import '../styles/FilterPanel.css';
+
 const categories = ['All', 'Beer', 'Wine', 'Whiskey'];
 
 const FilterPanel = ({ categoryFilter, setCategoryFilter }) => {
