@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import "../styles/Footer.css";
 
 import WhiteLogo from "../assets/WhiteLogo.svg";
@@ -15,10 +16,9 @@ const Footer = () => {
       <div className="footer-content">
         <h3>Long Necks, Strong Drinks</h3>
         <div className="footer-links">
-            <a href="#home">Home</a>
-            <a href="#about">About Us</a>
-            <a href="#store">Store</a>
-            <a href="#contact">Contact Us</a>
+            <Link to="/landing-page">Home</Link>
+            <Link to="/about">About Us</Link>
+            <Link to="/store">Store</Link>
         </div>
       </div>
       <div className="footer-socials">
@@ -34,8 +34,9 @@ const Footer = () => {
             <img src={YouTubeVector} alt="YouTube" className="social-icon" id='YouTube' />
           </a>
         </div>
-</div>
+      </div>
     </div>
   );
 }
+
 export default Footer;
