@@ -1,6 +1,5 @@
 import express from 'express';
-
-import router from express.Router();
+const router = express.Router();
 
 // Dummy game result route
 router.post('/result', (req, res) => {
