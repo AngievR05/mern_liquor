@@ -18,6 +18,11 @@ nav a{
   transition: 0.3s ease; /* Add transition effect */
 }
 
+nav a.active {
+  color: var(--Anzac) !important;
+  font-weight: bold;
+}
+
 nav a:hover{
   color: var(--Anzac);
 }

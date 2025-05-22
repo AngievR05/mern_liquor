@@ -15,10 +15,17 @@
 
 .landing-page {
     background-color: var(--Black);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.landing-page .footer-section{
+  margin-top: auto;
 }
 
 body{
-  color: var(--White);
+  color: var(--White) !important;
 }
 
 .gloock {
@@ -156,7 +163,7 @@ body{
 
 .Read-more-button {
   background-color: var(--Aubergine); /* Set button background color */
-  color: var(--Black); /* Set button text color */
+  color: var(--White) !important; /* Set button text color */
   border: none; /* Remove default border */
   border-radius: 5px; /* Add rounded corners */
   padding: 10px 20px; /* Add padding for button size */
@@ -173,7 +180,8 @@ body{
 }
 
 .Read-more-button a{
-  text-decoration: none; /* Remove underline from link */
+  text-decoration: none;
+  color: var(--White); /* Remove underline from link */
 }
 
 .Read-more-button:hover {
@@ -237,8 +245,12 @@ body{
   flex-direction: column;
 }
 
+.about-page .footer-section{
+  margin-top: auto;
+}
+
 .accordion{
-  margin: 25px 70px;
+  margin: 75px 170px;
   border-radius: 15px;
 }
 
@@ -253,34 +265,208 @@ body{
   background-color: var(--Aubergine) !important;
   color: var(--White) !important;
   font-family: "Gloock", serif;
-  font-size: 1.2rem;
-  font-weight: 600;
-  border: none;
-  box-shadow: none !important;
+  font-size: 1.3rem !important;
+  font-weight: 500;
+  border: none !important;
+  box-shadow: inset 3px 3px 5px #2a070b25, inset -3px -3px 5px #2a070b25 !important;
   transition: background 0.2s, color 0.2s;
 }
 
 .accordion-button:not(.collapsed) {
   background: linear-gradient(135deg, #9b1c23 0%, #551218 100%) !important;
   color: var(--White) !important;
+  border: none !important;
+  box-shadow: inset 3px 3px 5px #2a070b25, inset -3px -3px 5px #2a070b25 !important;
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='5,8 10,13 15,8' stroke='%23e9c46a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") !important;
 }
 
 .accordion-button:focus {
   box-shadow: 0 0 0 0.2rem var(--Aubergine) !important;
+  border: none !important;
 }
 
 .accordion-body {
-  background-color: var(--Aubergine) !important;
+  background: linear-gradient(135deg, #100203 0%, #2a070b 40%, #100203 100%);
   color: var(--White) !important;
   font-family: "Merriweather", serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  height: fit-content;
 }
 
 .accordion-button.collapsed {
-  background-color: var(--Aubergine) !important;
+  background-color: #551218 !important;
   color: var(--White) !important;
+  border: none !important;
+  box-shadow: inset 3px 3px 5px #2a070b25, inset -3px -3px 5px #2a070b25 !important;
 }
 
 .accordion-button::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fffff0' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E") !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='5,8 10,13 15,8' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") !important;
+}
+
+.accordion-button:focus, .accordion-button:active {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+#accordion-who {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.who-image img {
+  width: auto;
+  max-height: fill;
+  border-radius: 12px;
+  border-radius: 15px;
+}
+
+.who-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  padding: 0;
+  border-radius: 15px;
+  margin-left: auto;
+}
+
+.who-body {
+  width: 50%;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: auto;
+}
+
+#accordion-love {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  justify-content: center;
+  padding: 2rem 5rem;
+}
+
+.love-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.love-image {
+  max-width: 100%;
+  max-height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.love-body {
+  width: 50%;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#accordion-mission {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  justify-content: center;
+  padding: 2rem 5rem;
+}
+
+.mission-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
+.mission-image {
+  max-width: 100%;
+  max-height: 30rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+}
+
+.mission-body {
+  width: 50%;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: auto;
+}
+
+.who-image img, .love-image img, .mission-image img {
+  border-radius: 15px;
+  mask-image:
+    linear-gradient(to top,    transparent 0%, #fff 7%, #fff 92%, transparent 100%),
+    linear-gradient(to right,  transparent 0%, #fff 7%, #fff 92%, transparent 100%);
+  -webkit-mask-image:
+    linear-gradient(to top,    transparent 0%, #fff 7%, #fff 92%, transparent 100%),
+    linear-gradient(to right,  transparent 0%, #fff 7%, #fff 92%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
+.hero-about {
+  width: 100%;
+  height: 600px;
+  background: url("../assets/AboutHero.svg") no-repeat center center; /* Center the image */
+  background-size: cover; /* Ensure the image covers the section */
+  border-radius: 15px;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  margin: 0 auto; /* Center the section itself */
+  background-position: top;
+  mask-image: 
+    linear-gradient(to top,    transparent 0%, #fff 4%, #fff 85%, transparent 100%),
+    linear-gradient(to right,  transparent 0%, #fff 4%, #fff 85%, transparent 100%);
+  -webkit-mask-image: 
+    linear-gradient(to top,    transparent 0%, #fff 4%, #fff 85%, transparent 100%),
+    linear-gradient(to right,  transparent 0%, #fff 4%, #fff 85%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
+
+.hero-about-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align text to the left */
+  justify-content: center; /* Center text vertically */
+  text-align: left; /* Align text within the container */
+
+  width: 100%; /* Allow the text container to take full width */
+}
+
+.hero-about-text h1 {
+  font-size: 94px; /* Adjust font size as needed */
+  margin: 0; /* Remove default margin */
+  color: var(--White); /* Set text color */
+  max-width: 420px; /* Set a max width for the text container */
+  margin-left: 115px; /* Add left margin for spacing */
+  mix-blend-mode: hard-light; /* or try multiply, overlay, etc. */
+}
+
+.hero-about-text h3 {
+  margin: 0; /* Remove default margin */
+  color: var(--Anzac); /* Set text color */
+  max-width: 420px; /* Set a max width for the text container */
+  margin-left: 115px; /* Add left margin for spacing */
+  mix-blend-mode: screen; /* or try multiply, overlay, etc. */
 }
