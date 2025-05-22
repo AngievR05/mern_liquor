@@ -8,6 +8,8 @@ import LandingPage from './pages/LandingPage'
 import Register from './pages/Register';
 import Store from './pages/Store';
 import About from './pages/About';
+import Checkout from './pages/Checkout'; 
+import ProductDetails from './pages/ProductDetails';
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/about" element={<About />} />
         <Route path="/store" element={<Store />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
       </Routes>
     </Router>
   )
