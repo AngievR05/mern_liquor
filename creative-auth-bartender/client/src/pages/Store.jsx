@@ -4,6 +4,8 @@ import FilterPanel from '../components/FilterPanel';
 import SearchBar from '../components/SearchBar';
 import '../styles/StorePage.css';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+
 
 const staticProducts = [
   {
@@ -34,7 +36,7 @@ const staticProducts = [
     _id: '3',
     title: 'Single Malt Whiskey',
     image: '/images/whiskey.jpg',
-    price: 45.00,
+    price: 45.0,
     category: 'Whiskey',
     description: 'Smooth and smoky single malt whiskey.',
     stock: 10,
@@ -78,10 +80,12 @@ const Store = () => {
   useEffect(() => {
     let updated = [...products];
     if (categoryFilter !== 'All') {
-      updated = updated.filter(p => p.category.toLowerCase() === categoryFilter.toLowerCase());
+      updated = updated.filter(
+        (p) => p.category.toLowerCase() === categoryFilter.toLowerCase()
+      );
     }
     if (searchQuery) {
-      updated = updated.filter(p =>
+      updated = updated.filter((p) =>
         p.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
@@ -89,7 +93,7 @@ const Store = () => {
   }, [searchQuery, categoryFilter, products]);
 
   const handleLike = (productId) => {
-    const updated = products.map(p => {
+    const updated = products.map((p) => {
       if (p._id === productId) {
         return { ...p, likes: (p.likes || 0) + 1 };
       }
@@ -99,7 +103,7 @@ const Store = () => {
   };
 
   const handleComment = (productId, comment) => {
-    const updated = products.map(p => {
+    const updated = products.map((p) => {
       if (p._id === productId) {
         return {
           ...p,
@@ -112,33 +116,38 @@ const Store = () => {
   };
 
   const handleDelete = (productId) => {
-    const updated = products.filter(p => p._id !== productId);
+    const updated = products.filter((p) => p._id !== productId);
     setProducts(updated);
   };
 
   return (
     <div className="store-page">
       <Navbar />
-      <div className="store-container">
-        <div className="store-header">
-          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <div className="store-layout">
+        <div className="sidebar">
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+          <FilterPanel
+            categoryFilter={categoryFilter}
+            setCategoryFilter={setCategoryFilter}
+          />
         </div>
-        <div className="store-main">
-          <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} />
-          <div className="product-grid">
-            {filteredProducts.map(product => (
-              <ProductCard
-                key={product._id}
-                product={product}
-                isAdmin={isAdmin}
-                onLike={handleLike}
-                onComment={handleComment}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
+        <div className="product-grid">
+          {filteredProducts.map((product) => (
+            <ProductCard
+              key={product._id}
+              product={product}
+              isAdmin={isAdmin}
+              onLike={handleLike}
+              onComment={handleComment}
+              onDelete={handleDelete}
+            />
+          ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -55,3 +55,25 @@
   font-size: 12px;
   color: #666;
 }
+
+.store-page {
+  padding: 0;
+  background-color: #000000;
+  min-height: 100vh;
+}
+
+.store-layout {
+  display: flex;
+  gap: 2rem;
+}
+
+.sidebar {
+  width: 250px;
+}
+
+.product-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
