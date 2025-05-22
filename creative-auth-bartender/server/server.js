@@ -4,8 +4,8 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes.js';
 import gameRoutes from './routes/gameRoutes.js';
 import cors from 'cors';
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/apiDocumentation'); 
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/apiDocumentation.js'; 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
