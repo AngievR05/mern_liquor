@@ -1,70 +1,183 @@
-# Getting Started with Create React App
+# 🛡️ Creative Authentication System – Spirited Sign-In
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack MERN web app featuring a playful, game-based authentication method called **Spirited Sign-In**, where users sort virtual bottles correctly to gain access. For accessibility, users can also log in through a traditional form-based fallback.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📌 Table of Contents
 
-### `npm start`
+- [Project Overview](#project-overview)  
+- [Features](#features)  
+- [Tech Stack](#tech-stack)  
+- [Creative Authentication Explained](#creative-authentication-explained)  
+- [Getting Started](#getting-started)  
+- [API Documentation](#api-documentation)  
+- [Folder Structure](#folder-structure)  
+- [Demo](#demo)  
+- [Contributing](#contributing)  
+- [License](#license)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🧠 Project Overview
 
-### `npm test`
+This MERN stack project explores a creative twist on standard login forms. Users interact with a **mini bartender game** to prove identity, providing an intuitive and fun authentication experience. The app also supports an accessibility login for inclusivity.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## ✨ Features
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 🎮 Game-based login challenge (Spirited Sign-In)
+- 🧑‍🦽 Accessible fallback login form
+- 🔐 JWT token-based authentication
+- 🔑 Password hashing using `bcryptjs`
+- 🗃️ MongoDB integration
+- 📄 REST API with Swagger documentation
+- 📦 Fully modular and scalable codebase
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🧪 Creative Authentication Explained
 
-### `npm run eject`
+### 🥃 Spirited Sign-In
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+During login, users sort a series of drink bottles correctly in a game interface. Success grants access; failure shows a retry screen.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Why it’s creative:**  
+  It uses **spatial memory, visual cues**, and **pattern matching** instead of traditional typing. It gamifies identity verification without compromising security.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Fallback option:**  
+  A basic accessible login form is available at `/accessibility-login`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 🛠️ Tech Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Frontend:** React, TailwindCSS  
+- **Backend:** Node.js, Express  
+- **Database:** MongoDB, Mongoose  
+- **Auth:** JWT, bcrypt  
+- **Docs:** Swagger (via `swagger-jsdoc` and `swagger-ui-express`)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## 🚀 Getting Started
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 1. Clone the repository
 
-### Analyzing the Bundle Size
+```bash
+git clone https://github.com/AngievR05/mern_liquor.git
+cd mern_liquor/creative-auth-bartender
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 2. Install dependencies
 
-### Making a Progressive Web App
+```bash
+# Install backend dependencies
+cd server
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Install frontend dependencies
+cd ../client
+npm install
+```
 
-### Advanced Configuration
+### 3. Setup your environment variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Create a `.env` file in the `server` directory and add the following:
 
-### Deployment
+```
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_super_secret_jwt_key
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Make sure to add `.env` to your `.gitignore` file so that sensitive information is not committed to GitHub.
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 4. Start the development servers
+
+```bash
+# Start backend server
+cd server
+npm run dev
+
+# Start frontend server
+cd ../client
+npm start
+```
+
+---
+
+## 🧾 API Documentation
+
+Swagger UI is available for testing all backend routes.
+
+Once the backend server is running, visit:  
+[http://localhost:5000/apiDocumentation](http://localhost:5000/apiDocumentation)
+
+This interface allows you to test endpoints like login, register, and game results directly from the browser.
+
+---
+
+## 📁 Folder Structure
+
+```
+mern_liquor/
+│
+├── creative-auth-bartender/
+│   ├── server/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── middleware/
+│   │   ├── utils/
+│   │   ├── server.js
+│   │   ├── .gitignore
+│   │   └── .env
+│   │
+│   ├── client/
+│   │   ├── public/
+│   │   ├── src/
+│   │   │   ├── assets/
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── styles/
+│   │   │   └── App.js
+│   │   └── package.json
+│   │
+│   └── README.md
+```
+
+---
+
+## 🎥 Demo
+
+A short 5-minute video demo shows:
+
+- Registering and logging in
+- Game-based authentication in action
+- Accessibility fallback login
+- API and backend overview
+
+**Link to video to be inserted here**
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+1. Fork the repo
+2. Create your branch (`git checkout -b feature-name`)
+3. Commit your changes (`git commit -m 'Add feature'`)
+4. Push to the branch (`git push origin feature-name`)
+5. Open a pull request
+
+---
+
+## 📜 License
+
+MIT © 2025 BugSquashers
