@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import '../styles/ProductCard.css';
+import EditProductModal from '../components/EditProductModal';
 
-const ProductCard = ({ product, isAdmin, onLike, onComment, onDelete }) => {
+const ProductCard = ({ product, isAdmin, onLike, onComment, onDelete, onEdit }) => {
   const [commentText, setCommentText] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmitComment = (e) => {
     e.preventDefault();
@@ -10,6 +12,14 @@ const ProductCard = ({ product, isAdmin, onLike, onComment, onDelete }) => {
       onComment(product._id, commentText.trim());
       setCommentText('');
     }
+  };
+
+  // Called when modal saves
+  const handleSave = (updatedProduct) => {
+    if (onEdit) {
+      onEdit(updatedProduct); // Pass updated product up for actual update logic
+    }
+    setIsModalOpen(false); // Close modal after save
   };
 
   return (
@@ -48,10 +58,24 @@ const ProductCard = ({ product, isAdmin, onLike, onComment, onDelete }) => {
         {isAdmin && (
           <div className="admin-controls">
             <button className="delete-button" onClick={() => onDelete(product._id)}>🗑️ Delete</button>
-            {/* Optional: Add Edit Button Here */}
+            <button 
+              className="edit-button" 
+              onClick={() => setIsModalOpen(true)}
+            >
+              ✏️ Edit
+            </button>
           </div>
         )}
       </div>
+
+      {/* Edit modal */}
+      {isModalOpen && (
+        <EditProductModal 
+          product={product} 
+          onClose={() => setIsModalOpen(false)} 
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 };
