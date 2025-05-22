@@ -1,19 +1,19 @@
 {
-  "name": "creative-auth-bartender",
+  "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "cd server && nodemon server.js",
-    "client": "cd client && npm start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "concurrently": "^9.1.2"
+    "express": "^5.1.0",
+    "dotenv": "^16.5.0",
+    "mongoose": "^8.14.1",
+    "cors": "^2.8.5",
+    "swagger-ui-express": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
