@@ -6,6 +6,8 @@ import GameFailure from './pages/GameFailure'
 import AccessibilityLogin from './pages/AccessibilityLogin'
 import LandingPage from './pages/LandingPage'
 import Register from './pages/Register';
+import Store from './pages/Store';
+import About from './pages/About';
 
 export default function App() {
   return (
@@ -18,6 +20,8 @@ export default function App() {
         <Route path="/accessibility-login" element={<AccessibilityLogin />} />
         <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/store" element={<Store />} />
       </Routes>
     </Router>
   )
