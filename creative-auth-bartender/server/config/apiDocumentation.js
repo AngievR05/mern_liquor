@@ -15,7 +15,7 @@ const options = {
       },
     ],
   },
-  apis: ['./routes/*.js', './models/*.js'], // adjust if your route/model paths differ
+  apis: ['./routes/*.js', './models/*.js'], 
 };
 
 const swaggerSpec = swaggerJSDoc(options);

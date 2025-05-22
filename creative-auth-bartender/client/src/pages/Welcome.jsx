@@ -8,6 +8,13 @@ export default function Welcome() {
       <p className={styles.subtitle}>Match the bottles to the right shelves to prove you're not a lightweight.</p>
       <Link to="/game" className={styles.button}>
         <h3>Enter with Bartender Game</h3>
+       </Link>
+        <Link to="/register" className={styles.link}>
+        Create an Account
+      </Link>
+      <br />
+      <Link to="/accessibility-login" className={styles.link}>
+        Already have an account? Log in here
       </Link>
     </div>
   );
