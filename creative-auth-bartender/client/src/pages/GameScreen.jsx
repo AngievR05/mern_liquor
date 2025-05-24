@@ -3,11 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import styles from './GameScreen.module.css';
 
+import whiskeyImg from '../assets/whiskey.png';
+import wineImg from '../assets/wine.png';
+import beerImg from '../assets/beer.png';
+
 const initialBottles = [
   { id: '1', name: 'Whiskey', type: 'whiskey' },
   { id: '2', name: 'Wine', type: 'wine' },
   { id: '3', name: 'Beer', type: 'beer' },
 ];
+
+const bottleImages = {
+  whiskey: whiskeyImg,
+  wine: wineImg,
+  beer: beerImg,
+};
 
 const shelves = ['beer', 'wine', 'whiskey'];
 
@@ -93,7 +103,11 @@ const GameScreen = () => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        {bottle.name}
+                        <img
+                          src={bottleImages[bottle.type]}
+                          alt={bottle.name}
+                          className={styles.bottleImage}
+                        />
                       </div>
                     )}
                   </Draggable>
@@ -122,7 +136,11 @@ const GameScreen = () => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            {bottle.name}
+                            <img
+                              src={bottleImages[bottle.type]}
+                              alt={bottle.name}
+                              className={styles.bottleImage}
+                            />
                           </div>
                         )}
                       </Draggable>
