@@ -5,6 +5,7 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   height: fit-content;
+  font-family: 'Gloock', serif;
 }
 
 .filter-title {
@@ -15,11 +16,27 @@
 }
 
 .filter-option {
-  display: flex;
-  align-items: center;
   margin-bottom: 8px;
 }
 
-.filter-option input[type="checkbox"] {
-  margin-right: 8px;
+.category-button {
+  width: 100%;
+  text-align: left;
+  background-color: #eee;
+  color: #333;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.category-button:hover {
+  background-color: #ddd;
+}
+
+.category-button.active {
+  background-color: #9B1C23;
+  color: white;
 }

@@ -4,15 +4,13 @@ const categories = ['All', 'Beer', 'Wine', 'Whiskey'];
 
 const FilterPanel = ({ categoryFilter, setCategoryFilter }) => {
   return (
-    <div className="mb-4">
-      <h2 className="text-lg font-semibold mb-2">Filter by Category</h2>
-      <ul className="space-y-2">
-        {categories.map(cat => (
-          <li key={cat}>
+    <div className="filter-panel">
+      <h2 className="filter-title">Filter by Category</h2>
+      <ul>
+        {categories.map((cat) => (
+          <li key={cat} className="filter-option">
             <button
-              className={`px-3 py-1 rounded-xl text-sm w-full text-left ${
-                categoryFilter === cat ? 'bg-primary text-white' : 'bg-gray-100'
-              }`}
+              className={`category-button ${categoryFilter === cat ? 'active' : ''}`}
               onClick={() => setCategoryFilter(cat)}
             >
               {cat}
