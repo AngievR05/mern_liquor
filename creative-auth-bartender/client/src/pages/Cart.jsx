@@ -1,9 +1,9 @@
 import React from 'react';
-import '../styles/Cart.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import '../styles/Cart.css';
 
-const Cart = ({ cartItems, onRemove, onCheckout }) => {
+const Cart = ({ cartItems = [], onRemove = () => {}, onCheckout = () => {} }) => {
   const total = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
