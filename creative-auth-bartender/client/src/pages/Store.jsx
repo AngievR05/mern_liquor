@@ -42,32 +42,12 @@ const Store = () => {
     setFilteredProducts(updated);
   }, [searchQuery, categoryFilter, products]);
 
-  const handleAddProduct = async (newProduct) => {
-    try {
-      const res = await fetch('/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProduct),
-      });
-      const data = await res.json();
-      setProducts(prev => [...prev, data]);
-    } catch (err) {
-      console.error('Failed to add product:', err);
-    }
+  const handleAddProduct = (newProduct) => {
+    setProducts(prev => [...prev, newProduct]);
   };
 
-  const handleEditProduct = async (updatedProduct) => {
-    try {
-      const res = await fetch(`/api/products/${updatedProduct._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedProduct),
-      });
-      const data = await res.json();
-      setProducts(prev => prev.map(p => p._id === data._id ? data : p));
-    } catch (err) {
-      console.error('Failed to edit product:', err);
-    }
+  const handleEditProduct = (updatedProduct) => {
+    setProducts(prev => prev.map(p => p._id === updatedProduct._id ? updatedProduct : p));
   };
 
   const handleDeleteProduct = async (id) => {
@@ -91,11 +71,11 @@ const Store = () => {
         </div>
         <div className="product-grid">
           {filteredProducts.map((product) => (
-            <div key={product._id} style={{ position: 'relative' }}>
+            <div key={product._id} className="product-wrapper">
               <ProductCard product={product} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+              <div className="product-actions">
                 <button onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}>Edit</button>
-                <button onClick={() => handleDeleteProduct(product._id)} style={{ backgroundColor: 'red', color: 'white' }}>Delete</button>
+                <button onClick={() => handleDeleteProduct(product._id)} className="delete-button">Delete</button>
               </div>
             </div>
           ))}
