@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LogoNoText from '../assets/Logo-no-text.svg';
+import '../styles/AuthModal.css'; // Assuming you have a CSS file for styles
 
 export default function AuthModal({ onClose }) {
   const [tab, setTab] = useState('login');
@@ -205,19 +206,7 @@ export default function AuthModal({ onClose }) {
                     }}
                   />
                   <button
-                    type="submit"
-                    style={{
-                      background: 'linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)',
-                      color: '#350b0f',
-                      border: 'none',
-                      borderRadius: 8,
-                      padding: '12px 0',
-                      fontWeight: 700,
-                      fontSize: 18,
-                      cursor: 'pointer',
-                      marginTop: 8
-                    }}
-                  >
+                    type="submit" className='login-btn'>
                     Continue
                   </button>
                 </form>
@@ -352,19 +341,10 @@ export default function AuthModal({ onClose }) {
                     <button
                       type="submit"
                       disabled={verifyLoading}
-                      style={{
-                        background: 'linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)',
-                        color: '#350b0f',
-                        border: 'none',
-                        borderRadius: 8,
-                        padding: '12px 0',
-                        fontWeight: 700,
-                        fontSize: 18,
-                        cursor: 'pointer',
-                        width: '100%',
-                        opacity: verifyLoading ? 0.7 : 1
-                      }}
-                    >
+                    className='register-btn'
+                    style={{
+                      opacity: verifyLoading ? 0.7 : 1
+                    }}>
                       {verifyLoading ? "Verifying..." : "Verify & Finish"}
                     </button>
                   </form>
