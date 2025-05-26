@@ -1,8 +1,16 @@
 import { useState } from 'react';
-import '../styles/EditProductModal.css';
+import '../styles/AddProductModal.css';
 
-export default function EditProductModal({ product, onClose, onSave }) {
-  const [formData, setFormData] = useState({ ...product });
+
+export default function AddProductModal({ onClose, onSave }) {
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    price: 0,
+    category: '',
+    stock: 0,
+    image: '',
+  });
 
   const handleChange = async (e) => {
     const { name, value, files } = e.target;
@@ -13,7 +21,7 @@ export default function EditProductModal({ product, onClose, onSave }) {
       const data = await res.json();
       setFormData(prev => ({ ...prev, image: data.filePath }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: name === 'price' || name === 'stock' ? Number(value) : value }));
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
@@ -26,7 +34,7 @@ export default function EditProductModal({ product, onClose, onSave }) {
   return (
     <div className="edit-modal-overlay">
       <div className="edit-modal">
-        <h2>Edit Product</h2>
+        <h2>Add New Product</h2>
         <form onSubmit={handleSubmit}>
           <label>Title:</label>
           <input name="title" value={formData.title} onChange={handleChange} required />

@@ -4,6 +4,8 @@ import FilterPanel from '../components/FilterPanel';
 import SearchBar from '../components/SearchBar';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import AddProductModal from '../components/AddProductModal';
+import EditProductModal from '../components/EditProductModal';
 import '../styles/StorePage.css';
 
 const Store = () => {
@@ -11,6 +13,9 @@ const Store = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -20,61 +25,7 @@ const Store = () => {
         setProducts(data);
         setFilteredProducts(data);
       } catch (err) {
-        console.warn('Using static products fallback');
-        const staticProducts = [
-          {
-            _id: '1',
-            title: 'Vintage Red Wine',
-            image: '/images/red-wine.jpg',
-            price: 25.99,
-            category: 'Wine',
-            description: 'A bold, rich red wine with fruity undertones.',
-            stock: 12,
-            rating: 4.5,
-          },
-          {
-            _id: '2',
-            title: 'Craft Beer IPA',
-            image: '/images/ipa.jpg',
-            price: 8.49,
-            category: 'Beer',
-            description: 'A hoppy and refreshing craft IPA.',
-            stock: 30,
-            rating: 4.2,
-          },
-          {
-            _id: '3',
-            title: 'Single Malt Whiskey',
-            image: '/images/whiskey.jpg',
-            price: 45.0,
-            category: 'Whiskey',
-            description: 'Smooth and smoky single malt whiskey.',
-            stock: 10,
-            rating: 4.7,
-          },
-          {
-            _id: '4',
-            title: 'Rosé Summer Blush',
-            image: '/images/rose.jpg',
-            price: 19.99,
-            category: 'Wine',
-            description: 'Crisp and floral, perfect for warm evenings.',
-            stock: 15,
-            rating: 4.3,
-          },
-          {
-            _id: '5',
-            title: 'Stout Imperial Dark',
-            image: '/images/stout.jpg',
-            price: 9.5,
-            category: 'Beer',
-            description: 'Dark and intense with chocolate notes.',
-            stock: 20,
-            rating: 4.1,
-          },
-        ];
-        setProducts(staticProducts);
-        setFilteredProducts(staticProducts);
+        console.error('Failed to fetch products:', err);
       }
     };
     fetchProducts();
@@ -91,6 +42,44 @@ const Store = () => {
     setFilteredProducts(updated);
   }, [searchQuery, categoryFilter, products]);
 
+  const handleAddProduct = async (newProduct) => {
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProduct),
+      });
+      const data = await res.json();
+      setProducts(prev => [...prev, data]);
+    } catch (err) {
+      console.error('Failed to add product:', err);
+    }
+  };
+
+  const handleEditProduct = async (updatedProduct) => {
+    try {
+      const res = await fetch(`/api/products/${updatedProduct._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedProduct),
+      });
+      const data = await res.json();
+      setProducts(prev => prev.map(p => p._id === data._id ? data : p));
+    } catch (err) {
+      console.error('Failed to edit product:', err);
+    }
+  };
+
+  const handleDeleteProduct = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await fetch(`/api/products/${id}`, { method: 'DELETE' });
+      setProducts(prev => prev.filter(p => p._id !== id));
+    } catch (err) {
+      console.error('Failed to delete product:', err);
+    }
+  };
+
   return (
     <div className="store-page">
       <Navbar />
@@ -98,13 +87,22 @@ const Store = () => {
         <div className="sidebar">
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} />
+          <button onClick={() => setShowAddModal(true)} style={{ margin: '10px' }}>Add Product</button>
         </div>
         <div className="product-grid">
           {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
+            <div key={product._id} style={{ position: 'relative' }}>
+              <ProductCard product={product} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+                <button onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}>Edit</button>
+                <button onClick={() => handleDeleteProduct(product._id)} style={{ backgroundColor: 'red', color: 'white' }}>Delete</button>
+              </div>
+            </div>
           ))}
         </div>
       </div>
+      {showAddModal && <AddProductModal onClose={() => setShowAddModal(false)} onSave={handleAddProduct} />}
+      {showEditModal && <EditProductModal product={selectedProduct} onClose={() => setShowEditModal(false)} onSave={handleEditProduct} />}
       <Footer />
     </div>
   );
