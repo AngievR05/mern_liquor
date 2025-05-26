@@ -67,7 +67,12 @@ const Store = () => {
         <div className="sidebar">
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} />
-          <button onClick={() => setShowAddModal(true)} style={{ margin: '10px' }}>Add Product</button>
+          <button
+  className="store-add-product-btn"
+  onClick={() => setShowAddModal(true)}
+>
+  Add Product
+</button>
         </div>
         <div className="product-grid">
           {filteredProducts.map((product) => (
