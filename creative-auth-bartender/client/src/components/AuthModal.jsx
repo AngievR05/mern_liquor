@@ -3,7 +3,6 @@ import LogoNoText from '../assets/Logo-no-text.svg';
 import '../styles/AuthModal.css';
 import whiskeyImg from '../assets/whiskey.png'; // Use your whiskey bottle image
 import notWhiskeyImg from '../assets/wine.png'; // Use a non-whiskey image
-import { app } from '../firebase'; // adjust path if needed
 import tequilaAudio from '../assets/audio/tequila.mp3';
 import redWineAudio from '../assets/audio/redwine.mp3';
 import ginJuiceAudio from '../assets/audio/gaj.mp3';
