@@ -126,3 +126,24 @@
 .delete-button:hover {
   background-color: #700c12;
 }
+
+.add-to-cart-btn {
+  padding: 8px 12px;
+  background: linear-gradient(90deg, #E1BB3E, #E35537);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.add-to-cart-btn:hover {
+  opacity: 0.9;
+}
+
+.product-rating {
+  font-size: 14px;
+  color: #9B1C23;
+  font-weight: bold;
+}

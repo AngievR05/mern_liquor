@@ -3,7 +3,7 @@ import Product from '../models/Product.js';
 
 const router = express.Router();
 
-// GET all
+// GET all products
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find({});
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST new
+// POST new product
 router.post('/', async (req, res) => {
   try {
     const product = new Product(req.body);
@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT update
+// PUT update product
 router.put('/:id', async (req, res) => {
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -34,11 +34,31 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE
+// DELETE product
 router.delete('/:id', async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
     res.json({ message: 'Product deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST add review
+router.post('/:id/reviews', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    const { rating, comment, user } = req.body;
+    product.reviews.push({ rating, comment, user });
+
+    // Recalculate average rating
+    const total = product.reviews.reduce((sum, r) => sum + r.rating, 0);
+    product.averageRating = total / product.reviews.length;
+
+    const updated = await product.save();
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

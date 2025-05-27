@@ -14,6 +14,7 @@ import Checkout from './pages/Checkout';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 
+
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function App() {

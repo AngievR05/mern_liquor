@@ -1,42 +1,37 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import '../styles/Cart.css';
+import { useCart } from '../context/CartContext';
 
-const Cart = ({ cartItems = [], onRemove = () => {}, onCheckout = () => {} }) => {
-  const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+const CartPage = () => {
+  const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
+
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <div className="cart-page">
-      <Navbar />
-      <div className="cart-container">
-        <h2>Your Cart</h2>
-        {cartItems.length === 0 ? (
-          <p>Your cart is empty.</p>
-        ) : (
-          <>
-            <ul className="cart-list">
-              {cartItems.map((item, index) => (
-                <li key={index} className="cart-item">
-                  <img src={item.image} alt={item.title} />
-                  <div>
-                    <h4>{item.title}</h4>
-                    <p>${item.price.toFixed(2)}</p>
-                    <button onClick={() => onRemove(index)}>Remove</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="cart-summary">
-              <h3>Total: ${total.toFixed(2)}</h3>
-              <button onClick={onCheckout}>Checkout</button>
-            </div>
-          </>
-        )}
-      </div>
-      <Footer />
+      <h2>Your Cart</h2>
+      {cartItems.length === 0 ? (
+        <p>Your cart is empty.</p>
+      ) : (
+        <>
+          <ul>
+            {cartItems.map(item => (
+              <li key={item._id}>
+                <strong>{item.title}</strong> - R {item.price.toFixed(2)} x {item.quantity}
+                <input
+                  type="number"
+                  min="1"
+                  value={item.quantity}
+                  onChange={(e) => updateQuantity(item._id, Number(e.target.value))}
+                />
+                <button onClick={() => removeFromCart(item._id)}>Remove</button>
+              </li>
+            ))}
+          </ul>
+          <h3>Total: R {total.toFixed(2)}</h3>
+          <button onClick={clearCart}>Clear Cart</button>
+        </>
+      )}
     </div>
   );
 };
 
-export default Cart;
+export default CartPage;
