@@ -7,7 +7,7 @@ import fs from 'fs';
 import multer from 'multer';
 
 import productRoutes from './routes/productRoutes.js';
-import userRoutes from './routes/userRoutes.js'; // <-- Add this import
+import userRoutes from './routes/userRoutes.js'; 
 
 dotenv.config(); // Load .env
 
