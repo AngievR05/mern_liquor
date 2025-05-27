@@ -7,6 +7,7 @@ import fs from 'fs';
 import multer from 'multer';
 
 import productRoutes from './routes/productRoutes.js';
+import userRoutes from './routes/userRoutes.js'; // <-- Add this import
 
 dotenv.config(); // Load .env
 
@@ -38,6 +39,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 
 // API routes
 app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes); // <-- Add this line
 
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI)
