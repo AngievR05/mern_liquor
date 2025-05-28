@@ -55,8 +55,8 @@ const Store = () => {
   useEffect(() => {
     let updated = [...products];
     if (categoryFilter !== 'All') {
-      updated = updated.filter(p => p.category.toLowerCase() === categoryFilter.toLowerCase());
-    }
+  updated = updated.filter(p => p.category.toLowerCase() === categoryFilter.toLowerCase());
+}
     if (searchQuery) {
       updated = updated.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
     }
