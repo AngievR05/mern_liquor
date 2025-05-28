@@ -19,8 +19,10 @@ const ProductCard = ({ product }) => {
       <img src={productData.image} alt={productData.title} className="product-image" />
       <div className="product-info">
         <h3 className="product-title">{productData.title}</h3>
+        <div className="price-rating">
         <p className="product-price">R {productData.price.toFixed(2)}</p>
         <p className="product-rating">⭐ {productData.averageRating?.toFixed(2) || 0}</p>
+        </div>
 
         <button
           onClick={(e) => { e.stopPropagation(); addToCart(productData); }}
@@ -32,8 +34,10 @@ const ProductCard = ({ product }) => {
         {expanded && (
           <div className="product-extra">
             <p className="product-description">{productData.description}</p>
+            <div className="category-stock">
             <p className="product-category">Category: {productData.category}</p>
             <p className="product-stock">Stock: {productData.stock}</p>
+            </div>
 
             <h4>Reviews:</h4>
             <ul>
