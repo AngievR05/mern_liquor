@@ -15,15 +15,41 @@ import MissionImage from "../assets/barrelsMission.svg";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
+import ProfileModal from "../components/ProfileModal";
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const About = () => {
+  // Get user/profilePic from localStorage for nav
+  const getStoredUser = () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      return user || null;
+    } catch {
+      return null;
+    }
+  };
+  const getStoredProfilePic = () => {
+    try {
+      return localStorage.getItem('profilePic') || null;
+    } catch {
+      return null;
+    }
+  };
+  const loggedInUser = getStoredUser();
+  const profilePic = getStoredProfilePic();
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   return (
     <div className="about-page">
       <nav>
-        <Navbar />
+        <Navbar
+          onLoginClick={() => {}} // Optionally implement modal logic if needed
+          showLogin={!loggedInUser}
+          showProfile={!!loggedInUser}
+          onProfileClick={() => setShowProfileModal(true)}
+          profilePic={profilePic}
+        />
       </nav>
 
     <div className="hero-about">
@@ -86,7 +112,22 @@ const About = () => {
     </div>
   </div>
 </div>
-
+{showProfileModal && loggedInUser && (
+        <ProfileModal
+          user={loggedInUser}
+          onClose={() => setShowProfileModal(false)}
+          onLogout={() => {
+            setShowProfileModal(false);
+            localStorage.removeItem('loggedInUser');
+            localStorage.removeItem('profilePic');
+            window.location.reload(); // Or navigate to landing page if you want
+          }}
+          onProfilePicChange={(url) => {
+            // Optionally update profilePic in localStorage if changed from About page
+            localStorage.setItem('profilePic', url);
+          }}
+        />
+      )}
       <div className="footer-section">
         <Footer />
       </div>

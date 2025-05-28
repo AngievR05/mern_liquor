@@ -4,11 +4,11 @@ import { useLocation } from "react-router-dom";
 import "../styles/Navbar.css";
 import LogoNoText from "../assets/Logo-no-text.svg";
 
-const Navbar = ({ onLoginClick, cartCount = 0 }) => {
+export default function Navbar({ onLoginClick, showLogin = true, showProfile = false, onProfileClick, profilePic }) {
   const location = useLocation();
 
   return (
-    <nav>
+    <nav className="navbar">
       <div className="logo-container">
         <img src={LogoNoText} alt="Logo" className="logo" />
         <h3>The Drunken Giraffe</h3>
@@ -27,19 +27,10 @@ const Navbar = ({ onLoginClick, cartCount = 0 }) => {
       </div>
 
       <div className="navLinksRight">
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            onLoginClick && onLoginClick();
-          }}
-        >
-          Login
-        </a>
         <div className="cart-icon" style={{ position: "relative", marginTop: "8px", cursor: "pointer" }}>
           <a href="/cart">
             <FaShoppingCart size={24} />
-            {cartCount > 0 && (
+            {/* {cartCount > 0 && (
               <span
                 style={{
                   position: 'absolute',
@@ -59,12 +50,26 @@ const Navbar = ({ onLoginClick, cartCount = 0 }) => {
               >
                 {cartCount}
               </span>
-            )}
+            )} */}
           </a>
         </div>
+      </div>
+
+      <div className="navbar-actions">
+        {showProfile && (
+          <button className="navbar-profile-btn" onClick={onProfileClick} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {profilePic && (
+              <img src={profilePic} alt="Profile" style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '2px solid #e1bb3e' }} />
+            )}
+            Profile
+          </button>
+        )}
+        {!showProfile && showLogin && (
+          <button className="navbar-login-btn" onClick={onLoginClick}>
+            Login
+          </button>
+        )}
       </div>
     </nav>
   );
 };
-
-export default Navbar;

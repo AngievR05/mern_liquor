@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import FilterPanel from '../components/FilterPanel';
 import SearchBar from '../components/SearchBar';
@@ -6,15 +6,36 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AddProductModal from '../components/AddProductModal';
 import EditProductModal from '../components/EditProductModal';
+import ProfileModal from '../components/ProfileModal';
 import '../styles/StorePage.css';
 
 const Store = () => {
+  // Get user/profilePic from localStorage for nav
+  const getStoredUser = () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      return user || null;
+    } catch {
+      return null;
+    }
+  };
+  const getStoredProfilePic = () => {
+    try {
+      return localStorage.getItem('profilePic') || null;
+    } catch {
+      return null;
+    }
+  };
+  const loggedInUser = getStoredUser();
+  const profilePic = getStoredProfilePic();
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
@@ -62,7 +83,15 @@ const Store = () => {
 
   return (
     <div className="store-page">
-      <Navbar />
+      <nav>
+        <Navbar
+          onLoginClick={() => {}} // Optionally implement modal logic if needed
+          showLogin={!loggedInUser}
+          showProfile={!!loggedInUser}
+          onProfileClick={() => setShowProfileModal(true)}
+          profilePic={profilePic}
+        />
+      </nav>
       <div className="store-layout">
         <div className="sidebar">
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -88,6 +117,22 @@ const Store = () => {
       </div>
       {showAddModal && <AddProductModal onClose={() => setShowAddModal(false)} onSave={handleAddProduct} />}
       {showEditModal && <EditProductModal product={selectedProduct} onClose={() => setShowEditModal(false)} onSave={handleEditProduct} />}
+      {showProfileModal && loggedInUser && (
+        <ProfileModal
+          user={loggedInUser}
+          onClose={() => setShowProfileModal(false)}
+          onLogout={() => {
+            setShowProfileModal(false);
+            localStorage.removeItem('loggedInUser');
+            localStorage.removeItem('profilePic');
+            window.location.reload(); // Or navigate to landing page if you want
+          }}
+          onProfilePicChange={(url) => {
+            // Optionally update profilePic in localStorage if changed from Store page
+            localStorage.setItem('profilePic', url);
+          }}
+        />
+      )}
       <Footer />
     </div>
   );
