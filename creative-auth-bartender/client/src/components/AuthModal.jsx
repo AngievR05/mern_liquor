@@ -11,35 +11,24 @@ import sha256 from 'crypto-js/sha256'; // npm install crypto-js
 
 export default function AuthModal({ onClose }) {
   const [tab, setTab] = useState('login');
-  const [showGame, setShowGame] = useState(false);
-  const [gameError, setGameError] = useState('');
   const [registerForm, setRegisterForm] = useState({
     firstName: "",
     lastName: "",
-    emailOrPhone: "",
+    email: "",
     username: "",
     password: ""
   });
   const [registerError, setRegisterError] = useState("");
   const [registerLoading, setRegisterLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [passMessage, setPassMessage] = useState(""); // <-- add this state
   const [showContactHint, setShowContactHint] = useState(false);
+  const [emailError, setEmailError] = useState(""); // <-- add this state
   const [showPasswordHint, setShowPasswordHint] = useState(false);
-
-  // Audio game setup
-  const audioClips = [
-    { name: "Tequila", src: tequilaAudio, chorusStart: 30, chorusDuration: 3 },
-    { name: "Red Red Wine", src: redWineAudio, chorusStart: 40, chorusDuration: 3 },
-    { name: "Gin and Juice", src: ginJuiceAudio, chorusStart: 35, chorusDuration: 3 },
-    { name: "Cheers", src: cheersAudio, chorusStart: 45, chorusDuration: 3 }
-  ];
-
-  const [sequenceOrder, setSequenceOrder] = useState([]);
-  const [sequencePlayed, setSequencePlayed] = useState(false);
-  const [userSequence, setUserSequence] = useState([]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [showVisualFallback, setShowVisualFallback] = useState(false);
+  const [usernameValid, setUsernameValid] = useState({ capital: false, noSpaces: false });
+  const [showUsernameHint, setShowUsernameHint] = useState(false);
+  // Add password validation state and hint
+  const [passwordValid, setPasswordValid] = useState({ capital: false, special: false });
+  const [showPasswordHintBox, setShowPasswordHintBox] = useState(false);
 
   // Trivia questions for registration
   const triviaQuestions = [
@@ -73,85 +62,6 @@ export default function AuthModal({ onClose }) {
     return arr;
   }
 
-  function handleStartGame(e) {
-    e.preventDefault();
-    setShowGame(true);
-    setGameError('');
-    setUserSequence([]);
-    setShowVisualFallback(false);
-    // Always randomize the sequence order
-    setSequenceOrder(shuffleArray([0, 1, 2, 3]));
-    setSequencePlayed(false);
-  }
-
-  async function playSequence() {
-    setIsPlaying(true);
-    for (let i = 0; i < sequenceOrder.length; i++) {
-      const idx = sequenceOrder[i];
-      const { src, chorusStart, chorusDuration } = audioClips[idx];
-      const audio = new Audio(src);
-      audio.currentTime = chorusStart;
-      audio.play();
-      await new Promise(res => {
-        const stop = () => {
-          audio.pause();
-          audio.currentTime = 0;
-          res();
-        };
-        audio.onended = stop;
-        setTimeout(stop, chorusDuration * 1000);
-      });
-    }
-    setIsPlaying(false);
-    setSequencePlayed(true);
-  }
-
-  function handleUserInput(idx) {
-    if (isPlaying) return;
-    setUserSequence(seq => {
-      const newSeq = [...seq, idx];
-      // Only visually indicate selection, do not play audio
-      // Check if sequence is complete
-      if (newSeq.length === sequenceOrder.length) {
-        setTimeout(() => checkSequence(newSeq), 500);
-      }
-      return newSeq;
-    });
-  }
-
-  function checkSequence(seq) {
-    if (seq.length !== sequenceOrder.length) return;
-    const correct = seq.every((val, i) => val === sequenceOrder[i]);
-    if (correct) {
-      setShowGame(false);
-      setGameError('');
-      setPassMessage("✅ You passed the audio challenge!");
-      setTimeout(() => setPassMessage(""), 2000);
-    } else {
-      setGameError('Incorrect sequence! Try again or replay the sequence.');
-      setPassMessage("❌ Try again!");
-      setTimeout(() => setPassMessage(""), 2000);
-      setUserSequence([]);
-    }
-  }
-
-  function handleShowVisualFallback() {
-    setShowVisualFallback(true);
-    setGameError('');
-    setUserSequence([]);
-  }
-
-  function handleVisualInput(idx) {
-    if (isPlaying) return;
-    setUserSequence(seq => {
-      const newSeq = [...seq, idx];
-      if (newSeq.length === sequenceOrder.length) {
-        setTimeout(() => checkSequence(newSeq), 300);
-      }
-      return newSeq;
-    });
-  }
-
   // Registration submit with trivia
   async function handleRegisterSubmit(e) {
     e.preventDefault();
@@ -167,13 +77,13 @@ export default function AuthModal({ onClose }) {
     }
 
     try {
-      // Check if username or email/phone already exists
+      // Check if username or email already exists
       const checkRes = await fetch('/api/users/check-exists', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: registerForm.username,
-          emailOrPhone: registerForm.emailOrPhone
+          email: registerForm.email
         })
       });
 
@@ -219,7 +129,7 @@ export default function AuthModal({ onClose }) {
           firstName: registerForm.firstName,
           lastName: registerForm.lastName,
           username: registerForm.username,
-          emailOrPhone: registerForm.emailOrPhone,
+          email: registerForm.email,
           password: registerForm.password,
           trivia: hashedTrivia
         })
@@ -268,13 +178,13 @@ export default function AuthModal({ onClose }) {
     setLoginError("");
     setLoginLoading(true);
 
-    // Get user from backend by email/phone (simulate)
+    // Get user from backend by email (simulate)
     let user;
     try {
       const userRes = await fetch('/api/users/get-by-contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emailOrPhone: registerForm.emailOrPhone })
+        body: JSON.stringify({ email: registerForm.email })
       });
       user = await userRes.json();
     } catch {
@@ -305,13 +215,13 @@ export default function AuthModal({ onClose }) {
     setLoginError("");
     setLoginLoading(true);
 
-    // Get user from backend by email/phone (simulate)
+    // Get user from backend by email (simulate)
     let user;
     try {
       const userRes = await fetch('/api/users/get-by-contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emailOrPhone: registerForm.emailOrPhone })
+        body: JSON.stringify({ email: registerForm.email })
       });
       user = await userRes.json();
     } catch {
@@ -332,6 +242,43 @@ export default function AuthModal({ onClose }) {
       setLoginError("Incorrect password. Try again.");
     }
     setLoginLoading(false);
+  }
+
+  // Email validation handler
+  function handleEmailBlur(e) {
+    setShowContactHint(false);
+    if (!e.target.value.includes("@")) {
+      setEmailError("please enter a valid email address");
+    } else {
+      setEmailError("");
+    }
+  }
+
+  function handleEmailChange(e) {
+    setRegisterForm(f => ({ ...f, email: e.target.value }));
+    if (emailError && e.target.value.includes("@")) {
+      setEmailError("");
+    }
+  }
+
+  // Username validation handler
+  function handleUsernameChange(e) {
+    const value = e.target.value;
+    setRegisterForm(f => ({ ...f, username: value }));
+    setUsernameValid({
+      capital: /^[A-Z]/.test(value),
+      noSpaces: !/\s/.test(value) && value.length > 0
+    });
+  }
+
+  // Password validation handler
+  function handlePasswordChange(e) {
+    const value = e.target.value;
+    setRegisterForm(f => ({ ...f, password: value }));
+    setPasswordValid({
+      capital: /[A-Z]/.test(value),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(value)
+    });
   }
 
   return (
@@ -465,176 +412,107 @@ export default function AuthModal({ onClose }) {
               </div>
             ) : (
               tab === 'register' ? (
-                showGame ? (
-                  <div>
-                    <h3 style={{ margin: '0 0 18px 0', fontWeight: 700, color: '#350b0f', fontSize: 22 }}>
-                      Listen to the sequence of choruses and repeat it by clicking the buttons below.
-                    </h3>
-                    <button
-                      onClick={playSequence}
-                      disabled={isPlaying}
-                      style={{
-                        marginBottom: 16,
-                        background: '#e1bb3e',
-                        color: '#350b0f',
-                        border: 'none',
-                        borderRadius: 8,
-                        padding: '10px 24px',
-                        fontWeight: 700,
-                        fontSize: 16,
-                        cursor: isPlaying ? 'not-allowed' : 'pointer'
-                      }}
-                    >
-                      {isPlaying
-                        ? "Playing..."
-                        : sequencePlayed
-                          ? "Replay Sequence"
-                          : "Play Sequence"}
-                    </button>
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 18, justifyContent: 'center' }}>
-                      {audioClips.map((clip, idx) => (
-                        <button
-                          key={clip.name}
-                          onClick={() => handleUserInput(idx)}
-                          disabled={isPlaying}
-                          style={{
-                            background: userSequence.includes(idx) ? '#e1bb3e' : '#fff',
-                            border: '2px solid #e1bb3e',
-                            borderRadius: 8,
-                            padding: '12px 18px',
-                            fontWeight: 700,
-                            fontSize: 16,
-                            color: '#350b0f',
-                            cursor: isPlaying ? 'not-allowed' : 'pointer',
-                            opacity: userSequence.includes(idx) ? 0.7 : 1
-                          }}
-                        >
-                          {clip.name}
-                        </button>
-                      ))}
+                // Registration form (no audio game)
+                <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }} onSubmit={handleRegisterSubmit}>
+                  <input
+                    type="text"
+                    placeholder="First Name"
+                    value={registerForm.firstName}
+                    onChange={e => setRegisterForm(f => ({ ...f, firstName: e.target.value }))}
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: 8,
+                      border: '1px solid #e9c4b4',
+                      fontSize: 16,
+                      marginBottom: 8
+                    }}
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Last Name"
+                    value={registerForm.lastName}
+                    onChange={e => setRegisterForm(f => ({ ...f, lastName: e.target.value }))}
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: 8,
+                      border: '1px solid #e9c4b4',
+                      fontSize: 16,
+                      marginBottom: 8
+                    }}
+                    required
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={registerForm.email}
+                    onChange={handleEmailChange}
+                    onFocus={() => setShowContactHint(true)}
+                    onBlur={handleEmailBlur}
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: 8,
+                      border: '1px solid #e9c4b4',
+                      fontSize: 16,
+                      marginBottom: 8
+                    }}
+                    required
+                  />
+                  {emailError && (
+                    <div style={{
+                      color: '#b71c1c',
+                      fontSize: 14,
+                      marginBottom: 8,
+                      background: '#fffbe7',
+                      borderRadius: 6,
+                      padding: '6px 10px'
+                    }}>
+                      {emailError}
                     </div>
-                    <button
-                      onClick={handleShowVisualFallback}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#9b1c23',
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
-                        marginBottom: 8
-                      }}
-                    >
-                      Can't hear? Use visual fallback
-                    </button>
-                    {showVisualFallback && (
-                      <div>
-                        <h4 style={{ color: '#350b0f', marginBottom: 8 }}>Repeat the sequence visually:</h4>
-                        <div style={{ display: 'flex', gap: 16, marginBottom: 18, justifyContent: 'center' }}>
-                          {audioClips.map((clip, idx) => (
-                            <button
-                              key={clip.name}
-                              onClick={() => handleVisualInput(idx)}
-                              style={{
-                                background: userSequence.includes(idx) ? '#e1bb3e' : '#fff',
-                                border: '2px solid #e1bb3e',
-                                borderRadius: 8,
-                                padding: '12px 18px',
-                                fontWeight: 700,
-                                fontSize: 16,
-                                color: '#350b0f',
-                                cursor: 'pointer',
-                                opacity: userSequence.includes(idx) ? 0.7 : 1
-                              }}
-                            >
-                              {clip.name}
-                            </button>
-                          ))}
-                        </div>
-                        <div style={{ marginBottom: 8, color: '#888' }}>
-                          Sequence: {sequenceOrder.map(idx => audioClips[idx].name).join(' → ')}
-                        </div>
-                      </div>
-                    )}
-                    {gameError && <div style={{ color: 'red', marginBottom: 8 }}>{gameError}</div>}
-                    {passMessage && (
-                      <div style={{
-                        color: passMessage.startsWith("✅") ? "#2e7d32" : "#b71c1c",
-                        background: passMessage.startsWith("✅") ? "#e8f5e9" : "#ffebee",
-                        borderRadius: 8,
-                        padding: "8px 16px",
-                        marginBottom: 10,
-                        fontWeight: 700,
-                        fontSize: 18,
-                        textAlign: "center"
-                      }}>
-                        {passMessage}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }} onSubmit={handleStartGame}>
-                    <input
-                      type="text"
-                      placeholder="First Name"
-                      value={registerForm.firstName}
-                      onChange={e => setRegisterForm(f => ({ ...f, firstName: e.target.value }))}
-                      style={{
-                        padding: '12px 16px',
-                        borderRadius: 8,
-                        border: '1px solid #e9c4b4',
-                        fontSize: 16,
-                        marginBottom: 8
-                      }}
-                      required
-                    />
-                    <input
-                      type="text"
-                      placeholder="Last Name"
-                      value={registerForm.lastName}
-                      onChange={e => setRegisterForm(f => ({ ...f, lastName: e.target.value }))}
-                      style={{
-                        padding: '12px 16px',
-                        borderRadius: 8,
-                        border: '1px solid #e9c4b4',
-                        fontSize: 16,
-                        marginBottom: 8
-                      }}
-                      required
-                    />
-                    <input
-                      type="text"
-                      placeholder="Email or Phone Number"
-                      value={registerForm.emailOrPhone}
-                      onChange={e => setRegisterForm(f => ({ ...f, emailOrPhone: e.target.value }))}
-                      onFocus={() => setShowContactHint(true)}
-                      onBlur={() => setShowContactHint(false)}
-                      style={{
-                        padding: '12px 16px',
-                        borderRadius: 8,
-                        border: '1px solid #e9c4b4',
-                        fontSize: 16,
-                        marginBottom: 8
-                      }}
-                      required
-                    />
-                    {showContactHint && (
-                      <div style={{
-                        color: '#9b1c23',
+                  )}
+                  <input
+                    type="text"
+                    placeholder="Username"
+                    value={registerForm.username}
+                    onChange={handleUsernameChange}
+                    onFocus={() => setShowUsernameHint(true)}
+                    onBlur={() => setShowUsernameHint(false)}
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: 8,
+                      border: '1px solid #e9c4b4',
+                      fontSize: 16,
+                      marginBottom: 4
+                    }}
+                    required
+                  />
+                  {showUsernameHint && (
+                    <div style={{ marginBottom: 8 }}>
+                      <span style={{
+                        color: usernameValid.capital ? "#2e7d32" : "#b71c1c",
+                        fontWeight: 500,
                         fontSize: 14,
-                        marginBottom: 8,
-                        background: '#fffbe7',
-                        borderRadius: 6,
-                        padding: '6px 10px'
+                        marginRight: 12
                       }}>
-                        If entering a phone number, it must start with the country code (e.g. <b>+27</b>).<br />
-                        If entering an email, it must contain an <b>@</b> symbol.
-                      </div>
-                    )}
+                        {usernameValid.capital ? "✔" : "✖"} Starts with a capital letter
+                      </span>
+                      <span style={{
+                        color: usernameValid.noSpaces ? "#2e7d32" : "#b71c1c",
+                        fontWeight: 500,
+                        fontSize: 14
+                      }}>
+                        {usernameValid.noSpaces ? "✔" : "✖"} No spaces
+                      </span>
+                    </div>
+                  )}
+                  {/* Trivia questions */}
+                  {triviaQuestions.map(q => (
                     <input
+                      key={q.key}
                       type="text"
-                      placeholder="Username"
-                      value={registerForm.username}
-                      onChange={e => setRegisterForm(f => ({ ...f, username: e.target.value }))}
+                      placeholder={q.label}
+                      value={triviaAnswers[q.key]}
+                      onChange={e => setTriviaAnswers(a => ({ ...a, [q.key]: e.target.value }))}
                       style={{
                         padding: '12px 16px',
                         borderRadius: 8,
@@ -644,45 +522,64 @@ export default function AuthModal({ onClose }) {
                       }}
                       required
                     />
-                    {/* Trivia questions */}
-                    {triviaQuestions.map(q => (
-                      <input
-                        key={q.key}
-                        type="text"
-                        placeholder={q.label}
-                        value={triviaAnswers[q.key]}
-                        onChange={e => setTriviaAnswers(a => ({ ...a, [q.key]: e.target.value }))}
-                        style={{
-                          padding: '12px 16px',
-                          borderRadius: 8,
-                          border: '1px solid #e9c4b4',
-                          fontSize: 16,
-                          marginBottom: 8
-                        }}
-                        required
-                      />
-                    ))}
-                    {registerError && <div style={{ color: 'red', marginBottom: 8 }}>{registerError}</div>}
-                    <button
-                      type="submit"
-                      style={{
-                        background: 'linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)',
-                        color: '#350b0f',
-                        border: 'none',
-                        borderRadius: 8,
-                        padding: '12px 0',
-                        fontWeight: 700,
-                        fontSize: 18,
-                        cursor: 'pointer',
-                        marginTop: 8
-                      }}
-                    >
-                      Start Audio Game
-                    </button>
-                  </form>
-                )
+                  ))}
+                  <input
+                    type="password"
+                    placeholder="Set Password"
+                    value={registerForm.password}
+                    onChange={handlePasswordChange}
+                    onFocus={() => setShowPasswordHintBox(true)}
+                    onBlur={() => setShowPasswordHintBox(false)}
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: 8,
+                      border: '1px solid #e9c4b4',
+                      fontSize: 16,
+                      marginBottom: 4
+                    }}
+                    required
+                  />
+                  {showPasswordHintBox && (
+                    <div style={{ marginBottom: 8 }}>
+                      <span style={{
+                        color: passwordValid.capital ? "#2e7d32" : "#b71c1c",
+                        fontWeight: 500,
+                        fontSize: 14,
+                        marginRight: 12
+                      }}>
+                        {passwordValid.capital ? "✔" : "✖"} At least 1 capital letter
+                      </span>
+                      <span style={{
+                        color: passwordValid.special ? "#2e7d32" : "#b71c1c",
+                        fontWeight: 500,
+                        fontSize: 14
+                      }}>
+                        {passwordValid.special ? "✔" : "✖"} At least 1 special character
+                      </span>
+                    </div>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={registerLoading}
+                    style={{
+                      background: 'linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)',
+                      color: '#350b0f',
+                      border: 'none',
+                      borderRadius: 8,
+                      padding: '12px 0',
+                      fontWeight: 700,
+                      fontSize: 18,
+                      cursor: registerLoading ? 'not-allowed' : 'pointer',
+                      marginTop: 8,
+                      opacity: registerLoading ? 0.7 : 1
+                    }}
+                  >
+                    {registerLoading ? "Registering..." : "Register"}
+                  </button>
+                  {registerError && <div style={{ color: 'red', marginBottom: 8 }}>{registerError}</div>}
+                </form>
               ) : (
-                // Login form with trivia and password
+                // Login form with trivia and password (NO audio game here)
                 <div>
                   <h3 style={{ margin: '0 0 18px 0', fontWeight: 700, color: '#350b0f', fontSize: 22 }}>Welcome back!</h3>
                   <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }} onSubmit={
@@ -696,12 +593,12 @@ export default function AuthModal({ onClose }) {
                     }
                   }>
                     <input
-                      type="text"
-                      placeholder="Email or Phone Number"
-                      value={registerForm.emailOrPhone}
-                      onChange={e => setRegisterForm(f => ({ ...f, emailOrPhone: e.target.value }))}
+                      type="email"
+                      placeholder="Email"
+                      value={registerForm.email}
+                      onChange={handleEmailChange}
                       onFocus={() => setShowContactHint(true)}
-                      onBlur={() => setShowContactHint(false)}
+                      onBlur={handleEmailBlur}
                       style={{
                         padding: '12px 16px',
                         borderRadius: 8,
@@ -712,17 +609,16 @@ export default function AuthModal({ onClose }) {
                       required
                       disabled={showPasswordField}
                     />
-                    {showContactHint && (
+                    {emailError && (
                       <div style={{
-                        color: '#9b1c23',
+                        color: '#b71c1c',
                         fontSize: 14,
                         marginBottom: 8,
                         background: '#fffbe7',
                         borderRadius: 6,
                         padding: '6px 10px'
                       }}>
-                        If entering a phone number, it must start with the country code (e.g. <b>+27</b>).<br />
-                        If entering an email, it must contain an <b>@</b> symbol.
+                        {emailError}
                       </div>
                     )}
                     {!showPasswordField && loginTriviaIdx !== null && (
@@ -842,57 +738,6 @@ export default function AuthModal({ onClose }) {
                   </div>
                 </div>
               )
-            )}
-            {/* After game, show password set form */}
-            {tab === 'register' && !showGame && !registerLoading && !showSuccess && (
-              <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }} onSubmit={handleRegisterSubmit}>
-                <input
-                  type="password"
-                  placeholder="Set Password"
-                  value={registerForm.password}
-                  onChange={e => setRegisterForm(f => ({ ...f, password: e.target.value }))}
-                  onFocus={() => setShowPasswordHint(true)}
-                  onBlur={() => setShowPasswordHint(false)}
-                  style={{
-                    padding: '12px 16px',
-                    borderRadius: 8,
-                    border: '1px solid #e9c4b4',
-                    fontSize: 16,
-                    marginBottom: 8
-                  }}
-                  required
-                />
-                {showPasswordHint && (
-                  <div style={{
-                    color: '#9b1c23',
-                    fontSize: 14,
-                    marginBottom: 8,
-                    background: '#fffbe7',
-                    borderRadius: 6,
-                    padding: '6px 10px'
-                  }}>
-                    Password must have at least <b>1 capital letter</b> and <b>1 special character</b> (like <b>!</b> or <b>@</b>).
-                  </div>
-                )}
-                <button
-                  type="submit"
-                  disabled={registerLoading}
-                  style={{
-                    background: 'linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)',
-                    color: '#350b0f',
-                    border: 'none',
-                    borderRadius: 8,
-                    padding: '12px 0',
-                    fontWeight: 700,
-                    fontSize: 18,
-                    cursor: 'pointer',
-                    marginTop: 8,
-                    opacity: registerLoading ? 0.7 : 1
-                  }}
-                >
-                  {registerLoading ? "Registering..." : "Set Password & Register"}
-                </button>
-              </form>
             )}
           </div>
         </div>
