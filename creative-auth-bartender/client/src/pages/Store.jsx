@@ -108,9 +108,19 @@ const Store = () => {
             <div key={product._id} className="product-wrapper">
               <ProductCard product={product} />
               <div className="product-actions">
-                <button onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}>Edit</button>
-                <button onClick={() => handleDeleteProduct(product._id)} className="delete-button">Delete</button>
-              </div>
+  <button
+    onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}
+    className="edit-button"
+  >
+    Edit
+  </button>
+  <button
+    onClick={() => handleDeleteProduct(product._id)}
+    className="delete-button"
+  >
+    Delete
+  </button>
+</div>
             </div>
           ))}
         </div>
@@ -133,7 +143,7 @@ const Store = () => {
           }}
         />
       )}
-      <Footer />
+      <Footer className="store-footer" />
     </div>
   );
 };
