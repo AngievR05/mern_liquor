@@ -32,8 +32,10 @@ const ProductCard = ({ product }) => {
       <div className="product-info">
         <h3 className="product-title">{productData.title}</h3>
         <p className="product-price">R {productData.price.toFixed(2)}</p>
+        <div className="rating-likes">
         <p className="product-rating">⭐ {productData.averageRating?.toFixed(2) || 0}</p>
         <p className="product-likes">❤️ {productData.likes || 0} Likes</p>
+        </div>
 
         <button
           onClick={(e) => { e.stopPropagation(); addToCart(productData); }}

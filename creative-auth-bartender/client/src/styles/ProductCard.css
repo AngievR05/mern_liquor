@@ -266,7 +266,30 @@
 }
 
 .product-likes {
-  font-size: 14px;
-  color: #e35537;
+  color: var(--White) !important;
+  margin-top: ;
   font-weight: bold;
+}
+
+.rating-likes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;      /* Ensures vertical alignment */
+  gap: 12px;                /* Space between rating and likes */
+  margin: 0;
+  padding: 0;
+  justify-content: space-between; /* Distributes space evenly */
+}
+
+
+.product-rating,
+.product-likes {
+  margin: 0;                /* Remove default margins */
+  padding: 0;
+  font-size: 14px;
+  color: var(--White) !important;
+  font-weight: bold;
+  line-height: 1.2;         /* Ensures consistent line height */
+  display: flex;
+  align-items: center;      /* Ensures icon/text are centered */
 }
