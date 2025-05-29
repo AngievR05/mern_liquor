@@ -1,19 +1,15 @@
-.footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  /* keep your existing styles */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  height: 298px;
-  flex-shrink: 0;
-  background: #120204;
-  box-shadow: inset 0 30px 100px #000;
-  z-index: 1000; /* so it stays on top */
-}
+.footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    height: 298px;
+    flex-shrink: 0;
+    width: 100%;
+    background: #120204;
+    box-shadow: inset 0 30px 100px #000;
+    margin-bottom: 0px;
+} 
 
 .footer-links{
     display: flex;
