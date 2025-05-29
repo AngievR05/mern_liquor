@@ -9,6 +9,8 @@
     --White: #fffff0;
     --font-family-headings: 'Gloock', serif;
     --font-family-body: 'Merriweather', serif;
+    --button-shadow:box-shadow: inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7);
+    --button-shadow-hover: inset 4px 4px 10px rgba(0, 0, 0, 0.72), inset -2px -2px 10px rgba(255, 255, 255, 0.3);
   }
 
   @import url('https://fonts.googleapis.com/css2?family=Gloock&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap');

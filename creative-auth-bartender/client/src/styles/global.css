@@ -4,6 +4,8 @@
     --gold: #E0BA3E;
     --orange: #E35537;
     --beige: #E9C4B4;
+    --button-shadow:box-shadow: inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7);
+    --button-shadow-hover: inset 4px 4px 10px rgba(0, 0, 0, 0.72), inset -2px -2px 10px rgba(255, 255, 255, 0.3);
   }
   
 body {
