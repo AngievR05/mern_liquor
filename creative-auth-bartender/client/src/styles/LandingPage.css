@@ -196,6 +196,10 @@ body{
   transform: scale(0.99);
 }
 
+.Read-more-button:hover a {
+  transform: translateY(2px); /* Move text up on hover */
+}
+
 .our-products-section{
   display: flex;
   flex-direction: row;

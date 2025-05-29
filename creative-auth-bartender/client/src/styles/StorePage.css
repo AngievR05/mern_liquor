@@ -81,6 +81,12 @@
 
 .sidebar {
   width: 250px;
+  position: sticky;
+  top: 1rem;         /* Adjust this value to match your left margin/gap */
+  align-self: flex-start; /* This should match your .store-layout gap or left margin */
+  /* Optional: add a background and z-index for better appearance */
+  background: #1a0406;
+  z-index: 10;
 }
 
 .product-grid {
