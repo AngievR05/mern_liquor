@@ -86,16 +86,16 @@ const Store = () => {
 
   const breakpointCols = {
     default: 4,
-    1100: 3,
-    700: 2,
-    500: 1
+    1920: 3,
+    1100: 2,
+    700: 1
   };
 
   function getCurrentCols() {
     const width = window.innerWidth;
-    if (width <= 500) return 1;
-    if (width <= 700) return 2;
-    if (width <= 1100) return 3;
+    if (width <= 700) return 1;
+    if (width <= 1100) return 2;
+    if (width <= 1920) return 3;
     return 4;
   }
 
@@ -123,7 +123,7 @@ const Store = () => {
       <div className="store-layout">
         <div className="sidebar">
           <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} />
+          <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} className="filter-panel" />
           <button
   className="store-add-product-btn"
   onClick={() => setShowAddModal(true)}
@@ -133,14 +133,14 @@ const Store = () => {
         </div>
         {useMasonry ? (
           <Masonry
-  breakpointCols={breakpointCols}
-  className="product-grid"
-  columnClassName="product-grid-column"
->
-  {filteredProducts.map((product) => (
-    <div key={product._id} className="product-wrapper">
-      <ProductCard product={product} />
-      <div className="product-actions">
+            breakpointCols={breakpointCols}
+            className="product-grid"
+            columnClassName="product-grid-column"
+          >
+            {filteredProducts.map((product) => (
+              <div key={product._id} className="product-wrapper">
+                <ProductCard product={product} />
+                <div className="product-actions">
   <button
     onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}
     className="edit-button"
@@ -160,9 +160,9 @@ const Store = () => {
     Reviews
   </button>
 </div>
-    </div>
-  ))}
-</Masonry>
+              </div>
+            ))}
+          </Masonry>
         ) : (
           <div className="product-grid normal-grid">
             {filteredProducts.map((product) => (

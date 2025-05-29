@@ -80,13 +80,17 @@
 }
 
 .sidebar {
-  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
   position: sticky;
   top: 1rem;         /* Adjust this value to match your left margin/gap */
   align-self: flex-start; /* This should match your .store-layout gap or left margin */
   /* Optional: add a background and z-index for better appearance */
-  background: #1a0406;
   z-index: 10;
+}
+
+.filter-panel{
+  width: 100%;
 }
 
 .product-grid {
@@ -128,8 +132,12 @@
 
 .product-grid {
   display: flex;
-  margin-left: -2rem; /* gutter size offset */
+  /* flex-wrap: wrap; */
+  /* gap: 2rem; */
   width: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-left: 0 -2px; /* gutter size */
 }
 .product-grid-column {
   padding-left: 2rem; /* gutter size */
@@ -137,6 +145,10 @@
 }
 .product-wrapper {
   margin-bottom: 2rem;
+  max-width: 300px;
+  min-width: 300px;
+  flex: 1 0 300px;
+  box-sizing: border-box;
 }
 
 .reviews-modal-overlay {
@@ -151,16 +163,9 @@
 
 .normal-grid {
   display: flex;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: auto;
-  width: 100%;
-  margin: 0 auto;
   flex-wrap: wrap;
+  gap: 2rem;
+  width: 100%;
   justify-content: flex-start;
   align-items: flex-start;
-}
-
-
-.product-actions{
-  max-width: 300px;
 }
