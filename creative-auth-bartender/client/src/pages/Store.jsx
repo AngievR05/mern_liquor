@@ -8,6 +8,7 @@ import AddProductModal from '../components/AddProductModal';
 import EditProductModal from '../components/EditProductModal';
 import ProfileModal from '../components/ProfileModal';
 import '../styles/StorePage.css';
+import Masonry from 'react-masonry-css';
 
 const Store = () => {
   // Get user/profilePic from localStorage for nav
@@ -103,11 +104,20 @@ const Store = () => {
   Add Product
 </button>
         </div>
-        <div className="product-grid">
-          {filteredProducts.map((product) => (
-            <div key={product._id} className="product-wrapper">
-              <ProductCard product={product} />
-              <div className="product-actions">
+        <Masonry
+  breakpointCols={{
+    default: 4,
+    1100: 3,
+    700: 2,
+    500: 1
+  }}
+  className="product-grid"
+  columnClassName="product-grid-column"
+>
+  {filteredProducts.map((product) => (
+    <div key={product._id} className="product-wrapper">
+      <ProductCard product={product} />
+      <div className="product-actions">
   <button
     onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}
     className="edit-button"
@@ -121,9 +131,9 @@ const Store = () => {
     Delete
   </button>
 </div>
-            </div>
-          ))}
-        </div>
+    </div>
+  ))}
+</Masonry>
       </div>
       {showAddModal && <AddProductModal onClose={() => setShowAddModal(false)} onSave={handleAddProduct} />}
       {showEditModal && <EditProductModal product={selectedProduct} onClose={() => setShowEditModal(false)} onSave={handleEditProduct} />}

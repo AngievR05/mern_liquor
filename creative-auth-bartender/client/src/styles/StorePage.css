@@ -84,10 +84,12 @@
 }
 
 .product-grid {
-  flex: 1;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
+  grid-auto-flow: dense;
+  /* Add masonry layout */
+  grid-template-rows: masonry;
 }
 
 
@@ -115,4 +117,18 @@
   color: var(--White);
   transform: scale(0.98);
   box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.72), inset -2px -2px 10px rgba(255, 255, 255, 0.3);
+}
+
+
+.product-grid {
+  display: flex;
+  margin-left: -2rem; /* gutter size offset */
+  width: auto;
+}
+.product-grid-column {
+  padding-left: 2rem; /* gutter size */
+  background-clip: padding-box;
+}
+.product-wrapper {
+  margin-bottom: 2rem;
 }
