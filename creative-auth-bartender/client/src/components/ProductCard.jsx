@@ -35,7 +35,10 @@ const ProductCard = ({ product }) => {
         <p className="product-rating">⭐ {productData.averageRating?.toFixed(2) || 0}</p>
         <p className="product-likes">❤️ {productData.likes || 0} Likes</p>
 
-        <button onClick={(e) => { e.stopPropagation(); addToCart(productData); }} className="add-to-cart-btn">
+        <button
+          onClick={(e) => { e.stopPropagation(); addToCart(productData); }}
+          className="add-to-cart-btn"
+        >
           Add to Cart
         </button>
 
@@ -44,7 +47,7 @@ const ProductCard = ({ product }) => {
         </button>
 
         {expanded && (
-          <div className="product-extra">
+          <div className="product-extra" onClick={(e) => e.stopPropagation()}>
             <p className="product-description">{productData.description}</p>
             <p className="product-category">Category: {productData.category}</p>
             <p className="product-stock">Stock: {productData.stock}</p>
