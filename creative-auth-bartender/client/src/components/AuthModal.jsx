@@ -9,6 +9,7 @@ import ginJuiceAudio from '../assets/audio/gaj.mp3';
 import cheersAudio from '../assets/audio/cheers.mp3';
 import sha256 from 'crypto-js/sha256'; // npm install crypto-js
 import ProfileModal from './ProfileModal'; // <-- import the new profile modal component
+import { useNavigate } from 'react-router-dom';
 
 export default function AuthModal({ onClose }) {
   const [tab, setTab] = useState('login');
@@ -53,6 +54,7 @@ export default function AuthModal({ onClose }) {
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginPassword, setLoginPassword] = useState("");
+  const navigate = useNavigate();
 
   function shuffleArray(array) {
     // Fisher-Yates shuffle
@@ -217,34 +219,39 @@ export default function AuthModal({ onClose }) {
     setLoginError("");
     setLoginLoading(true);
 
-    // Get user by email only
-    let user;
+    // Log the password being sent for debugging
+    console.log('DEBUG: Password sent to backend:', loginPassword);
+
+    // Use the dedicated /login endpoint for password check
     const email = loginContact.trim().toLowerCase();
     try {
-      const res = await fetch('/api/users/get-by-contact', {
+      const res = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email
+          email,
+          password: loginPassword // This must be the plain password, not a hash!
         })
       });
-      user = await res.json();
-      if (!user || !user.password) {
+      if (!res.ok) {
+        const data = await res.json();
+        setLoginError(data.message || "Incorrect email or password.");
+        setLoginLoading(false);
+        return;
+      }
+      const user = await res.json();
+      if (!user || !user.email) {
         setLoginError("User not found.");
         setLoginLoading(false);
         return;
       }
-      if (loginPassword !== user.password) {
-        setLoginError("Incorrect password. Try again.");
-        setLoginLoading(false);
-        return;
-      }
-      // Success: pass user to parent
+      // Success: pass user to parent and redirect to homepage
       const userObj = {
         username: user.username,
         email: user.email,
       };
       onClose(userObj);
+      navigate("/landing-page"); // Redirect to homepage after successful login
     } catch {
       setLoginError("A server error occurred. Please try again later.");
     }

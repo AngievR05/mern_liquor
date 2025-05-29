@@ -34,7 +34,12 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    // Hash password with bcrypt
+    // Enforce password conditions: at least 1 capital letter and 1 special character
+    if (!/[A-Z]/.test(password) || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return res.status(400).json({ message: 'Password must have at least 1 capital letter and 1 special character.' });
+    }
+
+    // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Hash trivia answers with sha256 (or bcrypt if you want, but keep consistent)
@@ -42,7 +47,7 @@ router.post('/register', async (req, res) => {
     if (trivia && typeof trivia === 'object') {
       for (const key in trivia) {
         if (trivia[key]) {
-          hashedTrivia[key] = trivia[key]; // Already hashed on frontend, or use sha256 here if needed
+          hashedTrivia[key] = trivia[key]; // Already hashed on frontend, or hash here if needed
         }
       }
     }
@@ -52,7 +57,7 @@ router.post('/register', async (req, res) => {
       username,
       firstName,
       lastName,
-      password: hashedPassword,
+      password: hashedPassword, // Save hashed password
       trivia: hashedTrivia
     });
     res.status(201).json({
@@ -67,19 +72,50 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
+// Remove password from /get-by-contact response and add a dedicated login endpoint
+router.post('/get-by-contact', async (req, res) => {
+  const { email } = req.body;
+  try {
+    if (!email) {
+      return res.status(400).json({ message: 'No email provided' });
+    }
+    const cleanEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    // Do NOT send password hash to client
+    res.json({
+      username: user.username,
+      email: user.email,
+      // Do not send password!
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Add a dedicated login endpoint that checks password securely
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-
-  const user = await User.findOne({ email });
-  if (user && await user.matchPassword(password)) {
+  try {
+    const cleanEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
     res.json({
       _id: user._id,
-      email: user.email,
-      token: generateToken(user._id)
+      username: user.username,
+      email: user.email
+      // Add token or other info if needed
     });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error during login' });
   }
 });
 
@@ -101,38 +137,6 @@ router.post('/check-exists', async (req, res) => {
     res.json({ exists: !!user });
   } catch (err) {
     console.error('check-exists error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Add this route to allow trivia lookup by email only
-// Password check in login: compare with bcrypt
-router.post('/get-by-contact', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    if (!email) {
-      return res.status(400).json({ message: 'No email provided' });
-    }
-    const cleanEmail = email.trim().toLowerCase();
-    const user = await User.findOne({ email: cleanEmail });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // If password is provided, check it
-    if (password) {
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(401).json({ message: 'Incorrect password' });
-      }
-    }
-
-    res.json({
-      username: user.username,
-      email: user.email,
-      password: user.password // Only for demo; in production, never send password!
-    });
-  } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
 });
