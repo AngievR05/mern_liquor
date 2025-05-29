@@ -1,6 +1,18 @@
 import '../styles/FilterPanel.css';
 
-const categories = ['All', 'Beer', 'Wine', 'Whiskey'];
+const categories = [
+  'All',
+  'Beer',
+  'Red Wine',
+  'White Wine',
+  'Rose',
+  'Whiskey',
+  'Brandy',
+  'Vodka',
+  'Tequila',
+  'Rum',
+  'Gin'
+];
 
 const FilterPanel = ({ categoryFilter, setCategoryFilter }) => {
   return (
