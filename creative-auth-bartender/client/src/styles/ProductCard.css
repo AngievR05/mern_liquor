@@ -31,9 +31,9 @@
   margin: 0 auto;
 }
 
-.product-card:hover .product-image {
+/* .product-card:hover .product-image { */
   /* border: 10px solid rgb(16, 2, 2) !important; */
-}
+/* } */
 
 .product-info {
   padding: 1rem;
@@ -242,4 +242,25 @@
   background-color: var(--Anzac);
   color: var(--White);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.like-btn {
+  padding: 6px 12px;
+  background-color: #e35537;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.like-btn:hover {
+  opacity: 0.9;
+}
+
+.product-likes {
+  font-size: 14px;
+  color: #e35537;
+  font-weight: bold;
 }

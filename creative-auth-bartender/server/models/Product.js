@@ -17,6 +17,7 @@ const productSchema = new mongoose.Schema(
     image: { type: String, required: true },
     reviews: [reviewSchema],
     averageRating: { type: Number, default: 0 },
+    likes: { type: Number, default: 0 }, // Added field for Like system
   },
   { timestamps: true }
 );

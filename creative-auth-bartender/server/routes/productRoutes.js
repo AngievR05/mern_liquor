@@ -64,4 +64,20 @@ router.post('/:id/reviews', async (req, res) => {
   }
 });
 
+// Like a product
+router.patch('/:id/like', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    product.likes = (product.likes || 0) + 1;
+
+    const updated = await product.save();
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 export default router;
