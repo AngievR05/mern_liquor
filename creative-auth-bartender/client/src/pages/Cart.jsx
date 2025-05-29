@@ -2,8 +2,9 @@ import { useCart } from '../context/CartContext';
 import '../styles/CartPage.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom'; // ✅ Import Link
 
-const CartPage = () => {
+const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -44,6 +45,9 @@ const CartPage = () => {
             <div className="cart-summary">
               <h3>Total: R {total.toFixed(2)}</h3>
               <button onClick={clearCart} className="clear-cart-btn">Clear Cart</button>
+              <Link to="/checkout">
+                <button className="checkout-btn">Proceed to Checkout</button>
+              </Link>
             </div>
           </>
         )}
@@ -53,4 +57,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default Cart; 

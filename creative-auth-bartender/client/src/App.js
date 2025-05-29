@@ -11,7 +11,7 @@ import Store from './pages/Store';
 import About from './pages/About';
 import Checkout from './pages/Checkout';
 import ProductDetails from './pages/ProductDetails';
-import CartPage from './pages/Cart'; // Use the CartPage component
+import Cart from './pages/Cart'; 
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -28,9 +28,9 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/about" element={<About />} />
         <Route path="/store" element={<Store />} />
+        <Route path="/cart" element={<Cart />} /> 
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </Router>
   );
