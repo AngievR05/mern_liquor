@@ -22,10 +22,11 @@ const FilterPanel = ({ categoryFilter, setCategoryFilter }) => {
         {categories.map((cat) => (
           <li key={cat} className="filter-option">
             <button
+              type="button"
               className={`category-button ${categoryFilter === cat ? 'active' : ''}`}
               onClick={() => setCategoryFilter(cat)}
             >
-              {cat}
+            {cat}
             </button>
           </li>
         ))}
