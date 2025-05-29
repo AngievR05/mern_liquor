@@ -94,10 +94,12 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  margin-right: 0px;
 }
 
 .clear-cart-btn:hover {
   opacity: 0.9;
+  background-color: #e35537;
 }
 
 .empty-message {
@@ -113,17 +115,17 @@
 }
 
 .checkout-btn {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.75rem 1.5rem;
+  padding: 10px 14px;
   background-color: #9b1c23;
-  color: #fff;
-  text-align: center;
+  color: white;
+  border: none;
   border-radius: 4px;
-  text-decoration: none;
-  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 20px;
 }
 
 .checkout-btn:hover {
   background-color: #e35537;
+  opacity: 0.9;
 }
