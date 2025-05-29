@@ -51,8 +51,10 @@ const ProductCard = ({ product }) => {
         {expanded && (
           <div className="product-extra" onClick={(e) => e.stopPropagation()}>
             <p className="product-description">{productData.description}</p>
+            <div className="category-stock">
             <p className="product-category">Category: {productData.category}</p>
             <p className="product-stock">Stock: {productData.stock}</p>
+            </div>
 
             <h4>Reviews:</h4>
             <ul>
