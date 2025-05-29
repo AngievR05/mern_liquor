@@ -143,8 +143,18 @@
   justify-content: center;
 }
 
-.reviews-modal-overlay,
-.reviews-modal-overlay:hover {
-  background: rgba(0,0,0,0.7) !important;
-  transition: none !important;
+.normal-grid {
+  display: flex;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: auto;
+  width: 100%;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+
+.product-actions{
+  max-width: 300px;
 }

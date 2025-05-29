@@ -84,6 +84,31 @@ const Store = () => {
     }
   };
 
+  const breakpointCols = {
+    default: 4,
+    1100: 3,
+    700: 2,
+    500: 1
+  };
+
+  function getCurrentCols() {
+    const width = window.innerWidth;
+    if (width <= 500) return 1;
+    if (width <= 700) return 2;
+    if (width <= 1100) return 3;
+    return 4;
+  }
+
+  const [currentCols, setCurrentCols] = useState(getCurrentCols());
+
+  useEffect(() => {
+    const handleResize = () => setCurrentCols(getCurrentCols());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const useMasonry = filteredProducts.length > currentCols;
+
   return (
     <div className="store-page">
       <nav>
@@ -106,13 +131,9 @@ const Store = () => {
   Add Product
 </button>
         </div>
-        <Masonry
-  breakpointCols={{
-    default: 4,
-    1100: 3,
-    700: 2,
-    500: 1
-  }}
+        {useMasonry ? (
+          <Masonry
+  breakpointCols={breakpointCols}
   className="product-grid"
   columnClassName="product-grid-column"
 >
@@ -142,6 +163,35 @@ const Store = () => {
     </div>
   ))}
 </Masonry>
+        ) : (
+          <div className="product-grid normal-grid">
+            {filteredProducts.map((product) => (
+              <div key={product._id} className="product-wrapper">
+                <ProductCard product={product} />
+                <div className="product-actions">
+                  <button
+                    onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}
+                    className="edit-button"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteProduct(product._id)}
+                    className="delete-button"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                    className="reviews-button"
+                  >
+                    Reviews
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       {showAddModal && <AddProductModal onClose={() => setShowAddModal(false)} onSave={handleAddProduct} />}
       {showEditModal && <EditProductModal product={selectedProduct} onClose={() => setShowEditModal(false)} onSave={handleEditProduct} />}

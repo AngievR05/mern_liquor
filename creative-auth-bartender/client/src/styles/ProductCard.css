@@ -14,6 +14,7 @@
   color: white;
   padding: 1rem;
   max-width: 300px; /* Adjust as needed */
+  min-width: 300px; /* Adjust as needed */
 }
 
 .product-card:hover {
