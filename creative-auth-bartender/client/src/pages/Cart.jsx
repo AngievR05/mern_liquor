@@ -48,7 +48,7 @@ const CartPage = () => {
           </>
         )}
       </div>
-      <Footer />
+      <Footer className="cart-footer" />
     </div>
   );
 };

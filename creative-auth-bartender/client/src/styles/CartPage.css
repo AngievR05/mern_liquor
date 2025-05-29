@@ -1,10 +1,12 @@
 .cart-page {
-  background-color: #000;
-  color: white;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #000;
 }
 
 .cart-container {
+  flex: 1 0 auto;
   max-width: 900px;
   margin: 0 auto;
   padding: 40px 20px;
@@ -103,4 +105,9 @@
   margin-top: 40px;
   font-size: 18px;
   color: #888;
+}
+
+.cart-footer{
+  margin-top: auto;
+  width: 100%;
 }
