@@ -1,4 +1,7 @@
 import { useCart } from '../context/CartContext';
+import '../styles/CartPage.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const CartPage = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -7,29 +10,45 @@ const CartPage = () => {
 
   return (
     <div className="cart-page">
-      <h2>Your Cart</h2>
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <>
-          <ul>
-            {cartItems.map(item => (
-              <li key={item._id}>
-                <strong>{item.title}</strong> - R {item.price.toFixed(2)} x {item.quantity}
-                <input
-                  type="number"
-                  min="1"
-                  value={item.quantity}
-                  onChange={(e) => updateQuantity(item._id, Number(e.target.value))}
-                />
-                <button onClick={() => removeFromCart(item._id)}>Remove</button>
-              </li>
-            ))}
-          </ul>
-          <h3>Total: R {total.toFixed(2)}</h3>
-          <button onClick={clearCart}>Clear Cart</button>
-        </>
-      )}
+      <Navbar />
+      <div className="cart-container">
+        <h2>Your Cart</h2>
+        {cartItems.length === 0 ? (
+          <p className="empty-message">Your cart is empty. Head to the store to add some products!</p>
+        ) : (
+          <>
+            <ul className="cart-list">
+              {cartItems.map(item => (
+                <li key={item._id} className="cart-item">
+                  <div className="cart-item-info">
+                    <img src={item.image} alt={item.title} className="cart-item-image" />
+                    <div>
+                      <strong>{item.title}</strong>
+                      <p>R {item.price.toFixed(2)}</p>
+                    </div>
+                  </div>
+                  <div className="cart-item-actions">
+                    <label>Qty:</label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.quantity}
+                      onChange={(e) => updateQuantity(item._id, Number(e.target.value))}
+                    />
+                    <button onClick={() => removeFromCart(item._id)} className="remove-btn">Remove</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="cart-summary">
+              <h3>Total: R {total.toFixed(2)}</h3>
+              <button onClick={clearCart} className="clear-cart-btn">Clear Cart</button>
+            </div>
+          </>
+        )}
+      </div>
+      <Footer />
     </div>
   );
 };
