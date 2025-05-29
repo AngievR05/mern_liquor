@@ -7,10 +7,10 @@ import fs from 'fs';
 import multer from 'multer';
 
 import productRoutes from './routes/productRoutes.js';
-import userRoutes from './routes/userRoutes.js'; 
+import userRoutes from './routes/userRoutes.js';
+import orderRoutes from './routes/orderRoutes.js'; // New import for orders
 
-dotenv.config(); // Load .env
-
+dotenv.config();
 const app = express();
 const __dirname = path.resolve();
 
@@ -18,7 +18,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client/public')));
 
-// Debug log: Check if MONGO_URI is loading
 console.log('MONGO_URI:', process.env.MONGO_URI);
 
 // Multer upload setup
@@ -39,9 +38,10 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 
 // API routes
 app.use('/api/products', productRoutes);
-app.use('/api/users', userRoutes); // <-- Add this line
+app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes); // Add order route
 
-// Connect to MongoDB Atlas
+// MongoDB Atlas connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('MongoDB Atlas connected');
