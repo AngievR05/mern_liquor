@@ -57,19 +57,42 @@ body{
   margin: 0 10px;
 }
 
-.navLinksRight{
+.navLinksRight {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   flex-direction: row;
-  margin-right: 180px;
+  margin-right: 80px; /* adjust as needed */
+  gap: 16px; /* space between cart and button */
 }
+
 .navLinksRight a{
   color: var(--White);
   text-decoration: none;
   margin: 0 10px;
 }
 
+.navbar-login-btn,
+.navbar-profile-btn {
+  background: var(--White);
+  color: var(--Aubergine);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  margin-left: 0;
+  width: fit-content;
+  height: fit-content;
+}
+
+
+.navbar-login-btn:hover,
+.navbar-profile-btn:hover {
+  background: var(--Anzac);
+  color: var(--White);
+}
 
 .gloock {
   font-family: "Gloock", serif;

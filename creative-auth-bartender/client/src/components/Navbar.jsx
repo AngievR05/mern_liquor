@@ -27,49 +27,41 @@ export default function Navbar({ onLoginClick, showLogin = true, showProfile = f
       </div>
 
       <div className="navLinksRight">
-        <div className="cart-icon" style={{ position: "relative", marginTop: "8px", cursor: "pointer" }}>
-          <a href="/cart">
-            <FaShoppingCart size={24} />
-            {/* {cartCount > 0 && (
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '-6px',
-                  right: '-6px',
-                  background: '#e35537',
-                  color: 'white',
-                  borderRadius: '50%',
-                  width: '18px',
-                  height: '18px',
-                  fontSize: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold',
-                }}
-              >
-                {cartCount}
-              </span>
-            )} */}
-          </a>
-        </div>
-      </div>
-
-      <div className="navbar-actions">
-        {showProfile && (
-          <button className="navbar-profile-btn" onClick={onProfileClick} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {profilePic && (
-              <img src={profilePic} alt="Profile" style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', border: '2px solid #e1bb3e' }} />
-            )}
-            Profile
-          </button>
-        )}
-        {!showProfile && showLogin && (
-          <button className="navbar-login-btn" onClick={onLoginClick}>
-            Login
-          </button>
-        )}
-      </div>
+  <div className="cart-icon" style={{ position: "relative", marginTop: "8px", cursor: "pointer" }}>
+    <a href="/cart">
+      <FaShoppingCart size={24} />
+      {/* ...cart count badge if needed... */}
+    </a>
+  </div>
+{showProfile && (
+  <button
+    className="navbar-profile-btn"
+    onClick={onProfileClick}
+    style={{ display: 'flex', alignItems: 'center', gap: 8, width: 'fit-content' }}
+  >
+    {profilePic && (
+      <img
+        src={profilePic}
+        alt="Profile"
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          objectFit: 'cover',
+          border: '2px solid #e1bb3e'
+        }}
+      />
+    )}
+    {/* Show username instead of "Profile" */}
+    {typeof showProfile === "string" ? showProfile : (window.localStorage.getItem('loggedInUser') ? JSON.parse(window.localStorage.getItem('loggedInUser')).username : "Profile")}
+  </button>
+)}
+  {!showProfile && showLogin && (
+    <button className="navbar-login-btn" onClick={onLoginClick}>
+      Login
+    </button>
+  )}
+</div>
     </nav>
   );
 };
