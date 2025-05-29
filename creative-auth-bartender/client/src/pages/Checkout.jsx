@@ -39,6 +39,14 @@ const Checkout = () => {
 
     const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+    const formattedItems = cartItems.map(item => ({
+      productId: item._id,  // Important: Add productId for backend validation
+      title: item.title,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image,
+    }));
+
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
@@ -48,7 +56,7 @@ const Checkout = () => {
           email: form.email,
           address: form.address,
           card: form.card,
-          items: cartItems,
+          items: formattedItems,
           total,
         }),
       });
