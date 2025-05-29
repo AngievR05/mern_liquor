@@ -103,9 +103,9 @@ const ProductCard = ({ product }) => {
 
       {showReviewsModal && (
         <ReviewsModal
-          productId={productData._id}
-          reviews={productData.reviews}
           onClose={() => setShowReviewsModal(false)}
+          reviews={productData.reviews}
+          productName={productData.title}
         />
       )}
     </div>
