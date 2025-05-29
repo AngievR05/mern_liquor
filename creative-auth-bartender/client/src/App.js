@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Welcome from './pages/Welcome';
@@ -12,29 +11,11 @@ import Store from './pages/Store';
 import About from './pages/About';
 import Checkout from './pages/Checkout';
 import ProductDetails from './pages/ProductDetails';
-import Cart from './pages/Cart';
-
+import CartPage from './pages/Cart'; // Use the CartPage component
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function App() {
-  // ✅ Add cart state
-  const [cart, setCart] = useState([]);
-
-  // ✅ Cart handlers
-  const addToCart = (product) => {
-    setCart((prev) => [...prev, product]);
-  };
-
-  const removeFromCart = (index) => {
-    setCart((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleCheckout = () => {
-    alert('Thank you for your purchase!');
-    setCart([]);
-  };
-
   return (
     <Router>
       <Routes>
@@ -48,24 +29,8 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/store" element={<Store />} />
         <Route path="/checkout" element={<Checkout />} />
-
-        {/* ✅ Pass cart functions to product details */}
-        <Route
-          path="/product/:id"
-          element={<ProductDetails onAddToCart={addToCart} />}
-        />
-
-        {/* ✅ Cart page receives cart items + handlers */}
-        <Route
-          path="/cart"
-          element={
-            <Cart
-              cartItems={cart}
-              onRemove={removeFromCart}
-              onCheckout={handleCheckout}
-            />
-          }
-        />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </Router>
   );
