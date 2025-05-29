@@ -1,39 +1,47 @@
 .product-card {
   min-height: 400px;
+  max-height: 400px;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: var(--Black) !important;
   border: 1px solid var(--White) !important;
   border-radius: 15px;
-  overflow: hidden;
   box-shadow: inset 5 -5px 5 var(--Aubergine) !important;
   width: 100%;
   display: flex;
   flex-direction: column;
-  transition: background-color 0.5s ease, transform 0.8s cubic-bezier(0.4, 0, 0.6, 1);
   margin-top: 1rem;
   color: white;
   padding: 1rem;
+  max-width: 300px; /* Adjust as needed */
 }
 
 .product-card:hover {
-  background-color:rgb(16, 2, 2) !important;
+  background-color: rgb(16, 2, 2) !important;
   transform: scale(1.02);
 }
 
-.product-image {
-  width: auto;
-  min-height: fit-content;
-  aspect-ratio: 1 / 1;
-  display: block;
-  object-fit: contain;
-  /* border: 15px solid var(--Black) !important; */
+.product-card .product-image {
+  width: 100%;
+  height: 240px;
+  object-fit: cover; /* Crop vertically */
+  transition: object-fit 0.3s, height 0.3s;
   background-color: var(--White) !important;
   border-radius: 15px;
-  margin: 0 auto;
 }
 
-/* .product-card:hover .product-image { */
-  /* border: 10px solid rgb(16, 2, 2) !important; */
-/* } */
+/* Expanded state */
+.product-card.expanded {
+  min-height: unset;
+  max-height: unset;
+  overflow: visible;
+}
+
+.product-card.expanded .product-image {
+  height: auto;
+  max-height: 300px; /* or whatever fits your expanded layout */
+  object-fit: contain; /* Show full image */
+}
 
 .product-info {
   padding: 1rem;
@@ -42,12 +50,14 @@
 }
 
 .product-title {
-  font-size: 1.4rem !important;
+  font-size: 22px !important;
   font-weight: bold;
   margin: 0.2rem 0;
   color: var(--White) !important;
   max-width: 100%;
   text-overflow: ellipsis;
+  white-space: nowrap;      /* Prevents wrapping */
+  overflow: hidden;         /* Hides overflowed text */
   letter-spacing: 0.1rem;
 }
 
@@ -185,15 +195,25 @@
 }
 
 
-.category-stock{
+.category-stock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;         /* Vertically center both items */
+  justify-content: space-between; /* Push them to edges */
+  gap: 16px;                   /* Space between category and stock */
+  width: 100%;
+  margin-top: 1rem;            /* Add some space above */
+  margin-bottom: 1rem;         /* Add some space below */
+}
+
+.product-category,
+.product-stock {
+  margin: 0;
+  padding: 0;
   font-size: 14px;
   color: var(--White) !important;
   font-weight: 200;
-  margin-top: 8px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  /* Remove flex and text-align for better alignment */
 }
 
 
@@ -293,3 +313,174 @@
   display: flex;
   align-items: center;      /* Ensures icon/text are centered */
 }
+
+.review-list, .all-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.review-item {
+  padding: 8px 0;
+  color: var(--White);
+  font-size: 0.98rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.review-item,
+.modal-review-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-stars {
+  margin-bottom: 4px;
+}
+
+.review-user {
+  color: var(--Anzac);
+  font-weight: bold;
+  margin-right: 8px;
+  min-width: 60px;
+  text-align: right;
+}
+
+.review-content {
+  margin-left: 0;
+}
+
+.modal-review-stars {
+  min-width: 90px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.modal-review-divider {
+  width: 1px;
+  height: 28px;
+  background: #fff;
+  opacity: 0.4;
+  margin: 0 16px;
+}
+
+.modal-review-content {
+  flex: 1;
+  color: var(--White);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.reviews-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  /* Prevent overlay from changing on hover */
+  pointer-events: auto;
+}
+
+.reviews-modal {
+  background: #1a0406;
+  color: var(--White);
+  width: 50vw;
+  height: 50vh;
+  min-width: 320px;
+  min-height: 200px;
+  max-width: 90vw;
+  max-height: 80vh;
+  padding: 32px 24px 24px 24px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #e1bb3e;
+  font-size: 2rem;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 10;
+}
+
+.all-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.modal-review-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.modal-review-stars {
+  min-width: 90px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.modal-review-divider {
+  width: 1px;
+  height: 28px;
+  background: #fff;
+  opacity: 0.4;
+  margin: 0 16px;
+}
+
+.modal-review-content {
+  flex: 1;
+  color: var(--White);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.reviews-modal *:hover,
+.reviews-modal:hover {
+  transform: none !important;
+  /* background: none !important; */
+  /* Add any other overrides needed */
+}
+
+.reviews-modal .product-card:hover {
+  transform: none !important;
+  background: inherit !important;
+}
+
+.view-reviews-btn {
+  margin-top: 10px;
+  background: linear-gradient(90deg, #E1BB3E 60%, #E35537 100%);
+  color: #350b0f;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.view-reviews-btn:hover {
+  background: linear-gradient(90deg, #E1BB3E 40%, #E35537 100%);
+  color: var(--White);
+}
+

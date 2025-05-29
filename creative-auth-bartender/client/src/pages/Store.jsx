@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import AddProductModal from '../components/AddProductModal';
 import EditProductModal from '../components/EditProductModal';
 import ProfileModal from '../components/ProfileModal';
+import ReviewsModal from '../components/ReviewsModal';
 import '../styles/StorePage.css';
 import Masonry from 'react-masonry-css';
 
@@ -37,6 +38,7 @@ const Store = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
@@ -130,6 +132,12 @@ const Store = () => {
   >
     Delete
   </button>
+  <button
+    onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+    className="reviews-button"
+  >
+    Reviews
+  </button>
 </div>
     </div>
   ))}
@@ -151,6 +159,13 @@ const Store = () => {
             // Optionally update profilePic in localStorage if changed from Store page
             localStorage.setItem('profilePic', url);
           }}
+        />
+      )}
+      {showReviewsModal && (
+        <ReviewsModal
+          onClose={() => setShowReviewsModal(false)}
+          reviews={selectedProduct ? selectedProduct.reviews : []}
+          productName={selectedProduct ? selectedProduct.title : ''}
         />
       )}
       <Footer className="store-footer" />

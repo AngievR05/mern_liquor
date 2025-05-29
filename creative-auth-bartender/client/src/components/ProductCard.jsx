@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import '../styles/ProductCard.css';
 import { useCart } from '../context/CartContext';
 import ReviewForm from './ReviewForm';
+import ReviewsModal from './ReviewsModal';
 
 const ProductCard = ({ product }) => {
   const [expanded, setExpanded] = useState(false);
   const [productData, setProductData] = useState(product);
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
   const { addToCart } = useCart();
 
   const handleToggle = () => setExpanded(!expanded);
@@ -26,9 +28,25 @@ const ProductCard = ({ product }) => {
     setProductData(updatedProduct);
   };
 
+  const renderStars = (count) => (
+    <span className="review-stars">
+      {Array.from({ length: count }, (_, i) => (
+        <span key={i} style={{ color: '#e1bb3e', fontSize: '1.2em', marginRight: '2px' }}>★</span>
+      ))}
+    </span>
+  );
+
   return (
-    <div className="product-card" onClick={handleToggle} style={{ cursor: 'pointer' }}>
-      <img src={productData.image} alt={productData.title} className="product-image" />
+    <div
+      className={`product-card${expanded ? ' expanded' : ''}`}
+      onClick={handleToggle}
+      style={{ cursor: 'pointer' }}
+    >
+      <img
+        src={productData.image}
+        alt={productData.title}
+        className={`product-image${expanded ? ' expanded' : ''}`}
+      />
       <div className="product-info">
         <h3 className="product-title">{productData.title}</h3>
         <p className="product-price">R {productData.price.toFixed(2)}</p>
@@ -57,16 +75,39 @@ const ProductCard = ({ product }) => {
             </div>
 
             <h4>Reviews:</h4>
-            <ul>
-              {productData.reviews?.map((r, i) => (
-                <li key={i}>⭐ {r.rating} - {r.comment} (by {r.user})</li>
+            <div className="review-list">
+              {(productData.reviews || []).slice(0, 2).map((r, i, arr) => (
+                <React.Fragment key={i}>
+                  <div className="review-item">
+                    <span className="review-user">{r.user}</span>
+                    {renderStars(r.rating)}
+                    <div className="review-content">{r.comment}</div>
+                  </div>
+                  {i < arr.length - 1 && <hr className="review-divider" />}
+                </React.Fragment>
               ))}
-            </ul>
+            </div>
+            {(productData.reviews?.length > 2) && (
+              <button
+                className="view-reviews-btn"
+                onClick={(e) => { e.stopPropagation(); setShowReviewsModal(true); }}
+              >
+                View Reviews
+              </button>
+            )}
 
             <ReviewForm productId={productData._id} onReviewSubmit={handleReviewSubmit} />
           </div>
         )}
       </div>
+
+      {showReviewsModal && (
+        <ReviewsModal
+          productId={productData._id}
+          reviews={productData.reviews}
+          onClose={() => setShowReviewsModal(false)}
+        />
+      )}
     </div>
   );
 };
