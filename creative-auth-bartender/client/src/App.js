@@ -12,6 +12,8 @@ import About from './pages/About';
 import Checkout from './pages/Checkout';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart'; 
+import ChatWidget from './components/ChatWidget';
+
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -32,6 +34,7 @@ export default function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/product/:id" element={<ProductDetails />} />
       </Routes>
+      <ChatWidget />
     </Router>
   );
 }
