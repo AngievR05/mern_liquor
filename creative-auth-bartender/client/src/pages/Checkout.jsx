@@ -3,6 +3,10 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import '../styles/CheckoutPage.css';
+import Confetti from 'react-confetti';
+import { useWindowSize } from '@react-hook/window-size';
+import useSound from 'use-sound';
+import successSound from '../assets/success.mp3'; // Add your sound in assets
 
 const Checkout = () => {
   const [form, setForm] = useState({
@@ -13,6 +17,8 @@ const Checkout = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const { cartItems, clearCart } = useCart();
+  const [width, height] = useWindowSize();
+  const [playSuccess] = useSound(successSound, { volume: 0.5 });
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -40,7 +46,7 @@ const Checkout = () => {
     const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     const formattedItems = cartItems.map(item => ({
-      productId: item._id,  // Important: Add productId for backend validation
+      productId: item._id,
       title: item.title,
       price: item.price,
       quantity: item.quantity,
@@ -66,6 +72,7 @@ const Checkout = () => {
       console.log('Order saved:', data);
 
       setSubmitted(true);
+      playSuccess();
       clearCart();
     } catch (error) {
       console.error('Checkout error:', error);
@@ -81,6 +88,7 @@ const Checkout = () => {
 
         {submitted ? (
           <div className="checkout-success">
+            <Confetti width={width} height={height} numberOfPieces={200} recycle={false} />
             <h2>Thank you for your purchase!</h2>
             <p>Your order is being processed.</p>
           </div>

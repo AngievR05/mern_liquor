@@ -12,7 +12,6 @@ import '../styles/StorePage.css';
 import Masonry from 'react-masonry-css';
 
 const Store = () => {
-  // Get user/profilePic from localStorage for nav
   const getStoredUser = () => {
     try {
       const user = JSON.parse(localStorage.getItem('loggedInUser'));
@@ -58,10 +57,14 @@ const Store = () => {
   useEffect(() => {
     let updated = [...products];
     if (categoryFilter !== 'All') {
-  updated = updated.filter(p => p.category.toLowerCase() === categoryFilter.toLowerCase());
-}
+      updated = updated.filter(p => p.category.toLowerCase() === categoryFilter.toLowerCase());
+    }
     if (searchQuery) {
-      updated = updated.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()));
+      updated = updated.filter(
+        p =>
+          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
     setFilteredProducts(updated);
   }, [searchQuery, categoryFilter, products]);
@@ -113,7 +116,7 @@ const Store = () => {
     <div className="store-page">
       <nav>
         <Navbar
-          onLoginClick={() => {}} // Optionally implement modal logic if needed
+          onLoginClick={() => {}}
           showLogin={!loggedInUser}
           showProfile={!!loggedInUser}
           onProfileClick={() => setShowProfileModal(true)}
@@ -122,15 +125,21 @@ const Store = () => {
       </nav>
       <div className="store-layout">
         <div className="sidebar">
-          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            products={products}
+            setFilteredProducts={setFilteredProducts}
+          />
           <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} className="filter-panel" />
           <button
-  className="store-add-product-btn"
-  onClick={() => setShowAddModal(true)}
->
-  Add Product
-</button>
+            className="store-add-product-btn"
+            onClick={() => setShowAddModal(true)}
+          >
+            Add Product
+          </button>
         </div>
+
         {useMasonry ? (
           <Masonry
             breakpointCols={breakpointCols}
@@ -141,25 +150,25 @@ const Store = () => {
               <div key={product._id} className="product-wrapper">
                 <ProductCard product={product} />
                 <div className="product-actions">
-  <button
-    onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}
-    className="edit-button"
-  >
-    Edit
-  </button>
-  <button
-    onClick={() => handleDeleteProduct(product._id)}
-    className="delete-button"
-  >
-    Delete
-  </button>
-  <button
-    onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-    className="reviews-button"
-  >
-    Reviews
-  </button>
-</div>
+                  <button
+                    onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}
+                    className="edit-button"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteProduct(product._id)}
+                    className="delete-button"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                    className="reviews-button"
+                  >
+                    Reviews
+                  </button>
+                </div>
               </div>
             ))}
           </Masonry>
@@ -193,6 +202,7 @@ const Store = () => {
           </div>
         )}
       </div>
+
       {showAddModal && <AddProductModal onClose={() => setShowAddModal(false)} onSave={handleAddProduct} />}
       {showEditModal && <EditProductModal product={selectedProduct} onClose={() => setShowEditModal(false)} onSave={handleEditProduct} />}
       {showProfileModal && loggedInUser && (
@@ -203,10 +213,9 @@ const Store = () => {
             setShowProfileModal(false);
             localStorage.removeItem('loggedInUser');
             localStorage.removeItem('profilePic');
-            window.location.reload(); // Or navigate to landing page if you want
+            window.location.reload();
           }}
           onProfilePicChange={(url) => {
-            // Optionally update profilePic in localStorage if changed from Store page
             localStorage.setItem('profilePic', url);
           }}
         />
