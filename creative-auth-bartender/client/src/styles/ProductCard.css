@@ -27,7 +27,7 @@
   height: 240px;
   object-fit: cover; /* Crop vertically */
   transition: object-fit 0.3s, height 0.3s;
-  background-color: var(--White) !important;
+  background-color: #ffffff !important;
   border-radius: 15px;
 }
 
