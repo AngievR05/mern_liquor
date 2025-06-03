@@ -8,38 +8,51 @@ const socket = io();
 const ChatWidget = () => {
   const [showChat, setShowChat] = useState(false);
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
-    { text: 'Hi! Welcome to The Drunken Giraffe 🦒🍷. How can we assist you today? You can ask for pages like "about us", "store", or "cart"!', sender: 'bot' }
-  ]);
+  const [messages, setMessages] = useState(() => {
+    const stored = localStorage.getItem('chatMessages');
+    return stored
+      ? JSON.parse(stored)
+      : [
+          {
+            text:
+              'Hi! Welcome to The Drunken Giraffe 🦒🍷. How can we assist you today? You can ask for pages like "about us", "store", or "cart"!',
+            sender: 'bot',
+          },
+        ];
+  });
   const [botTyping, setBotTyping] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     socket.on('receiveMessage', (msg) => {
-      setMessages(prev => [...prev, { text: msg, sender: 'other' }]);
+      setMessages((prev) => [...prev, { text: msg, sender: 'other' }]);
     });
 
     return () => socket.off('receiveMessage');
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('chatMessages', JSON.stringify(messages));
+  }, [messages]);
+
   const handleNavigation = (text) => {
-    const lowerText = text.toLowerCase();
-    if (lowerText.includes('about')) {
+    const lower = text.toLowerCase();
+    if (lower.includes('about')) {
       navigate('/about');
       return 'Taking you to the About page!';
-    } else if (lowerText.includes('product') || lowerText.includes('store')) {
+    } else if (lower.includes('store') || lower.includes('product')) {
       navigate('/store');
       return 'Taking you to the Store!';
-    } else if (lowerText.includes('cart')) {
+    } else if (lower.includes('cart')) {
       navigate('/cart');
       return 'Taking you to your Cart!';
-    } else if (lowerText.includes('home') || lowerText.includes('landing')) {
+    } else if (lower.includes('home') || lower.includes('landing')) {
       navigate('/landing-page');
       return 'Heading to the Home page!';
-    } else if (lowerText.includes('help')) {
-      return 'You can ask for "about us", "store", "cart", or "home".';
-    } else if (lowerText.includes('hello') || lowerText.includes('hi')) {
+    } else if (lower.includes('help')) {
+      return 'Try: "about us", "store", "cart", or "home".';
+    } else if (lower.includes('hello') || lower.includes('hi')) {
       return 'Hello there! 👋 What can I help you with today?';
     }
     return null;
@@ -47,20 +60,24 @@ const ChatWidget = () => {
 
   const sendMessage = () => {
     if (message.trim()) {
-      setMessages(prev => [...prev, { text: message, sender: 'user' }]);
+      const userMsg = { text: message, sender: 'user' };
+      setMessages((prev) => [...prev, userMsg]);
       socket.emit('sendMessage', message);
       setMessage('');
 
       const navResponse = handleNavigation(message);
       setBotTyping(true);
       setTimeout(() => {
-        if (navResponse) {
-          setMessages(prev => [...prev, { text: navResponse, sender: 'bot' }]);
-        } else {
-          setMessages(prev => [...prev, { text: 'I\'m here to help! Try asking for "about us", "store", or "cart".', sender: 'bot' }]);
-        }
+        const botMsg = navResponse
+          ? { text: navResponse, sender: 'bot' }
+          : {
+              text:
+                "I'm here to help! Try asking for 'about us', 'store', or 'cart'.",
+              sender: 'bot',
+            };
+        setMessages((prev) => [...prev, botMsg]);
         setBotTyping(false);
-      }, 1200); // 1.2 second delay
+      }, 1000);
     }
   };
 
