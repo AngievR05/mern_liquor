@@ -1,6 +1,8 @@
-# 🛡️ Creative Authentication System – Spirited Sign-In
+# 🛡️ Creative Authentication + E-Commerce Platform – Spirited Sign-In 🦒🍷
 
-A full-stack MERN web app featuring a playful, game-based authentication method called **Spirited Sign-In**, where users sort virtual bottles correctly to gain access. For accessibility, users can also log in through a traditional form-based fallback.
+An end-to-end MERN stack web app that fuses **creative login flows**, a **live product store**, **cart + checkout system**, and an **AI-style chatbot assistant**. It all starts with the playful **Spirited Sign-In** — a mini-game where users sort bottles to gain access.
+
+Built for creative computing students who don’t just think outside the box — they redesign it.
 
 ---
 
@@ -9,7 +11,9 @@ A full-stack MERN web app featuring a playful, game-based authentication method 
 - [Project Overview](#project-overview)  
 - [Features](#features)  
 - [Tech Stack](#tech-stack)  
-- [Creative Authentication Explained](#creative-authentication-explained)  
+- [Creative Authentication](#creative-authentication)  
+- [E-Commerce Features](#e-commerce-features)  
+- [Live Chat Widget](#live-chat-widget)  
 - [Getting Started](#getting-started)  
 - [API Documentation](#api-documentation)  
 - [Folder Structure](#folder-structure)  
@@ -21,19 +25,39 @@ A full-stack MERN web app featuring a playful, game-based authentication method 
 
 ## 🧠 Project Overview
 
-This MERN stack project explores a creative twist on standard login forms. Users interact with a **mini bartender game** to prove identity, providing an intuitive and fun authentication experience. The app also supports an accessibility login for inclusivity.
+This project combines **authentication innovation** with **real product functionality**. It’s a **creative twist on traditional UX**. From login via mini-game to smart product filtering, users get a smooth, styled, and intelligent shopping experience.
+
+Built with students, artists, and rebels in mind.
 
 ---
 
 ## ✨ Features
 
-- 🎮 Game-based login challenge (Spirited Sign-In)
-- 🧑‍🦽 Accessible fallback login form
-- 🔐 JWT token-based authentication
-- 🔑 Password hashing using `bcryptjs`
-- 🗃️ MongoDB integration
-- 📄 REST API with Swagger documentation
-- 📦 Fully modular and scalable codebase
+### 🔑 Authentication
+- 🎮 **Spirited Sign-In**: Bottle-sorting game for login
+- 🧑‍🦽 Accessible fallback login
+- 🔐 JWT-based authentication
+- 🔑 Encrypted passwords with bcrypt
+
+### 🛒 E-Commerce
+- 📦 Add, edit, delete products (admin role optional)
+- 🛍 Add items to cart with quantity control
+- 💳 Checkout with styled form and card formatting
+- 🎟 Order persistence with backend storage
+- 💬 Reviews + 0.25 step star ratings
+- 🇿🇦 Prices in South African Rand (R)
+
+### 🧠 Live Chat Widget
+- 🤖 Bot with smart routing (e.g., “go to cart”)
+- 💬 Typing indicator & message delay
+- 💾 Chat history with localStorage
+- 📱 iOS-style animations
+
+### 🎨 UI / UX
+- Fully custom CSS (no Tailwind)
+- Masonry product grid layout
+- Mobile-friendly with responsive breakpoints
+- Checkout and Cart pages with animated transitions
 
 ---
 
@@ -41,29 +65,52 @@ This MERN stack project explores a creative twist on standard login forms. Users
 
 ### 🥃 Spirited Sign-In
 
-During login, users sort a series of drink bottles correctly in a game interface. Success grants access; failure shows a retry screen.
+Instead of passwords, users must **sort bottles correctly** in a game-like interface.
 
-- **Why it’s creative:**  
-  It uses **spatial memory, visual cues**, and **pattern matching** instead of traditional typing. It gamifies identity verification without compromising security.
+- Uses **memory, reflex, and visual logic**
+- If failed, retry screen is shown
+- If successful, token is granted and access is given
 
-- **Fallback option:**  
-  A basic accessible login form is available at `/accessibility-login`.
+> 🔁 Accessible form login at `/accessibility-login`
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React, TailwindCSS  
-- **Backend:** Node.js, Express  
-- **Database:** MongoDB, Mongoose  
-- **Auth:** JWT, bcrypt  
-- **Docs:** Swagger (via `swagger-jsdoc` and `swagger-ui-express`)
+| Frontend   | Backend    | Extras             |
+|------------|------------|--------------------|
+| React      | Node.js    | JWT Auth           |
+| Bootstrap  | Express    | bcrypt             |
+| React Icons| MongoDB    | Multer (uploads)   |
+| CSS        | Mongoose   | Swagger UI         |
+| Masonry    | Nodemailer | Socket.io (Chat)   |
+
+---
+
+## 🛍️ E-Commerce Features
+
+- 👕 Dynamic product listings
+- 🛠 Admins can upload products with images
+- 🧾 Reviews with rating (0.25 steps)
+- 🧃 Quantity control + cart persistence
+- 🔒 Order saved with product ID and user data
+- ✅ Checkout validation + success animation
+
+---
+
+## 💬 Live Chat Widget
+
+- Click to open, iOS-style
+- Routes to `/about`, `/store`, `/cart`, etc.
+- Typing delay for realism
+- Stores last session via localStorage
+- Future: log conversation to DB (optional)
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
+### 1. Clone the repo
 
 ```bash
 git clone https://github.com/AngievR05/mern_liquor.git
@@ -161,6 +208,9 @@ A short 5-minute video demo shows:
 - Game-based authentication in action
 - Accessibility fallback login
 - API and backend overview
+- Product browsing + cart
+- Checkout + order
+- Chatbot navigation
 
 **Link to video to be inserted here**
 
