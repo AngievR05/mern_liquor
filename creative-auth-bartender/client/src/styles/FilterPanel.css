@@ -10,7 +10,7 @@
   overflow-x: hidden; /* Prevent horizontal overflow */
   display: flex;
   flex-direction: column;
-  max-height: 584.1px;
+  max-height: 560px;
 }
 
 .filterAccordion,
@@ -53,7 +53,7 @@
   text-align: center;
   background-color: #eee;
   color: #333;
-  /* padding: 8px 12px; */
+  padding: 8px 12px;
   border: none;
   border-radius: 6px;
   font-size: 14px;
