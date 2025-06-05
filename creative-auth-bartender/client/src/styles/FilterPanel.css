@@ -53,14 +53,14 @@
   text-align: center;
   background-color: #eee;
   color: #333;
-  padding: 8px 12px;
+  /* padding: 8px 12px; */
   border: none;
   border-radius: 6px;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
   box-sizing: border-box;
-  margin: 0 auto;
+  margin: 0;
   display: block;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .filter-categories {
-  margin-top: 16px; /* Space below the title */
+  margin-top: -50px; /* Space below the title */
   left: 0;
   top: 0;
   padding: 0;
