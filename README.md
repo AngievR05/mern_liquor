@@ -40,7 +40,6 @@ A creative authentication MERN app where users sort drink bottles in a game to l
 
 - Node.js 18+
 - MongoDB Atlas account
-- Gmail for email sending
 
 ### 2.2 How to Install
 
@@ -84,13 +83,13 @@ Visit the app at:
 
 ### Screenshots
 
-(Add screenshots of your: Game login screen, Store page, Cart, and Chat UI)
+(Add screenshots of: Game login screen, Store page, Cart, and Chat UI)
 
 ---
 
 ## 4. 🎥 Demonstration
 
-[Insert video demo link here – Loom, YouTube or Drive]
+[Insert video demo link here – Drive]
 
 **Covers:**
 
