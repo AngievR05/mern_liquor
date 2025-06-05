@@ -50,7 +50,7 @@ const FilterPanel = ({ categoryFilter, setCategoryFilter }) => {
     <div className="filter-panel">
       <h2 className="filter-title">Filter by Category</h2>
       <div className="filter-categories">
-        <Accordion alwaysOpen={false}>
+        <Accordion alwaysOpen={false} className='filterAccordion' >
           {groupedCategories.map((group, idx) =>
             group.items.length === 1 && group.name === group.items[0] ? (
               <button

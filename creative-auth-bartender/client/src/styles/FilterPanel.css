@@ -13,19 +13,19 @@
   max-height: 584.1px;
 }
 
-.accordion,
-.accordion-item,
-.accordion-header,
-.accordion-body {
+.filterAccordion,
+.filterAccordion-item,
+.filterAccordion-header,
+.filterAccordion-body {
   width: 100%;
   box-sizing: border-box;
 }
 
-.accordion {
+.filterAccordion {
   border-radius: 8px;
 }
 
-.accordion-body ul {
+.filterAccordion-body ul {
   padding-left: 0;
   margin: 0;
   width: 100%;
