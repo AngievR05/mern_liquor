@@ -73,3 +73,10 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => {
     console.error('MongoDB connection error:', err);
   });
+
+// Your error means the package "socket.io" is not installed in your server directory.
+
+// To fix, run this command in your server folder:
+// npm install socket.io
+
+// After install, run `npm start` again.

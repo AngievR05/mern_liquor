@@ -1,17 +1,45 @@
+import React from 'react';
 import { useCart } from '../context/CartContext';
-import '../styles/CartPage.css';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom'; // ✅ Import Link
+import '../styles/CartPage.css';
 
-const Cart = () => {
+export default function Cart() {
+  const loggedInUser = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('loggedInUser'));
+    } catch {
+      return null;
+    }
+  })();
+
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
+
+  if (!loggedInUser) {
+    return (
+      <div>
+        <div style={{
+          minHeight: '60vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: 24,
+          color: '#9b1c23',
+          fontWeight: 600,
+          textAlign: 'center'
+        }}>
+          <p>Missing your items?<br />Login to see your next order</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <div className="cart-page">
-      <Navbar />
       <div className="cart-container">
         <h2>Your Cart</h2>
         {cartItems.length === 0 ? (
@@ -56,5 +84,3 @@ const Cart = () => {
     </div>
   );
 };
-
-export default Cart; 

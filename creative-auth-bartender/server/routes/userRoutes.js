@@ -121,22 +121,20 @@ router.post('/login', async (req, res) => {
 
 // Check if user exists
 router.post('/check-exists', async (req, res) => {
-  const { email } = req.body;
+  // Defensive: check both username and email if provided
+  const { email, username } = req.body;
   try {
-    // Defensive: ensure email is a string and not empty
-    if (!email || typeof email !== "string" || !email.trim()) {
-      return res.status(400).json({ message: 'No email provided' });
+    if (email && typeof email === "string" && email.trim()) {
+      // Always check email as lowercased and trimmed
+      const user = await User.findOne({ email: email.trim().toLowerCase() });
+      return res.json({ exists: !!user });
     }
-    // Debug: log the incoming email and all emails in the DB
-    const incoming = email.trim().toLowerCase();
-    const allUsers = await User.find({}, { email: 1 });
-    console.log('DEBUG: Incoming email:', incoming);
-    console.log('DEBUG: All emails in DB:', allUsers.map(u => u.email));
-    // Always check email as lowercased and trimmed
-    const user = await User.findOne({ email: incoming });
-    res.json({ exists: !!user });
+    if (username && typeof username === "string" && username.trim()) {
+      const user = await User.findOne({ username: username.trim() });
+      return res.json({ exists: !!user });
+    }
+    return res.status(400).json({ message: 'No email or username provided' });
   } catch (err) {
-    console.error('check-exists error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });

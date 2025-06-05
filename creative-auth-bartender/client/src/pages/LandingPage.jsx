@@ -9,7 +9,6 @@ import OurStoryImage from "../assets/OurStoryImage.svg";
 import OurProductsImage from "../assets/OurProductsImage.svg";
 import LogoNoText from "../assets/Logo-no-text.svg";
 
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AuthModal from "../components/AuthModal";
 import ProfileModal from "../components/ProfileModal";
@@ -87,18 +86,16 @@ const LandingPage = () => {
     navigate("/landing-page");
   }
 
-  // Provide profilePic and showProfile/showLogin to Navbar
+  // REMOVE the <Navbar ... /> from here, only render it in App.js!
   return (
     <div className="landing-page">
-      <nav>
-        <Navbar
-          onLoginClick={() => setShowAuthModal(true)}
-          showLogin={!loggedInUser}
-          showProfile={!!loggedInUser}
-          onProfileClick={() => setShowProfileModal(true)}
-          profilePic={profilePic}
-        />
-      </nav>
+      {/* <Navbar
+        onLoginClick={() => setShowAuthModal(true)}
+        showLogin={!loggedInUser}
+        showProfile={!!loggedInUser}
+        onProfileClick={() => setShowProfileModal(true)}
+        profilePic={profilePic}
+      /> */}
 
       <div className="hero-section">
         <div className="hero-text">

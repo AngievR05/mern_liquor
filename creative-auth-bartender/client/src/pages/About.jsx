@@ -42,17 +42,7 @@ const About = () => {
 
   return (
     <div className="about-page">
-      <nav>
-        <Navbar
-          onLoginClick={() => {}} // Optionally implement modal logic if needed
-          showLogin={!loggedInUser}
-          showProfile={!!loggedInUser}
-          onProfileClick={() => setShowProfileModal(true)}
-          profilePic={profilePic}
-        />
-      </nav>
-
-    <div className="hero-about">
+      <div className="hero-about">
         <div className="hero-about-text">
           <h1>About Us</h1>
           <h3>The Story of <br/> The Drunken <br/>Giraffe</h3>
@@ -132,7 +122,6 @@ const About = () => {
         <Footer />
       </div>
     </div>
-
   );
 };
 

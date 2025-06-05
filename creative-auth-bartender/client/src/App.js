@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 
 import Welcome from './pages/Welcome';
 import GameAuth from './pages/GameScreen';
@@ -13,13 +14,23 @@ import Checkout from './pages/Checkout';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart'; 
 import ChatWidget from './components/ChatWidget';
-
+import AuthModal from './components/AuthModal';
+import Navbar from './components/Navbar';
+import BecomeSeller from './pages/BecomeSeller';
+import SellerApplication from './pages/SellerApplication';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default function App() {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  // Helper to pass to Navbar for login button
+  const handleLoginClick = () => setShowAuthModal(true);
+
+  // Only render Navbar ONCE, and not inside any page component
   return (
     <Router>
+      <Navbar onLoginClick={handleLoginClick} />
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/game" element={<GameAuth />} />
@@ -33,8 +44,15 @@ export default function App() {
         <Route path="/cart" element={<Cart />} /> 
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/become-seller" element={<BecomeSeller />} />
+        <Route path="/become-seller/apply" element={<SellerApplication />} />
       </Routes>
-      <ChatWidget />
+      {window.location.pathname !== "/" && window.location.pathname !== "/game" && (
+        <ChatWidget />
+      )}
+      {showAuthModal && (
+        <AuthModal onClose={() => setShowAuthModal(false)} />
+      )}
     </Router>
   );
 }

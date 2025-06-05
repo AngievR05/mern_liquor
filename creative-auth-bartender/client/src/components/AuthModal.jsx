@@ -10,6 +10,7 @@ import cheersAudio from '../assets/audio/cheers.mp3';
 import sha256 from 'crypto-js/sha256'; // npm install crypto-js
 import ProfileModal from './ProfileModal'; // <-- import the new profile modal component
 import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function AuthModal({ onClose }) {
   const [tab, setTab] = useState('login');
@@ -31,6 +32,8 @@ export default function AuthModal({ onClose }) {
   // Add password validation state and hint
   const [passwordValid, setPasswordValid] = useState({ capital: false, special: false });
   const [showPasswordHintBox, setShowPasswordHintBox] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   // Trivia questions for registration
   const triviaQuestions = [
@@ -538,22 +541,41 @@ export default function AuthModal({ onClose }) {
                         required
                       />
                     ))}
-                    <input
-                      type="password"
-                      placeholder="Set Password"
-                      value={registerForm.password}
-                      onChange={handlePasswordChange}
-                      onFocus={() => setShowPasswordHintBox(true)}
-                      onBlur={() => setShowPasswordHintBox(false)}
-                      style={{
-                        padding: '12px 16px',
-                        borderRadius: 8,
-                        border: '1px solid #e9c4b4',
-                        fontSize: 16,
-                        marginBottom: 4
-                      }}
-                      required
-                    />
+                    <div style={{ position: 'relative', width: '100%' }}>
+                      <input
+                        type={showRegisterPassword ? "text" : "password"}
+                        placeholder="Set Password"
+                        value={registerForm.password}
+                        onChange={handlePasswordChange}
+                        onFocus={() => setShowPasswordHintBox(true)}
+                        onBlur={() => setShowPasswordHintBox(false)}
+                        style={{
+                          padding: '12px 16px',
+                          borderRadius: 8,
+                          border: '1px solid #e9c4b4',
+                          fontSize: 16,
+                          marginBottom: 4,
+                          width: '100%',
+                          paddingRight: 40
+                        }}
+                        required
+                      />
+                      <span
+                        style={{
+                          position: 'absolute',
+                          right: 12,
+                          top: 16,
+                          cursor: 'pointer',
+                          color: '#9b1c23'
+                        }}
+                        onClick={() => setShowRegisterPassword(v => !v)}
+                        tabIndex={0}
+                        aria-label={showRegisterPassword ? "Hide password" : "Show password"}
+                      >
+                        {/* Show open eye when showing password, crossed eye when hidden */}
+                        {showRegisterPassword ? <FaEye /> : <FaEyeSlash />}
+                      </span>
+                    </div>
                     {showPasswordHintBox && (
                       <div style={{ marginBottom: 8 }}>
                         <span style={{
@@ -640,20 +662,39 @@ export default function AuthModal({ onClose }) {
                               background: "#f3f3f3"
                             }}
                           />
-                          <input
-                            type="password"
-                            placeholder="Password"
-                            value={loginPassword}
-                            onChange={e => setLoginPassword(e.target.value)}
-                            style={{
-                              padding: '12px 16px',
-                              borderRadius: 8,
-                              border: '1px solid #e9c4b4',
-                              fontSize: 16,
-                              marginBottom: 8
-                            }}
-                            required
-                          />
+                          <div style={{ position: 'relative', width: '100%' }}>
+                            <input
+                              type={showLoginPassword ? "text" : "password"}
+                              placeholder="Password"
+                              value={loginPassword}
+                              onChange={e => setLoginPassword(e.target.value)}
+                              style={{
+                                padding: '12px 16px',
+                                borderRadius: 8,
+                                border: '1px solid #e9c4b4',
+                                fontSize: 16,
+                                marginBottom: 8,
+                                width: '100%',
+                                paddingRight: 40
+                              }}
+                              required
+                            />
+                            <span
+                              style={{
+                                position: 'absolute',
+                                right: 12,
+                                top: 16,
+                                cursor: 'pointer',
+                                color: '#9b1c23'
+                              }}
+                              onClick={() => setShowLoginPassword(v => !v)}
+                              tabIndex={0}
+                              aria-label={showLoginPassword ? "Hide password" : "Show password"}
+                            >
+                              {/* Show open eye when showing password, crossed eye when hidden */}
+                              {showLoginPassword ? <FaEye /> : <FaEyeSlash />}
+                            </span>
+                          </div>
                           {loginError && <div style={{ color: 'red', marginBottom: 8 }}>{loginError}</div>}
                           <button
                             type="button"

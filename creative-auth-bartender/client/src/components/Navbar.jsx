@@ -1,18 +1,13 @@
 import React from "react";
 import { FaShoppingCart } from "react-icons/fa";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 import LogoNoText from "../assets/Logo-no-text.svg";
 import { useCart } from "../context/CartContext"; // Cart context
 
-export default function Navbar({
-  onLoginClick,
-  showLogin = true,
-  showProfile = false,
-  onProfileClick,
-  profilePic,
-}) {
+export default function Navbar({ onLoginClick, showLogin, showProfile, onProfileClick, profilePic }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { cartItems } = useCart();
 
   // Resolve uploaded image paths correctly from /uploads
@@ -68,43 +63,91 @@ export default function Navbar({
           </Link>
         </div>
 
-        {showProfile && (
+        {showLogin !== false && (
           <button
-            className="navbar-profile-btn"
-            onClick={onProfileClick}
+            className="login-btn"
+            onClick={onLoginClick}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              width: "fit-content",
+              marginLeft: 16,
+              background: '#9b1c23',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 8,
+              padding: '8px 18px',
+              fontWeight: 700,
+              fontSize: 16,
+              cursor: 'pointer'
             }}
           >
-            {profilePic && (
-              <img
-                src={getProfileImageSrc(profilePic)}
-                alt="Profile"
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  border: "2px solid #e1bb3e",
-                }}
-              />
-            )}
-            {typeof showProfile === "string"
-              ? showProfile
-              : window.localStorage.getItem("loggedInUser")
-              ? JSON.parse(localStorage.getItem("loggedInUser")).username
-              : "Profile"}
-          </button>
-        )}
-
-        {!showProfile && showLogin && (
-          <button className="navbar-login-btn" onClick={onLoginClick}>
             Login
           </button>
         )}
+        {showProfile && (
+          <button
+            className="profile-btn"
+            onClick={onProfileClick}
+            style={{
+              marginLeft: 16,
+              background: 'none',
+              border: 'none',
+              borderRadius: '50%',
+              padding: 0,
+              cursor: 'pointer'
+            }}
+          >
+            {profilePic ? (
+              <img
+                src={profilePic}
+                alt="Profile"
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: '2px solid #e1bb3e'
+                }}
+              />
+            ) : (
+              <span
+                style={{
+                  display: 'inline-block',
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  background: '#eee',
+                  color: '#9b1c23',
+                  fontWeight: 700,
+                  fontSize: 18,
+                  textAlign: 'center',
+                  lineHeight: '36px',
+                  border: '2px solid #e1bb3e'
+                }}
+              >
+                U
+              </span>
+            )}
+          </button>
+        )}
+        <button
+          className="become-seller-btn"
+          style={{
+            marginLeft: 16,
+            background: "#e1bb3e",
+            color: "#350b0f",
+            border: "none",
+            borderRadius: 8,
+            padding: "8px 18px",
+            fontWeight: 700,
+            fontSize: 16,
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            // You can navigate to a seller registration page or show a modal
+            navigate("/become-seller");
+          }}
+        >
+          Become a Seller
+        </button>
       </div>
     </nav>
   );

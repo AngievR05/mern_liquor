@@ -70,24 +70,21 @@ exports.loginUser = async (req, res) => {
     console.log('DEBUG: User email:', cleanEmail);
     console.log('DEBUG: Hashed password in DB:', user.password);
     console.log('DEBUG: Password provided:', password);
-
-    // Extra debug: check password length and type
     console.log('DEBUG: typeof password:', typeof password, 'length:', password.length);
+    console.log('DEBUG: Password as JSON:', JSON.stringify(password));
 
-    // Check for double-hashing or frontend bug
-    if (password.startsWith('$2b$') || password.startsWith('$2a$')) {
-      console.error('WARNING: The password sent from the frontend is already a bcrypt hash! You must send the plain password, not the hash.');
-      return res.status(401).json({ message: 'Frontend is sending a hashed password. Please send the plain password.' });
-    }
+    // Extra debug: check for whitespace issues
+    console.log('DEBUG: Password from DB as JSON:', JSON.stringify(user.password));
 
     // Use bcrypt.compare directly
     const passwordMatch = await bcrypt.compare(password, user.password);
     console.log('DEBUG: bcrypt.compare result:', passwordMatch);
+
     if (!passwordMatch) {
+      // Show char codes for both passwords for invisible char debugging
+      console.log('DEBUG: Password entered char codes:', Array.from(password).map(c => c.charCodeAt(0)));
+      console.log('DEBUG: Password in DB char codes (first 60):', Array.from(user.password.slice(0, 60)).map(c => c.charCodeAt(0)));
       console.error('Login failed: password mismatch for email', cleanEmail);
-      // Debug: show what bcrypt would hash the plain password to
-      const testHash = await bcrypt.hash(password, 10);
-      console.log('DEBUG: Hash of provided password (for troubleshooting):', testHash);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
@@ -102,3 +99,20 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: 'Server error during login' });
   }
 };
+
+// To find out why your server is crashing, check the terminal for the error message above the line:
+// [nodemon] app crashed - waiting for file changes before starting...
+// That message will tell you the exact file and line number of the error.
+
+// Common causes:
+// - Syntax error (missing bracket, comma, etc.)
+// - Importing a module that doesn't exist
+// - Using a variable that is not defined
+// - Database connection error
+
+// Solution:
+// 1. Carefully read the error message above the "app crashed" line in your terminal.
+// 2. Fix the code at the file/line mentioned in the error.
+// 3. Save the file and nodemon will restart automatically.
+
+// If you want help, copy and paste the full error message (not just "app crashed") here.

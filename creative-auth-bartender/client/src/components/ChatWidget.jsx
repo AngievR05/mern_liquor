@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ChatWidget.css';
 import ShinyText from './ShinyText';
+import { FaComments, FaQuestionCircle, FaTimes } from 'react-icons/fa';
 
 const socket = io();
 
@@ -22,6 +23,7 @@ const ChatWidget = () => {
         ];
   });
   const [botTyping, setBotTyping] = useState(false);
+  const [showContact, setShowContact] = useState(false);
 
   const navigate = useNavigate();
 
@@ -91,9 +93,31 @@ const ChatWidget = () => {
 
   return (
     <div className="chat-widget">
-      <button className="chat-toggle" onClick={() => setShowChat(!showChat)}>
-        {showChat ? <ShinyText text="Close Chat" disabled={false} speed={3} className='chat-shiny-text' /> : <ShinyText text="Chat" disabled={false} speed={3} className='chat-shiny-text' />}
-      </button>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <button className="chat-toggle" onClick={() => setShowChat(!showChat)}>
+          <FaComments style={{ marginRight: 6 }} />
+          {showChat ? <ShinyText text="Close Chat" disabled={false} speed={3} className='chat-shiny-text' /> : <ShinyText text="Chat" disabled={false} speed={3} className='chat-shiny-text' />}
+        </button>
+        <button
+          className="contact-toggle"
+          style={{
+            background: '#fff',
+            border: '1px solid #e1bb3e',
+            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            marginLeft: 4
+          }}
+          title="Contact Us"
+          onClick={() => setShowContact(true)}
+        >
+          <FaQuestionCircle color="#9b1c23" size={20} />
+        </button>
+      </div>
 
       {showChat && (
         <div className="chat-box">
@@ -118,6 +142,60 @@ const ChatWidget = () => {
               placeholder="Type a message..."
             />
             <button onClick={sendMessage}>Send</button>
+          </div>
+        </div>
+      )}
+
+      {showContact && (
+        <div
+          style={{
+            position: 'fixed',
+            right: 24,
+            bottom: 90,
+            background: '#fff',
+            border: '2px solid #e1bb3e',
+            borderRadius: 12,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+            padding: 24,
+            zIndex: 3000,
+            minWidth: 320,
+            maxWidth: 360
+          }}
+        >
+          <button
+            onClick={() => setShowContact(false)}
+            style={{
+              position: 'absolute',
+              top: 8,
+              right: 12,
+              background: 'none',
+              border: 'none',
+              fontSize: 22,
+              color: '#9b1c23',
+              cursor: 'pointer'
+            }}
+            aria-label="Close"
+          >
+            <FaTimes />
+          </button>
+          <h3 style={{ color: '#350b0f', marginBottom: 12 }}>Contact Us</h3>
+          <div style={{ color: '#444', fontSize: 16, marginBottom: 12 }}>
+            <b>For General Enquiries</b>
+            <div>Contact: <a href="tel:0814107793" style={{ color: '#9b1c23' }}>081 410 7793</a></div>
+            <div>Email: <a href="mailto:DrunkenG@gmail.com" style={{ color: '#9b1c23' }}>DrunkenG@gmail.com</a></div>
+          </div>
+          <div style={{ color: '#444', fontSize: 16, marginBottom: 12 }}>
+            <b>For Online Shopping Enquiries</b>
+            <div>Contact: <a href="tel:0814107793" style={{ color: '#9b1c23' }}>081 410 7793</a></div>
+            <div>Email: <a href="mailto:DrunkenG.support@gmail.com" style={{ color: '#9b1c23' }}>DrunkenG.support@gmail.com</a></div>
+          </div>
+          <div style={{ color: '#444', fontSize: 16, marginBottom: 8 }}>
+            <b>Contact Centre Hours:</b>
+            <div>Monday to Saturday: 8am – 5pm</div>
+            <div>Sunday and Public Holidays: 9am – 4pm</div>
+            <div style={{ marginTop: 6, fontSize: 15, color: '#b71c1c' }}>
+              Contact center is closed on Good Friday, Christmas Day, Day of Goodwill and New Year's Day.
+            </div>
           </div>
         </div>
       )}

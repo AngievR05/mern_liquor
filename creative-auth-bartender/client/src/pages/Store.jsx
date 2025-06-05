@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import FilterPanel from '../components/FilterPanel';
 import SearchBar from '../components/SearchBar';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AddProductModal from '../components/AddProductModal';
 import EditProductModal from '../components/EditProductModal';
@@ -114,15 +113,6 @@ const Store = () => {
 
   return (
     <div className="store-page">
-      <nav>
-        <Navbar
-          onLoginClick={() => {}}
-          showLogin={!loggedInUser}
-          showProfile={!!loggedInUser}
-          onProfileClick={() => setShowProfileModal(true)}
-          profilePic={profilePic}
-        />
-      </nav>
       <div className="store-layout">
         <div className="sidebar">
           <SearchBar

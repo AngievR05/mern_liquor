@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import styles from '../styles/LoginRegister.module.css';
 
 export default function Register() {
@@ -8,6 +9,7 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = (e) => {
@@ -51,14 +53,32 @@ export default function Register() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <input
-          type="password"
-          placeholder="Password"
-          className={styles.input}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div style={{ position: 'relative', width: '100%' }}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            className={styles.input}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ paddingRight: 40 }}
+          />
+          <span
+            style={{
+              position: 'absolute',
+              right: 12,
+              top: 14,
+              cursor: 'pointer',
+              color: '#9b1c23'
+            }}
+            onClick={() => setShowPassword(v => !v)}
+            tabIndex={0}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {/* Show open eye when showing password, crossed eye when hidden */}
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
+          </span>
+        </div>
         <input
           type="file"
           accept="image/*"
