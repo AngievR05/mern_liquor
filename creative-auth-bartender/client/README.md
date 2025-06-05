@@ -1,233 +1,229 @@
-# 🛡️ Creative Authentication + E-Commerce Platform – Spirited Sign-In 🦒🍷
+# 🛡️ Spirited Sign-In – Creative Auth + E-Commerce Platform 🦒🍷
 
-An end-to-end MERN stack web app that fuses **creative login flows**, a **live product store**, **cart + checkout system**, and an **AI-style chatbot assistant**. It all starts with the playful **Spirited Sign-In** — a mini-game where users sort bottles to gain access.
+A full-stack MERN web app that blends creative authentication, live product browsing, a cart and checkout system, chatbot support, and interactive review ratings — all in a single branded platform built for real-world users.
 
-Built for creative computing students who don’t just think outside the box — they redesign it.
-
----
-
-## 📌 Table of Contents
-
-- [Project Overview](#project-overview)  
-- [Features](#features)  
-- [Tech Stack](#tech-stack)  
-- [Creative Authentication](#creative-authentication)  
-- [E-Commerce Features](#e-commerce-features)  
-- [Live Chat Widget](#live-chat-widget)  
-- [Getting Started](#getting-started)  
-- [API Documentation](#api-documentation)  
-- [Folder Structure](#folder-structure)  
-- [Demo](#demo)  
-- [Contributing](#contributing)  
-- [License](#license)
+> 📚 Developed as part of Open Window's Creative Computing curriculum.  
+> 🎓 Intended for personal portfolio and educational purposes only.
 
 ---
 
-## 🧠 Project Overview
+## 📑 Table of Contents
 
-This project combines **authentication innovation** with **real product functionality**. It’s a **creative twist on traditional UX**. From login via mini-game to smart product filtering, users get a smooth, styled, and intelligent shopping experience.
-
-Built with students, artists, and rebels in mind.
-
----
-
-## ✨ Features
-
-### 🔑 Authentication
-- 🎮 **Spirited Sign-In**: Bottle-sorting game for login
-- 🧑‍🦽 Accessible fallback login
-- 🔐 JWT-based authentication
-- 🔑 Encrypted passwords with bcrypt
-
-### 🛒 E-Commerce
-- 📦 Add, edit, delete products (admin role optional)
-- 🛍 Add items to cart with quantity control
-- 💳 Checkout with styled form and card formatting
-- 🎟 Order persistence with backend storage
-- 💬 Reviews + 0.25 step star ratings
-- 🇿🇦 Prices in South African Rand (R)
-
-### 🧠 Live Chat Widget
-- 🤖 Bot with smart routing (e.g., “go to cart”)
-- 💬 Typing indicator & message delay
-- 💾 Chat history with localStorage
-- 📱 iOS-style animations
-
-### 🎨 UI / UX
-- Fully custom CSS (no Tailwind)
-- Masonry product grid layout
-- Mobile-friendly with responsive breakpoints
-- Checkout and Cart pages with animated transitions
+1. [About the Project](#1-about-the-project)  
+   1.1 [Project Description](#11-project-description)  
+   1.2 [Built With](#12-built-with)  
+2. [Getting Started](#2-getting-started)  
+   2.1 [Prerequisites](#21-prerequisites)  
+   2.2 [How to Install](#22-how-to-install)  
+3. [Features & Usage](#3-features--usage)  
+4. [Demonstration](#4-demonstration)  
+5. [Architecture / System Design](#5-architecture--system-design)  
+6. [Testing](#6-testing)  
+7. [Highlights & Challenges](#7-highlights--challenges)  
+8. [Roadmap / Future Improvements](#8-roadmap--future-improvements)  
+9. [Contributing & License](#9-contributing--license)  
+10. [Authors & Contact Info](#10-authors--contact-info)  
+11. [Acknowledgements](#11-acknowledgements)
 
 ---
 
-## 🧪 Creative Authentication Explained
+## 1. 📦 About the Project
 
-### 🥃 Spirited Sign-In
+### 1.1 Project Description
 
-Instead of passwords, users must **sort bottles correctly** in a game-like interface.
+**Spirited Sign-In** challenges conventional logins with a mini-game where users sort virtual bottles to authenticate. The platform expands into a full e-commerce experience — supporting products, reviews, a cart system, real-time chat assistant, and animations throughout.
 
-- Uses **memory, reflex, and visual logic**
-- If failed, retry screen is shown
-- If successful, token is granted and access is given
+**Who is it for?**  
+- UX-focused developers  
+- Creative coders & designers  
+- Portfolio reviewers & academic staff
 
-> 🔁 Accessible form login at `/accessibility-login`
-
----
-
-## 🛠️ Tech Stack
-
-| Frontend   | Backend    | Extras             |
-|------------|------------|--------------------|
-| React      | Node.js    | JWT Auth           |
-| Bootstrap  | Express    | bcrypt             |
-| React Icons| MongoDB    | Multer (uploads)   |
-| CSS        | Mongoose   | Swagger UI         |
-| Masonry    | Nodemailer | Socket.io (Chat)   |
+**Why it exists:**  
+To showcase how authentication, UX/UI, and full-stack logic can be reimagined for engagement and usability.
 
 ---
 
-## 🛍️ E-Commerce Features
+### 1.2 Built With
 
-- 👕 Dynamic product listings
-- 🛠 Admins can upload products with images
-- 🧾 Reviews with rating (0.25 steps)
-- 🧃 Quantity control + cart persistence
-- 🔒 Order saved with product ID and user data
-- ✅ Checkout validation + success animation
-
----
-
-## 💬 Live Chat Widget
-
-- Click to open, iOS-style
-- Routes to `/about`, `/store`, `/cart`, etc.
-- Typing delay for realism
-- Stores last session via localStorage
-- Future: log conversation to DB (optional)
+- **Frontend:** React, Bootstrap, Masonry Layout, Custom CSS  
+- **Backend:** Node.js, Express  
+- **Database:** MongoDB, Mongoose  
+- **Auth:** JWT, bcrypt  
+- **Chatbot:** React + Socket.io  
+- **Docs:** Swagger + API schema  
+- **Other:** Multer (uploads), Nodemailer (checkout email)
 
 ---
 
-## 🚀 Getting Started
+## 2. 🚀 Getting Started
 
-### 1. Clone the repo
+### 2.1 Prerequisites
+
+- Node.js v18+  
+- MongoDB Atlas Account  
+- Gmail Account (for confirmation emails)  
+- Git
+
+---
+
+### 2.2 How to Install
 
 ```bash
+# Clone the repo
 git clone https://github.com/AngievR05/mern_liquor.git
 cd mern_liquor/creative-auth-bartender
-```
 
-### 2. Install dependencies
-
-```bash
 # Install backend dependencies
 cd server
 npm install
 
+# Setup environment variables
+cp .env.example .env
+# Fill in MONGO_URI, JWT_SECRET, EMAIL_USER, EMAIL_PASS
+
+# Start backend
+npm run dev
+
 # Install frontend dependencies
 cd ../client
 npm install
-```
+npm start
 
-### 3. Setup your environment variables
-
-Create a `.env` file in the `server` directory and add the following:
-
-```
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_super_secret_jwt_key
-```
-
-Make sure to add `.env` to your `.gitignore` file so that sensitive information is not committed to GitHub.
+### Visit the app at:
+[http://localhost:3000](http://localhost:3000)
 
 ---
 
-### 4. Start the development servers
+## 3. ✨ Features & Usage
+
+| Area              | Features                                                                 |
+|-------------------|--------------------------------------------------------------------------|
+| 🔐 Auth            | Game login + accessible fallback                                         |
+| 🛍 Products        | View, add, edit, delete products with image upload support               |
+| 💬 Reviews         | Add star ratings (1–5 in 0.25 steps) and comments per product            |
+| 🛒 Cart & Checkout | Local cart, quantity control, order saving, validation, email receipt    |
+| 🤖 Chat Assistant  | Bot with typing delay, routing to pages, smart replies, iOS-style UI     |
+| 📄 Admin API       | Swagger UI: `/api-docs`                                                   |
+
+---
+
+### 📸 Screenshots
+
+*(Add screenshots of: Game login screen, Store page, Cart, and Chat UI)*
+
+---
+
+## 4. 🎥 Demonstration
+
+**[Insert video demo link here]**
+
+**Covers:**
+
+- Registering and logging in  
+- Spirited Sign-In in action  
+- Cart + checkout + confirmation email  
+- Live chatbot  
+- Admin product management  
+
+---
+
+## 5. 🧠 Architecture / System Design
+
+- React handles UI with React Context for Cart  
+- Node/Express REST API for all routes  
+- MongoDB Atlas stores users, products, reviews, orders  
+- Multer saves product images to `client/public/uploads`  
+- Nodemailer sends confirmation email from checkout  
+- WebSocket (via Socket.io) handles chatbot messages  
+
+---
+
+## 6. 🧪 Testing
+
+Manual unit testing completed for:
+
+- ✅ Game logic  
+- ✅ Auth token logic  
+- ✅ Cart totals  
+- ✅ Order model  
+
+> ℹ️ *Plan to add Cypress or Vitest for automated testing in the future.*
+
+---
+
+## 7. ⚡ Highlights & Challenges
+
+| Highlights                          | Challenges                                           |
+|-------------------------------------|------------------------------------------------------|
+| Spirited Sign-In game concept       | Uploading images client-side → saving to `uploads`  |
+| Review system with rating UX        | Bot typing delays + routing to pages                |
+| Cart persistence using localStorage | Handling empty carts and invalid cards              |
+| Autocomplete search bar             | Styling the chat to feel native (iOS vibes)         |
+
+---
+
+## 8. 🔭 Roadmap / Future Improvements
+
+- [ ] User dashboard (view past orders)  
+- [ ] Product wishlist  
+- [ ] Upload profile image to database  
+- [ ] Admin-only product access  
+- [ ] Chatbot memory (session-based tracking)  
+- [ ] Deploy to Render, Vercel, or Netlify  
+
+---
+
+## 9. 🤝 Contributing & License
+
+### Contributing
+
+Contributions are welcome!  
 
 ```bash
-# Start backend server
-cd server
-npm run dev
-
-# Start frontend server
-cd ../client
-npm start
-```
-
----
-
-## 🧾 API Documentation
-
-Swagger UI is available for testing all backend routes.
-
-Once the backend server is running, visit:  
-[http://localhost:5000/apiDocumentation](http://localhost:5000/apiDocumentation)
-
-This interface allows you to test endpoints like login, register, and game results directly from the browser.
-
----
-
-## 📁 Folder Structure
-
-```
-mern_liquor/
-│
-├── creative-auth-bartender/
-│   ├── server/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── middleware/
-│   │   ├── utils/
-│   │   ├── server.js
-│   │   ├── .gitignore
-│   │   └── .env
-│   │
-│   ├── client/
-│   │   ├── public/
-│   │   ├── src/
-│   │   │   ├── assets/
-│   │   │   ├── components/
-│   │   │   ├── pages/
-│   │   │   ├── styles/
-│   │   │   └── App.js
-│   │   └── package.json
-│   │
-│   └── README.md
-```
-
----
-
-## 🎥 Demo
-
-A short 5-minute video demo shows:
-
-- Registering and logging in
-- Game-based authentication in action
-- Accessibility fallback login
-- API and backend overview
-- Product browsing + cart
-- Checkout + order
-- Chatbot navigation
-
-**Link to video to be inserted here**
-
----
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
-
-1. Fork the repo
-2. Create your branch (`git checkout -b feature-name`)
-3. Commit your changes (`git commit -m 'Add feature'`)
-4. Push to the branch (`git push origin feature-name`)
-5. Open a pull request
+git checkout -b feature/cool-feature
+git commit -m "Added something awesome"
+git push origin feature/cool-feature
+Then open a pull request.
 
 ---
 
 ## 📜 License
 
-MIT © 2025 BugSquashers
+This project is **not open source** and is intended for **educational portfolio use only**.
+
+© Bug Squashers 2025. All rights reserved.  
+*No redistribution or commercial use permitted.*
+
+---
+
+## 10. 👩‍💻 Authors & Contact Info
+
+**Angie van Rooyen**  
+📧 Email: [241077@virtualwindow.co.za](mailto:241077@virtualwindow.co.za)  
+🔗 GitHub: [AngievR05](https://github.com/AngievR05)
+
+**Xander Poalses**  
+📧 Email: [241322@virtualwindow.co.za](mailto:241322@virtualwindow.co.za)  
+🔗 GitHub: [241322](https://github.com/241322)
+
+**Dhiali Chetty**  
+📧 Email: [231299@virtualwindow.co.za](mailto:231299@virtualwindow.co.za)  
+🔗 GitHub: [Dhiali](https://github.com/Dhiali)
+
+**Tsungai Katsuro**  
+📧 Email: [tsungai@openwindow.co.za](mailto:tsungai@openwindow.co.za)  
+🔗 GitHub: [TsungaiKats](https://github.com/TsungaiKats)
+
+
+---
+
+## 11. 🙏 Acknowledgements
+
+- Open Window Creative Computing Faculty  
+- Stack Overflow, GitHub Copilot, MDN  
+- NodeMailer + Socket.io Docs  
+- The React community  
+- Bugs squashed, lessons learned 🐞
+
+> 💡 *“Documentation is the difference between a side project and a usable product.”*  
+> — Every senior dev ever
