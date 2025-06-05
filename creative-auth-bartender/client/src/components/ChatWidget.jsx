@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ChatWidget.css';
+import ShinyText from './ShinyText';
 
 const socket = io();
 
@@ -91,7 +92,7 @@ const ChatWidget = () => {
   return (
     <div className="chat-widget">
       <button className="chat-toggle" onClick={() => setShowChat(!showChat)}>
-        {showChat ? 'Close Chat' : 'Chat'}
+        {showChat ? <ShinyText text="Close Chat" disabled={false} speed={3} className='chat-shiny-text' /> : <ShinyText text="Chat" disabled={false} speed={3} className='chat-shiny-text' />}
       </button>
 
       {showChat && (
