@@ -7,11 +7,15 @@ const categories = [
   'White Wine',
   'Rose',
   'Whiskey',
+  'Bourbon',
+  'Scotch',
   'Brandy',
+  'Cognac',
   'Vodka',
   'Tequila',
   'Rum',
-  'Gin'
+  'Gin',
+  'Liqueurs'
 ];
 
 const FilterPanel = ({ categoryFilter, setCategoryFilter }) => {
