@@ -21,7 +21,7 @@ const groupedCategories = [
   },
   {
     name: 'Beer',
-    items: ['Beer', 'Lager', 'Ale', 'Stout', 'Pilsner'], // Add more subcategories as needed
+    items: ['Lager', 'Ale', 'Stout', 'Pilsner', 'Cider'], // Add more subcategories as needed
   },
   {
     name: 'Vodka',
