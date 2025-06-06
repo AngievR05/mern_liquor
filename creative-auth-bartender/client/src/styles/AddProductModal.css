@@ -11,6 +11,7 @@
   z-index: 1000;
   padding: 16px;
   box-sizing: border-box;
+  font-family: "Merriweather", serif;
 }
 
 .edit-modal {
@@ -87,6 +88,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease, opacity 0.2s ease;
+  font-family: "Merriweather", serif;
 }
 
 .edit-buttons button[type="submit"] {

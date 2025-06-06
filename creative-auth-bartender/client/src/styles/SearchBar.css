@@ -7,6 +7,7 @@
   margin-top: 20px;
   width: 100%;
   max-width: 400px;
+  font-family: "Merriweather", serif;
 }
 
 .search-bar input {
@@ -31,6 +32,7 @@
   list-style: none;
   padding: 0;
   margin: 4px 0 0 0;
+  font-family: "Merriweather", serif;
 }
 
 .suggestions-list li {
@@ -38,6 +40,7 @@
   cursor: pointer;
   color: #fff;
   font-size: 14px;
+  font-family: "Merriweather", serif;
 }
 
 .suggestions-list li:hover {
@@ -51,6 +54,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-family: "Merriweather", serif;
 }
 
 .search-bar button:hover {

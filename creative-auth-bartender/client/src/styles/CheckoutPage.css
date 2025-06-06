@@ -6,7 +6,7 @@
   flex-direction: column;
   justify-content: center;
   padding: 40px 20px;
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-family: "Merriweather", serif;
 }
 
 .checkout-container {
@@ -25,6 +25,7 @@
   color: #e0ba3e;
   margin-bottom: 24px;
   font-size: 28px;
+  font-family: "Merriweather", serif;
 }
 
 .checkout-form {
