@@ -36,6 +36,7 @@ export default function AuthModal({ onClose }) {
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [underageError, setUnderageError] = useState(""); // <-- Add this line with other useState hooks
+  const [adminMode, setAdminMode] = useState(false);
 
   // Trivia questions for registration
   const triviaQuestions = [
@@ -62,6 +63,16 @@ export default function AuthModal({ onClose }) {
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [adminEmail, setAdminEmail] = useState("");
+  const [adminPassword, setAdminPassword] = useState("");
+  const [adminLoginError, setAdminLoginError] = useState("");
+  const [adminLoginLoading, setAdminLoginLoading] = useState(false);
+  // Admin registration state
+  const [adminTab, setAdminTab] = useState('login'); // 'login' or 'register'
+  const [adminRegEmail, setAdminRegEmail] = useState("");
+  const [adminRegPassword, setAdminRegPassword] = useState("");
+  const [adminRegError, setAdminRegError] = useState("");
+  const [adminRegLoading, setAdminRegLoading] = useState(false);
   const navigate = useNavigate();
 
   function shuffleArray(array) {
@@ -359,6 +370,45 @@ export default function AuthModal({ onClose }) {
     });
   }
 
+  // Admin login handler
+  async function handleAdminLogin(e) {
+    e.preventDefault();
+    setAdminLoginError("");
+    setAdminLoginLoading(true);
+
+    // Replace this with your real admin authentication logic
+    // For demo: admin@site.com / password: admin123
+    if (adminEmail === "admin@site.com" && adminPassword === "admin123") {
+      localStorage.setItem("isAdmin", "true");
+      setAdminLoginLoading(false);
+      onClose && onClose({ isAdmin: true, email: adminEmail });
+    } else {
+      setAdminLoginError("Invalid admin credentials.");
+      setAdminLoginLoading(false);
+    }
+  }
+
+  // Example admin registration handler (replace with real backend logic)
+  async function handleAdminRegister(e) {
+    e.preventDefault();
+    setAdminRegError("");
+    setAdminRegLoading(true);
+
+    // Replace this with your real admin registration logic
+    // For demo: only allow one admin registration
+    if (!adminRegEmail || !adminRegPassword) {
+      setAdminRegError("Email and password required.");
+      setAdminRegLoading(false);
+      return;
+    }
+    // Save admin credentials to localStorage (for demo only, not secure)
+    localStorage.setItem("adminEmail", adminRegEmail);
+    localStorage.setItem("adminPassword", adminRegPassword);
+    setAdminRegLoading(false);
+    setAdminTab('login');
+    alert("Admin registered. Please login.");
+  }
+
   return (
     <>
       <div style={{
@@ -390,14 +440,23 @@ export default function AuthModal({ onClose }) {
             padding: '48px 36px',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <img src={LogoNoText} alt="Logo" style={{ width: 68, height: 68 }} />
+              <img
+                src={LogoNoText}
+                alt="Logo"
+                style={{ width: 68, height: 68, cursor: "pointer" }}
+                onClick={() => setAdminMode(true)}
+                title="Admin login"
+              />
               <h2 style={{ margin: 0, fontSize: 32, fontWeight: 800, letterSpacing: 1 }}>
-                Welcome to The Drunken Giraffe
+                {adminMode ? "Welcome Back" : "Welcome to The Drunken Giraffe"}
               </h2>
             </div>
             <p style={{ marginTop: 18, fontSize: 18, lineHeight: 1.5, color: '#e9c4b4' }}>
-              Discover, collect and enjoy premium spirits.<br />
-              Log in or create an account to purchase, review or become a seller.
+              {adminMode
+                ? "Make sure our site withholds a high standard."
+                : <>Discover, collect and enjoy premium spirits.<br />
+                  Log in or create an account to purchase, review or become a seller.</>
+              }
             </p>
           </div>
           {/* Right column: Auth form */}
@@ -412,7 +471,6 @@ export default function AuthModal({ onClose }) {
             position: 'relative',
             minHeight: 400,
             minWidth: 700,
-            // Add maxHeight and overflow for scrollable registration
             maxHeight: 600,
           }}>
             <button
@@ -423,154 +481,52 @@ export default function AuthModal({ onClose }) {
               }}
               aria-label="Close"
             >×</button>
-            <div style={{ display: 'flex', width: '100%', marginBottom: 32 }}>
-              <button
-                onClick={() => setTab('login')}
-                style={{
-                  flex: 1,
-                  fontWeight: tab === 'login' ? 700 : 400,
-                  fontSize: 18,
-                  background: 'none',
-                  border: 'none',
-                  borderBottom: tab === 'login' ? '3px solid #e1bb3e' : '3px solid transparent',
-                  color: tab === 'login' ? '#350b0f' : '#9b1c23',
-                  padding: '8px 0',
-                  cursor: 'pointer',
-                  outline: 'none'
-                }}
-              >
-                Login
-              </button>
-              <button
-                onClick={() => setTab('register')}
-                style={{
-                  flex: 1,
-                  fontWeight: tab === 'register' ? 700 : 400,
-                  fontSize: 18,
-                  background: 'none',
-                  border: 'none',
-                  borderBottom: tab === 'register' ? '3px solid #e1bb3e' : '3px solid transparent',
-                  color: tab === 'register' ? '#350b0f' : '#9b1c23',
-                  padding: '8px 0',
-                  cursor: 'pointer',
-                  outline: 'none'
-                }}
-              >
-                Register
-              </button>
-            </div>
-            <div style={{
-              width: '100%',
-              // Make registration modal scrollable if needed
-              overflowY: tab === 'register' ? 'auto' : 'visible',
-              maxHeight: tab === 'register' ? 500 : 'none',
-              paddingRight: tab === 'register' ? 8 : 0
-            }}>
-              {showSuccess ? (
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 300,
-                  width: '100%',
-                  textAlign: 'center'
-                }}>
-                  <h2 style={{ color: '#350b0f', fontWeight: 800, marginBottom: 16 }}>
-                    Registration complete!
-                  </h2>
-                  <h3 style={{ color: '#9b1c23', fontWeight: 700 }}>
-                    {registerForm.username}
-                  </h3>
-                  <p style={{ fontSize: 20, color: '#350b0f', marginTop: 12 }}>
-                    You are now a member.
-                  </p>
-                  <p style={{ color: '#888', marginTop: 24 }}>
-                    Redirecting to homepage...
-                  </p>
+            {/* Admin login/register form */}
+            {adminMode ? (
+              <div style={{ width: "100%" }}>
+                <div style={{ display: 'flex', width: '100%', marginBottom: 32 }}>
+                  <button
+                    onClick={() => setAdminTab('login')}
+                    style={{
+                      flex: 1,
+                      fontWeight: adminTab === 'login' ? 700 : 400,
+                      fontSize: 18,
+                      background: 'none',
+                      border: 'none',
+                      borderBottom: adminTab === 'login' ? '3px solid #e1bb3e' : '3px solid transparent',
+                      color: adminTab === 'login' ? '#350b0f' : '#9b1c23',
+                      padding: '8px 0',
+                      cursor: 'pointer',
+                      outline: 'none'
+                    }}
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => setAdminTab('register')}
+                    style={{
+                      flex: 1,
+                      fontWeight: adminTab === 'register' ? 700 : 400,
+                      fontSize: 18,
+                      background: 'none',
+                      border: 'none',
+                      borderBottom: adminTab === 'register' ? '3px solid #e1bb3e' : '3px solid transparent',
+                      color: adminTab === 'register' ? '#350b0f' : '#9b1c23',
+                      padding: '8px 0',
+                      cursor: 'pointer',
+                      outline: 'none'
+                    }}
+                  >
+                    Register
+                  </button>
                 </div>
-              ) : loginSuccess ? (
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 200,
-                  width: '100%',
-                  textAlign: 'center'
-                }}>
-                  <h2 style={{ color: '#2e7d32', fontWeight: 800, marginBottom: 16 }}>
-                    Login successful!
-                  </h2>
-                  <p style={{ color: '#888', marginTop: 24 }}>
-                    Redirecting...
-                  </p>
-                </div>
-              ) : (
-                tab === 'register' ? (
-                  // Registration form (no audio game)
-                  <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }} onSubmit={handleRegisterSubmit}>
-                    <input
-                      type="text"
-                      placeholder="First Name"
-                      value={registerForm.firstName}
-                      onChange={e => setRegisterForm(f => ({ ...f, firstName: e.target.value }))}
-                      style={{
-                        padding: '12px 16px',
-                        borderRadius: 8,
-                        border: '1px solid #e9c4b4',
-                        fontSize: 16,
-                        marginBottom: 8
-                      }}
-                      required
-                    />
-                    <input
-                      type="text"
-                      placeholder="Last Name"
-                      value={registerForm.lastName}
-                      onChange={e => setRegisterForm(f => ({ ...f, lastName: e.target.value }))}
-                      style={{
-                        padding: '12px 16px',
-                        borderRadius: 8,
-                        border: '1px solid #e9c4b4',
-                        fontSize: 16,
-                        marginBottom: 8
-                      }}
-                      required
-                    />
-                    <input
-                      type="text"
-                      placeholder="ID Number"
-                      value={registerForm.idNumber}
-                      onChange={e => setRegisterForm(f => ({ ...f, idNumber: e.target.value }))}
-                      style={{
-                        padding: '12px 16px',
-                        borderRadius: 8,
-                        border: '1px solid #e9c4b4',
-                        fontSize: 16,
-                        marginBottom: 8
-                      }}
-                      required
-                    />
-                    {underageError && (
-                      <div style={{
-                        color: '#b71c1c',
-                        fontSize: 14,
-                        marginBottom: 8,
-                        background: '#fffbe7',
-                        borderRadius: 6,
-                        padding: '6px 10px'
-                      }}>
-                        {underageError}
-                      </div>
-                    )}
+                {adminTab === 'login' ? (
+                  <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }} onSubmit={handleAdminLogin}>
                     <input
                       type="email"
-                      placeholder="Email"
-                      value={registerForm.email}
-                      onChange={handleEmailChange}
-                      onFocus={() => setShowContactHint(true)}
-                      onBlur={handleEmailBlur}
+                      placeholder="Admin Email"
+                      value={adminEmail}
+                      onChange={e => setAdminEmail(e.target.value)}
                       style={{
                         padding: '12px 16px',
                         borderRadius: 8,
@@ -580,275 +536,316 @@ export default function AuthModal({ onClose }) {
                       }}
                       required
                     />
-                    {emailError && (
-                      <div style={{
-                        color: '#b71c1c',
-                        fontSize: 14,
-                        marginBottom: 8,
-                        background: '#fffbe7',
-                        borderRadius: 6,
-                        padding: '6px 10px'
-                      }}>
-                        {emailError}
-                      </div>
-                    )}
                     <input
-                      type="text"
-                      placeholder="Username"
-                      value={registerForm.username}
-                      onChange={handleUsernameChange}
-                      onFocus={() => setShowUsernameHint(true)}
-                      onBlur={() => setShowUsernameHint(false)}
+                      type="password"
+                      placeholder="Password"
+                      value={adminPassword}
+                      onChange={e => setAdminPassword(e.target.value)}
                       style={{
                         padding: '12px 16px',
                         borderRadius: 8,
                         border: '1px solid #e9c4b4',
                         fontSize: 16,
-                        marginBottom: 4
+                        marginBottom: 8
                       }}
                       required
                     />
-                    {showUsernameHint && (
-                      <div style={{ marginBottom: 8 }}>
-                        <span style={{
-                          color: usernameValid.capital ? "#2e7d32" : "#b71c1c",
-                          fontWeight: 500,
-                          fontSize: 14,
-                          marginRight: 12
-                        }}>
-                          {usernameValid.capital ? "✔" : "✖"} Starts with a capital letter
-                        </span>
-                        <span style={{
-                          color: usernameValid.noSpaces ? "#2e7d32" : "#b71c1c",
-                          fontWeight: 500,
-                          fontSize: 14
-                        }}>
-                          {usernameValid.noSpaces ? "✔" : "✖"} No spaces
-                        </span>
-                      </div>
-                    )}
-                    {/* Trivia questions */}
-                    {triviaQuestions.map(q => (
-                      <input
-                        key={q.key}
-                        type="text"
-                        placeholder={q.label}
-                        value={triviaAnswers[q.key]}
-                        onChange={e => setTriviaAnswers(a => ({ ...a, [q.key]: e.target.value }))}
-                        style={{
-                          padding: '12px 16px',
-                          borderRadius: 8,
-                          border: '1px solid #e9c4b4',
-                          fontSize: 16,
-                          marginBottom: 8
-                        }}
-                        required
-                      />
-                    ))}
-                    <div style={{ position: 'relative', width: '100%' }}>
-                      <input
-                        type={showRegisterPassword ? "text" : "password"}
-                        placeholder="Set Password"
-                        value={registerForm.password}
-                        onChange={handlePasswordChange}
-                        onFocus={() => setShowPasswordHintBox(true)}
-                        onBlur={() => setShowPasswordHintBox(false)}
-                        style={{
-                          padding: '12px 16px',
-                          borderRadius: 8,
-                          border: '1px solid #e9c4b4',
-                          fontSize: 16,
-                          marginBottom: 4,
-                          width: '100%',
-                          paddingRight: 40
-                        }}
-                        required
-                      />
-                      <span
-                        style={{
-                          position: 'absolute',
-                          right: 12,
-                          top: 16,
-                          cursor: 'pointer',
-                          color: '#9b1c23'
-                        }}
-                        onClick={() => setShowRegisterPassword(v => !v)}
-                        tabIndex={0}
-                        aria-label={showRegisterPassword ? "Hide password" : "Show password"}
-                      >
-                        {/* Show open eye when showing password, crossed eye when hidden */}
-                        {showRegisterPassword ? <FaEye /> : <FaEyeSlash />}
-                      </span>
-                    </div>
-                    {showPasswordHintBox && (
-                      <div style={{ marginBottom: 8 }}>
-                        <span style={{
-                          color: passwordValid.capital ? "#2e7d32" : "#b71c1c",
-                          fontWeight: 500,
-                          fontSize: 14,
-                          marginRight: 12
-                        }}>
-                          {passwordValid.capital ? "✔" : "✖"} At least 1 capital letter
-                        </span>
-                        <span style={{
-                          color: passwordValid.special ? "#2e7d32" : "#b71c1c",
-                          fontWeight: 500,
-                          fontSize: 14
-                        }}>
-                          {passwordValid.special ? "✔" : "✖"} At least 1 special character
-                        </span>
-                      </div>
-                    )}
+                    {adminLoginError && <div style={{ color: 'red', marginBottom: 8 }}>{adminLoginError}</div>}
                     <button
                       type="submit"
-                      disabled={registerLoading}
-                      style={{
-                        background: 'linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)',
-                        color: '#350b0f',
-                        border: 'none',
-                        borderRadius: 8,
-                        padding: '12px 0',
-                        fontWeight: 700,
-                        fontSize: 18,
-                        cursor: registerLoading ? 'not-allowed' : 'pointer',
-                        marginTop: 8,
-                        opacity: registerLoading ? 0.7 : 1
-                      }}
+                      className='login-btn'
+                      disabled={adminLoginLoading}
                     >
-                      {registerLoading ? "Registering..." : "Register"}
+                      {adminLoginLoading ? "Logging in..." : "Login"}
                     </button>
-                    {registerError && <div style={{ color: 'red', marginBottom: 8 }}>{registerError}</div>}
+                    <button
+                      type="button"
+                      style={{
+                        marginTop: 12,
+                        background: "none",
+                        border: "none",
+                        color: "#9b1c23",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        fontSize: 15
+                      }}
+                      onClick={() => setAdminMode(false)}
+                    >
+                      Back to user login
+                    </button>
                   </form>
                 ) : (
-                  // Login form: step-by-step (email -> trivia -> password)
-                  <div>
-                    <h3 style={{ margin: '0 0 18px 0', fontWeight: 700, color: '#350b0f', fontSize: 22 }}>Welcome back!</h3>
-                    <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                      {loginStep === 0 && (
-                        <>
-                          <input
-                            type="email"
-                            placeholder="Email"
-                            value={loginContact}
-                            onChange={e => setLoginContact(e.target.value)}
-                            style={{
-                              padding: '12px 16px',
-                              borderRadius: 8,
-                              border: '1px solid #e9c4b4',
-                              fontSize: 16,
-                              marginBottom: 8
-                            }}
-                            required
-                          />
-                          {loginError && <div style={{ color: 'red', marginBottom: 8 }}>{loginError}</div>}
-                          <button
-                            type="button"
-                            className='login-btn'
-                            disabled={loginLoading}
-                            onClick={handleLoginContactSubmit}
-                          >
-                            {loginLoading ? "Checking..." : "Continue"}
-                          </button>
-                        </>
-                      )}
-                      {loginStep === 1 && (
-                        <>
-                          <input
-                            type="email"
-                            value={loginContact}
-                            disabled
-                            style={{
-                              padding: '12px 16px',
-                              borderRadius: 8,
-                              border: '1px solid #e9c4b4',
-                              fontSize: 16,
-                              marginBottom: 8,
-                              background: "#f3f3f3"
-                            }}
-                          />
-                          <div style={{ position: 'relative', width: '100%' }}>
-                            <input
-                              type={showLoginPassword ? "text" : "password"}
-                              placeholder="Password"
-                              value={loginPassword}
-                              onChange={e => setLoginPassword(e.target.value)}
-                              style={{
-                                padding: '12px 16px',
-                                borderRadius: 8,
-                                border: '1px solid #e9c4b4',
-                                fontSize: 16,
-                                marginBottom: 8,
-                                width: '100%',
-                                paddingRight: 40
-                              }}
-                              required
-                            />
-                            <span
-                              style={{
-                                position: 'absolute',
-                                right: 12,
-                                top: 16,
-                                cursor: 'pointer',
-                                color: '#9b1c23'
-                              }}
-                              onClick={() => setShowLoginPassword(v => !v)}
-                              tabIndex={0}
-                              aria-label={showLoginPassword ? "Hide password" : "Show password"}
-                            >
-                              {/* Show open eye when showing password, crossed eye when hidden */}
-                              {showLoginPassword ? <FaEye /> : <FaEyeSlash />}
+                  <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }} onSubmit={handleAdminRegister}>
+                    <input
+                      type="email"
+                      placeholder="Admin Email"
+                      value={adminRegEmail}
+                      onChange={e => setAdminRegEmail(e.target.value)}
+                      style={{
+                        padding: '12px 16px',
+                        borderRadius: 8,
+                        border: '1px solid #e9c4b4',
+                        fontSize: 16,
+                        marginBottom: 8
+                      }}
+                      required
+                    />
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={adminRegPassword}
+                      onChange={e => setAdminRegPassword(e.target.value)}
+                      style={{
+                        padding: '12px 16px',
+                        borderRadius: 8,
+                        border: '1px solid #e9c4b4',
+                        fontSize: 16,
+                        marginBottom: 8
+                      }}
+                      required
+                    />
+                    {adminRegError && <div style={{ color: 'red', marginBottom: 8 }}>{adminRegError}</div>}
+                    <button
+                      type="submit"
+                      className='login-btn'
+                      disabled={adminRegLoading}
+                    >
+                      {adminRegLoading ? "Registering..." : "Register"}
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        marginTop: 12,
+                        background: "none",
+                        border: "none",
+                        color: "#9b1c23",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        fontSize: 15
+                      }}
+                      onClick={() => setAdminTab('login')}
+                    >
+                      Back to login
+                    </button>
+                  </form>
+                )}
+              </div>
+            ) : (
+              <>
+                <div style={{ display: 'flex', width: '100%', marginBottom: 32 }}>
+                  <button
+                    onClick={() => setTab('login')}
+                    style={{
+                      flex: 1,
+                      fontWeight: tab === 'login' ? 700 : 400,
+                      fontSize: 18,
+                      background: 'none',
+                      border: 'none',
+                      borderBottom: tab === 'login' ? '3px solid #e1bb3e' : '3px solid transparent',
+                      color: tab === 'login' ? '#350b0f' : '#9b1c23',
+                      padding: '8px 0',
+                      cursor: 'pointer',
+                      outline: 'none'
+                    }}
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => setTab('register')}
+                    style={{
+                      flex: 1,
+                      fontWeight: tab === 'register' ? 700 : 400,
+                      fontSize: 18,
+                      background: 'none',
+                      border: 'none',
+                      borderBottom: tab === 'register' ? '3px solid #e1bb3e' : '3px solid transparent',
+                      color: tab === 'register' ? '#350b0f' : '#9b1c23',
+                      padding: '8px 0',
+                      cursor: 'pointer',
+                      outline: 'none'
+                    }}
+                  >
+                    Register
+                  </button>
+                </div>
+                <div style={{
+                  width: '100%',
+                  // Make registration modal scrollable if needed
+                  overflowY: tab === 'register' ? 'auto' : 'visible',
+                  maxHeight: tab === 'register' ? 500 : 'none',
+                  paddingRight: tab === 'register' ? 8 : 0
+                }}>
+                  {showSuccess ? (
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: 300,
+                      width: '100%',
+                      textAlign: 'center'
+                    }}>
+                      <h2 style={{ color: '#350b0f', fontWeight: 800, marginBottom: 16 }}>
+                        Registration complete!
+                      </h2>
+                      <h3 style={{ color: '#9b1c23', fontWeight: 700 }}>
+                        {registerForm.username}
+                      </h3>
+                      <p style={{ fontSize: 20, color: '#350b0f', marginTop: 12 }}>
+                        You are now a member.
+                      </p>
+                      <p style={{ color: '#888', marginTop: 24 }}>
+                        Redirecting to homepage...
+                      </p>
+                    </div>
+                  ) : loginSuccess ? (
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: 200,
+                      width: '100%',
+                      textAlign: 'center'
+                    }}>
+                      <h2 style={{ color: '#2e7d32', fontWeight: 800, marginBottom: 16 }}>
+                        Login successful!
+                      </h2>
+                      <p style={{ color: '#888', marginTop: 24 }}>
+                        Redirecting...
+                      </p>
+                    </div>
+                  ) : (
+                    tab === 'register' ? (
+                      // Registration form (no audio game)
+                      <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }} onSubmit={handleRegisterSubmit}>
+                        <input
+                          type="text"
+                          placeholder="First Name"
+                          value={registerForm.firstName}
+                          onChange={e => setRegisterForm(f => ({ ...f, firstName: e.target.value }))}
+                          style={{
+                            padding: '12px 16px',
+                            borderRadius: 8,
+                            border: '1px solid #e9c4b4',
+                            fontSize: 16,
+                            marginBottom: 8
+                          }}
+                          required
+                        />
+                        <input
+                          type="text"
+                          placeholder="Last Name"
+                          value={registerForm.lastName}
+                          onChange={e => setRegisterForm(f => ({ ...f, lastName: e.target.value }))}
+                          style={{
+                            padding: '12px 16px',
+                            borderRadius: 8,
+                            border: '1px solid #e9c4b4',
+                            fontSize: 16,
+                            marginBottom: 8
+                          }}
+                          required
+                        />
+                        <input
+                          type="text"
+                          placeholder="ID Number"
+                          value={registerForm.idNumber}
+                          onChange={e => setRegisterForm(f => ({ ...f, idNumber: e.target.value }))}
+                          style={{
+                            padding: '12px 16px',
+                            borderRadius: 8,
+                            border: '1px solid #e9c4b4',
+                            fontSize: 16,
+                            marginBottom: 8
+                          }}
+                          required
+                        />
+                        {underageError && (
+                          <div style={{
+                            color: '#b71c1c',
+                            fontSize: 14,
+                            marginBottom: 8,
+                            background: '#fffbe7',
+                            borderRadius: 6,
+                            padding: '6px 10px'
+                          }}>
+                            {underageError}
+                          </div>
+                        )}
+                        <input
+                          type="email"
+                          placeholder="Email"
+                          value={registerForm.email}
+                          onChange={handleEmailChange}
+                          onFocus={() => setShowContactHint(true)}
+                          onBlur={handleEmailBlur}
+                          style={{
+                            padding: '12px 16px',
+                            borderRadius: 8,
+                            border: '1px solid #e9c4b4',
+                            fontSize: 16,
+                            marginBottom: 8
+                          }}
+                          required
+                        />
+                        {emailError && (
+                          <div style={{
+                            color: '#b71c1c',
+                            fontSize: 14,
+                            marginBottom: 8,
+                            background: '#fffbe7',
+                            borderRadius: 6,
+                            padding: '6px 10px'
+                          }}>
+                            {emailError}
+                          </div>
+                        )}
+                        <input
+                          type="text"
+                          placeholder="Username"
+                          value={registerForm.username}
+                          onChange={handleUsernameChange}
+                          onFocus={() => setShowUsernameHint(true)}
+                          onBlur={() => setShowUsernameHint(false)}
+                          style={{
+                            padding: '12px 16px',
+                            borderRadius: 8,
+                            border: '1px solid #e9c4b4',
+                            fontSize: 16,
+                            marginBottom: 4
+                          }}
+                          required
+                        />
+                        {showUsernameHint && (
+                          <div style={{ marginBottom: 8 }}>
+                            <span style={{
+                              color: usernameValid.capital ? "#2e7d32" : "#b71c1c",
+                              fontWeight: 500,
+                              fontSize: 14,
+                              marginRight: 12
+                            }}>
+                              {usernameValid.capital ? "✔" : "✖"} Starts with a capital letter
+                            </span>
+                            <span style={{
+                              color: usernameValid.noSpaces ? "#2e7d32" : "#b71c1c",
+                              fontWeight: 500,
+                              fontSize: 14
+                            }}>
+                              {usernameValid.noSpaces ? "✔" : "✖"} No spaces
                             </span>
                           </div>
-                          {loginError && <div style={{ color: 'red', marginBottom: 8 }}>{loginError}</div>}
-                          <button
-                            type="button"
-                            className='login-btn'
-                            disabled={loginLoading}
-                            onClick={handleLoginPasswordContinue}
-                          >
-                            Continue
-                          </button>
-                        </>
-                      )}
-                      {loginStep === 2 && (
-                        <>
+                        )}
+                        {/* Trivia questions */}
+                        {triviaQuestions.map(q => (
                           <input
-                            type="email"
-                            value={loginContact}
-                            disabled
-                            style={{
-                              padding: '12px 16px',
-                              borderRadius: 8,
-                              border: '1px solid #e9c4b4',
-                              fontSize: 16,
-                              marginBottom: 8,
-                              background: "#f3f3f3"
-                            }}
-                          />
-                          <input
-                            type="password"
-                            value={loginPassword}
-                            disabled
-                            style={{
-                              padding: '12px 16px',
-                              borderRadius: 8,
-                              border: '1px solid #e9c4b4',
-                              fontSize: 16,
-                              marginBottom: 8,
-                              background: "#f3f3f3"
-                            }}
-                          />
-                          {/* Always show the question label if index is set */}
-                          {typeof loginTriviaIndex === "number" && triviaQuestions[loginTriviaIndex] && (
-                            <label style={{ fontWeight: 500, marginBottom: 4 }}>
-                              {triviaQuestions[loginTriviaIndex].label}
-                            </label>
-                          )}
-                          <input
+                            key={q.key}
                             type="text"
-                            placeholder="Answer"
-                            value={loginTriviaAnswer}
-                            onChange={e => setLoginTriviaAnswer(e.target.value)}
+                            placeholder={q.label}
+                            value={triviaAnswers[q.key]}
+                            onChange={e => setTriviaAnswers(a => ({ ...a, [q.key]: e.target.value }))}
                             style={{
                               padding: '12px 16px',
                               borderRadius: 8,
@@ -858,94 +855,310 @@ export default function AuthModal({ onClose }) {
                             }}
                             required
                           />
-                          {loginError && <div style={{ color: 'red', marginBottom: 8 }}>{loginError}</div>}
+                        ))}
+                        <div style={{ position: 'relative', width: '100%' }}>
+                          <input
+                            type={showRegisterPassword ? "text" : "password"}
+                            placeholder="Set Password"
+                            value={registerForm.password}
+                            onChange={handlePasswordChange}
+                            onFocus={() => setShowPasswordHintBox(true)}
+                            onBlur={() => setShowPasswordHintBox(false)}
+                            style={{
+                              padding: '12px 16px',
+                              borderRadius: 8,
+                              border: '1px solid #e9c4b4',
+                              fontSize: 16,
+                              marginBottom: 4,
+                              width: '100%',
+                              paddingRight: 40
+                            }}
+                            required
+                          />
+                          <span
+                            style={{
+                              position: 'absolute',
+                              right: 12,
+                              top: 16,
+                              cursor: 'pointer',
+                              color: '#9b1c23'
+                            }}
+                            onClick={() => setShowRegisterPassword(v => !v)}
+                            tabIndex={0}
+                            aria-label={showRegisterPassword ? "Hide password" : "Show password"}
+                          >
+                            {/* Show open eye when showing password, crossed eye when hidden */}
+                            {showRegisterPassword ? <FaEye /> : <FaEyeSlash />}
+                          </span>
+                        </div>
+                        {showPasswordHintBox && (
+                          <div style={{ marginBottom: 8 }}>
+                            <span style={{
+                              color: passwordValid.capital ? "#2e7d32" : "#b71c1c",
+                              fontWeight: 500,
+                              fontSize: 14,
+                              marginRight: 12
+                            }}>
+                              {passwordValid.capital ? "✔" : "✖"} At least 1 capital letter
+                            </span>
+                            <span style={{
+                              color: passwordValid.special ? "#2e7d32" : "#b71c1c",
+                              fontWeight: 500,
+                              fontSize: 14
+                            }}>
+                              {passwordValid.special ? "✔" : "✖"} At least 1 special character
+                            </span>
+                          </div>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={registerLoading}
+                          style={{
+                            background: 'linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)',
+                            color: '#350b0f',
+                            border: 'none',
+                            borderRadius: 8,
+                            padding: '12px 0',
+                            fontWeight: 700,
+                            fontSize: 18,
+                            cursor: registerLoading ? 'not-allowed' : 'pointer',
+                            marginTop: 8,
+                            opacity: registerLoading ? 0.7 : 1
+                          }}
+                        >
+                          {registerLoading ? "Registering..." : "Register"}
+                        </button>
+                        {registerError && <div style={{ color: 'red', marginBottom: 8 }}>{registerError}</div>}
+                      </form>
+                    ) : (
+                      // Login form: step-by-step (email -> trivia -> password)
+                      <div>
+                        <h3 style={{ margin: '0 0 18px 0', fontWeight: 700, color: '#350b0f', fontSize: 22 }}>Welcome back!</h3>
+                        <form style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                          {loginStep === 0 && (
+                            <>
+                              <input
+                                type="email"
+                                placeholder="Email"
+                                value={loginContact}
+                                onChange={e => setLoginContact(e.target.value)}
+                                style={{
+                                  padding: '12px 16px',
+                                  borderRadius: 8,
+                                  border: '1px solid #e9c4b4',
+                                  fontSize: 16,
+                                  marginBottom: 8
+                                }}
+                                required
+                              />
+                              {loginError && <div style={{ color: 'red', marginBottom: 8 }}>{loginError}</div>}
+                              <button
+                                type="button"
+                                className='login-btn'
+                                disabled={loginLoading}
+                                onClick={handleLoginContactSubmit}
+                              >
+                                {loginLoading ? "Checking..." : "Continue"}
+                              </button>
+                            </>
+                          )}
+                          {loginStep === 1 && (
+                            <>
+                              <input
+                                type="email"
+                                value={loginContact}
+                                disabled
+                                style={{
+                                  padding: '12px 16px',
+                                  borderRadius: 8,
+                                  border: '1px solid #e9c4b4',
+                                  fontSize: 16,
+                                  marginBottom: 8,
+                                  background: "#f3f3f3"
+                                }}
+                              />
+                              <div style={{ position: 'relative', width: '100%' }}>
+                                <input
+                                  type={showLoginPassword ? "text" : "password"}
+                                  placeholder="Password"
+                                  value={loginPassword}
+                                  onChange={e => setLoginPassword(e.target.value)}
+                                  style={{
+                                    padding: '12px 16px',
+                                    borderRadius: 8,
+                                    border: '1px solid #e9c4b4',
+                                    fontSize: 16,
+                                    marginBottom: 8,
+                                    width: '100%',
+                                    paddingRight: 40
+                                  }}
+                                  required
+                                />
+                                <span
+                                  style={{
+                                    position: 'absolute',
+                                    right: 12,
+                                    top: 16,
+                                    cursor: 'pointer',
+                                    color: '#9b1c23'
+                                  }}
+                                  onClick={() => setShowLoginPassword(v => !v)}
+                                  tabIndex={0}
+                                  aria-label={showLoginPassword ? "Hide password" : "Show password"}
+                                >
+                                  {/* Show open eye when showing password, crossed eye when hidden */}
+                                  {showLoginPassword ? <FaEye /> : <FaEyeSlash />}
+                                </span>
+                              </div>
+                              {loginError && <div style={{ color: 'red', marginBottom: 8 }}>{loginError}</div>}
+                              <button
+                                type="button"
+                                className='login-btn'
+                                disabled={loginLoading}
+                                onClick={handleLoginPasswordContinue}
+                              >
+                                Continue
+                              </button>
+                            </>
+                          )}
+                          {loginStep === 2 && (
+                            <>
+                              <input
+                                type="email"
+                                value={loginContact}
+                                disabled
+                                style={{
+                                  padding: '12px 16px',
+                                  borderRadius: 8,
+                                  border: '1px solid #e9c4b4',
+                                  fontSize: 16,
+                                  marginBottom: 8,
+                                  background: "#f3f3f3"
+                                }}
+                              />
+                              <input
+                                type="password"
+                                value={loginPassword}
+                                disabled
+                                style={{
+                                  padding: '12px 16px',
+                                  borderRadius: 8,
+                                  border: '1px solid #e9c4b4',
+                                  fontSize: 16,
+                                  marginBottom: 8,
+                                  background: "#f3f3f3"
+                                }}
+                              />
+                              {/* Always show the question label if index is set */}
+                              {typeof loginTriviaIndex === "number" && triviaQuestions[loginTriviaIndex] && (
+                                <label style={{ fontWeight: 500, marginBottom: 4 }}>
+                                  {triviaQuestions[loginTriviaIndex].label}
+                                </label>
+                              )}
+                              <input
+                                type="text"
+                                placeholder="Answer"
+                                value={loginTriviaAnswer}
+                                onChange={e => setLoginTriviaAnswer(e.target.value)}
+                                style={{
+                                  padding: '12px 16px',
+                                  borderRadius: 8,
+                                  border: '1px solid #e9c4b4',
+                                  fontSize: 16,
+                                  marginBottom: 8
+                                }}
+                                required
+                              />
+                              {loginError && <div style={{ color: 'red', marginBottom: 8 }}>{loginError}</div>}
+                              <button
+                                type="button"
+                                className='login-btn'
+                                disabled={loginLoading}
+                                onClick={handleLoginTriviaSubmit}
+                              >
+                                {loginLoading ? "Logging in..." : "Login"}
+                              </button>
+                            </>
+                          )}
+                        </form>
+                        <div style={{ textAlign: 'center', margin: '18px 0 0 0', color: '#888', fontSize: 15 }}>
+                          Or continue with Socials
+                        </div>
+                        <div style={{ display: 'flex', gap: 16, marginTop: 16, justifyContent: 'center' }}>
+                          <button
+                            style={{
+                              flex: 1,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: 10,
+                              background: '#fff',
+                              border: '1px solid #d1d5db',
+                              borderRadius: 8,
+                              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                              padding: '10px 0',
+                              fontWeight: 600,
+                              fontSize: 16,
+                              color: '#222',
+                              cursor: 'pointer',
+                              transition: 'box-shadow 0.2s',
+                            }}
+                            onMouseOver={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)'}
+                            onMouseOut={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.06)'}
+                          >
+                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: 22, height: 22 }} />
+                            Google
+                          </button>
+                          <button
+                            style={{
+                              flex: 1,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: 10,
+                              background: '#fff',
+                              border: '1px solid #d1d5db',
+                              borderRadius: 8,
+                              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                              padding: '10px 0',
+                              fontWeight: 600,
+                              fontSize: 16,
+                              color: '#222',
+                              cursor: 'pointer',
+                              transition: 'box-shadow 0.2s',
+                            }}
+                            onMouseOver={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)'}
+                            onMouseOut={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.06)'}
+                          >
+                            <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook" style={{ width: 22, height: 22 }} />
+                            Facebook
+                          </button>
+                        </div>
+                        <div style={{ marginTop: 32, textAlign: 'center', fontSize: 15, color: '#888' }}>
+                          Don't have an account?
                           <button
                             type="button"
-                            className='login-btn'
-                            disabled={loginLoading}
-                            onClick={handleLoginTriviaSubmit}
+                            onClick={() => setTab('register')}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#9b1c23',
+                              fontWeight: 700,
+                              marginLeft: 8,
+                              cursor: 'pointer',
+                              textDecoration: 'underline',
+                              fontSize: 15
+                            }}
                           >
-                            {loginLoading ? "Logging in..." : "Login"}
+                            Create One
                           </button>
-                        </>
-                      )}
-                    </form>
-                    <div style={{ textAlign: 'center', margin: '18px 0 0 0', color: '#888', fontSize: 15 }}>
-                      Or continue with Socials
-                    </div>
-                    <div style={{ display: 'flex', gap: 16, marginTop: 16, justifyContent: 'center' }}>
-                      <button
-                        style={{
-                          flex: 1,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: 10,
-                          background: '#fff',
-                          border: '1px solid #d1d5db',
-                          borderRadius: 8,
-                          boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                          padding: '10px 0',
-                          fontWeight: 600,
-                          fontSize: 16,
-                          color: '#222',
-                          cursor: 'pointer',
-                          transition: 'box-shadow 0.2s',
-                        }}
-                        onMouseOver={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)'}
-                        onMouseOut={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.06)'}
-                      >
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: 22, height: 22 }} />
-                        Google
-                      </button>
-                      <button
-                        style={{
-                          flex: 1,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: 10,
-                          background: '#fff',
-                          border: '1px solid #d1d5db',
-                          borderRadius: 8,
-                          boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                          padding: '10px 0',
-                          fontWeight: 600,
-                          fontSize: 16,
-                          color: '#222',
-                          cursor: 'pointer',
-                          transition: 'box-shadow 0.2s',
-                        }}
-                        onMouseOver={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)'}
-                        onMouseOut={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.06)'}
-                      >
-                        <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook" style={{ width: 22, height: 22 }} />
-                        Facebook
-                      </button>
-                    </div>
-                    <div style={{ marginTop: 32, textAlign: 'center', fontSize: 15, color: '#888' }}>
-                      Don't have an account?
-                      <button
-                        type="button"
-                        onClick={() => setTab('register')}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#9b1c23',
-                          fontWeight: 700,
-                          marginLeft: 8,
-                          cursor: 'pointer',
-                          textDecoration: 'underline',
-                          fontSize: 15
-                        }}
-                      >
-                        Create One
-                      </button>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
