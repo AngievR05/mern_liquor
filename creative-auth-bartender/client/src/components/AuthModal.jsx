@@ -370,43 +370,103 @@ export default function AuthModal({ onClose }) {
     });
   }
 
+  // Admin registration handler
+  async function handleAdminRegister(e) {
+    e.preventDefault();
+    setAdminRegError("");
+    setAdminRegLoading(true);
+
+    // Only allow admin emails ending with @virtualwindow.co.za
+    const email = adminRegEmail.trim().toLowerCase();
+    if (!email.endsWith("@virtualwindow.co.za")) {
+      setAdminRegError("Cannot login as admin");
+      setAdminRegLoading(false);
+      return;
+    }
+
+    // Save admin to backend (must be saved to database)
+    try {
+      const res = await fetch('/api/admin/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: adminRegPassword
+        })
+      });
+      // If you get a 404, it means your backend does not have this endpoint.
+      if (res.status === 404) {
+        setAdminRegError("Admin registration is not available. Please ask the backend developer to implement /api/admin/register.");
+        setAdminRegLoading(false);
+        return;
+      }
+      if (res.status === 409) {
+        setAdminRegError("Admin already registered.");
+        setAdminRegLoading(false);
+        return;
+      }
+      if (!res.ok) {
+        let msg = "Cannot login as admin";
+        try {
+          const data = await res.json();
+          if (data && data.message) msg = data.message;
+        } catch {}
+        setAdminRegError(msg);
+        setAdminRegLoading(false);
+        return;
+      }
+      setAdminRegLoading(false);
+      setAdminTab('login');
+      alert("Admin registered. Please login.");
+    } catch {
+      setAdminRegError("Cannot login as admin");
+      setAdminRegLoading(false);
+    }
+  }
+
   // Admin login handler
   async function handleAdminLogin(e) {
     e.preventDefault();
     setAdminLoginError("");
     setAdminLoginLoading(true);
 
-    // Replace this with your real admin authentication logic
-    // For demo: admin@site.com / password: admin123
-    if (adminEmail === "admin@site.com" && adminPassword === "admin123") {
-      localStorage.setItem("isAdmin", "true");
+    // Only allow admin emails ending with @virtualwindow.co.za
+    const email = adminEmail.trim().toLowerCase();
+    if (!email.endsWith("@virtualwindow.co.za")) {
+      setAdminLoginError("Cannot login as admin");
       setAdminLoginLoading(false);
-      onClose && onClose({ isAdmin: true, email: adminEmail });
-    } else {
-      setAdminLoginError("Invalid admin credentials.");
-      setAdminLoginLoading(false);
-    }
-  }
-
-  // Example admin registration handler (replace with real backend logic)
-  async function handleAdminRegister(e) {
-    e.preventDefault();
-    setAdminRegError("");
-    setAdminRegLoading(true);
-
-    // Replace this with your real admin registration logic
-    // For demo: only allow one admin registration
-    if (!adminRegEmail || !adminRegPassword) {
-      setAdminRegError("Email and password required.");
-      setAdminRegLoading(false);
       return;
     }
-    // Save admin credentials to localStorage (for demo only, not secure)
-    localStorage.setItem("adminEmail", adminRegEmail);
-    localStorage.setItem("adminPassword", adminRegPassword);
-    setAdminRegLoading(false);
-    setAdminTab('login');
-    alert("Admin registered. Please login.");
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: adminPassword
+        })
+      });
+      if (res.status === 404) {
+        setAdminLoginError("Not a regristed admin");
+        setAdminLoginLoading(false);
+        return;
+      }
+      if (!res.ok) {
+        setAdminLoginError("Cannot login as admin");
+        setAdminLoginLoading(false);
+        return;
+      }
+      // Save admin info to localStorage to trigger Navbar profile button
+      localStorage.setItem("loggedInUser", JSON.stringify({ email: adminEmail, isAdmin: true }));
+      localStorage.setItem("isAdmin", "true");
+      document.dispatchEvent(new Event('auth-login'));
+      setAdminLoginLoading(false);
+      onClose && onClose({ isAdmin: true, email: adminEmail });
+    } catch {
+      setAdminLoginError("Cannot login as admin");
+      setAdminLoginLoading(false);
+    }
   }
 
   return (

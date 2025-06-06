@@ -42,6 +42,53 @@ app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 
+// --- Admin Model using Mongoose ---
+
+// Define Admin schema/model (if not already created)
+const adminSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
+});
+const Admin = mongoose.models && mongoose.models.Admin
+  ? mongoose.models.Admin
+  : mongoose.model('Admin', adminSchema);
+
+// --- Admin Registration Endpoint ---
+app.post('/api/admin/register', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ message: 'Email and password required' });
+  if (!email.endsWith('@virtualwindow.co.za')) return res.status(403).json({ message: 'Invalid admin email' });
+
+  try {
+    const exists = await Admin.findOne({ email: email.trim().toLowerCase() });
+    if (exists) return res.status(409).json({ message: 'Admin already registered.' });
+
+    // For production, hash the password!
+    const admin = new Admin({ email: email.trim().toLowerCase(), password });
+    await admin.save();
+    res.status(201).json({ message: 'Admin registered' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// --- Admin Login Endpoint ---
+app.post('/api/admin/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ message: 'Email and password required' });
+
+  try {
+    const admin = await Admin.findOne({ email: email.trim().toLowerCase() });
+    if (!admin) return res.status(404).json({ message: 'Not a regristed admin' });
+    // For production, compare hashed passwords!
+    if (admin.password !== password) return res.status(401).json({ message: 'Incorrect password' });
+
+    res.json({ message: 'Admin login successful', email: admin.email });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // HTTP + Socket.io server
 const server = http.createServer(app);
 const io = new Server(server, {
