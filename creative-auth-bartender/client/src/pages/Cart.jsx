@@ -1,37 +1,35 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import Footer from '../components/Footer';
-import { Link } from 'react-router-dom'; // ✅ Import Link
+import { Link } from 'react-router-dom';
+import ProductCard from '../components/ProductCard'; // <-- import ProductCard
 import '../styles/CartPage.css';
 
-export default function Cart() {
-  const loggedInUser = (() => {
-    try {
-      return JSON.parse(localStorage.getItem('loggedInUser'));
-    } catch {
-      return null;
-    }
-  })();
+const getStoredUser = () => {
+  try {
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    return user || null;
+  } catch {
+    return null;
+  }
+};
 
+export default function Cart() {
+  const loggedInUser = getStoredUser();
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
 
   if (!loggedInUser) {
     return (
-      <div>
-        <div style={{
-          minHeight: '60vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 24,
-          color: '#9b1c23',
-          fontWeight: 600,
-          textAlign: 'center'
-        }}>
-          <p>Missing your items?<br />Login to see your next order</p>
-        </div>
-        <Footer />
+      <div style={{
+        minHeight: '60vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 22,
+        color: '#9b1c23',
+        fontWeight: 700
+      }}>
+        No items - please login to add products
       </div>
     );
   }
@@ -48,23 +46,19 @@ export default function Cart() {
           <>
             <ul className="cart-list">
               {cartItems.map(item => (
-                <li key={item._id} className="cart-item">
-                  <div className="cart-item-info">
-                    <img src={item.image} alt={item.title} className="cart-item-image" />
-                    <div>
-                      <strong>{item.title}</strong>
-                      <p>R {item.price.toFixed(2)}</p>
+                <li key={item._id} className="cart-item" style={{ flexDirection: "column", alignItems: "stretch" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                    <ProductCard product={item} showAddToCart={false} />
+                    <div className="cart-item-actions" style={{ minWidth: 120 }}>
+                      <label>Qty:</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.quantity}
+                        onChange={(e) => updateQuantity(item._id, Number(e.target.value))}
+                      />
+                      <button onClick={() => removeFromCart(item._id)} className="remove-btn">Remove</button>
                     </div>
-                  </div>
-                  <div className="cart-item-actions">
-                    <label>Qty:</label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) => updateQuantity(item._id, Number(e.target.value))}
-                    />
-                    <button onClick={() => removeFromCart(item._id)} className="remove-btn">Remove</button>
                   </div>
                 </li>
               ))}

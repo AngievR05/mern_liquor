@@ -3,10 +3,8 @@ import ProductCard from '../components/ProductCard';
 import FilterPanel from '../components/FilterPanel';
 import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
-import AddProductModal from '../components/AddProductModal';
-import EditProductModal from '../components/EditProductModal';
-import ProfileModal from '../components/ProfileModal';
 import ReviewsModal from '../components/ReviewsModal';
+import AuthModal from '../components/AuthModal';
 import '../styles/StorePage.css';
 import Masonry from 'react-masonry-css';
 
@@ -33,10 +31,9 @@ const Store = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
@@ -68,24 +65,6 @@ const Store = () => {
     setFilteredProducts(updated);
   }, [searchQuery, categoryFilter, products]);
 
-  const handleAddProduct = (newProduct) => {
-    setProducts(prev => [...prev, newProduct]);
-  };
-
-  const handleEditProduct = (updatedProduct) => {
-    setProducts(prev => prev.map(p => p._id === updatedProduct._id ? updatedProduct : p));
-  };
-
-  const handleDeleteProduct = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) return;
-    try {
-      await fetch(`/api/products/${id}`, { method: 'DELETE' });
-      setProducts(prev => prev.filter(p => p._id !== id));
-    } catch (err) {
-      console.error('Failed to delete product:', err);
-    }
-  };
-
   const breakpointCols = {
     default: 4,
     1920: 3,
@@ -111,6 +90,9 @@ const Store = () => {
 
   const useMasonry = filteredProducts.length > currentCols;
 
+  // Handler for ProductCard ghost button
+  const handleLoginToBuy = () => setShowAuthModal(true);
+
   return (
     <div className="store-page">
       <div className="store-layout">
@@ -122,12 +104,7 @@ const Store = () => {
             setFilteredProducts={setFilteredProducts}
           />
           <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} className="filter-panel" />
-          <button
-            className="store-add-product-btn"
-            onClick={() => setShowAddModal(true)}
-          >
-            Add Product
-          </button>
+          {/* Remove Add Product button */}
         </div>
 
         {useMasonry ? (
@@ -138,20 +115,9 @@ const Store = () => {
           >
             {filteredProducts.map((product) => (
               <div key={product._id} className="product-wrapper">
-                <ProductCard product={product} />
+                <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
                 <div className="product-actions">
-                  <button
-                    onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}
-                    className="edit-button"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProduct(product._id)}
-                    className="delete-button"
-                  >
-                    Delete
-                  </button>
+                  {/* Remove Edit and Delete buttons */}
                   <button
                     onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
                     className="reviews-button"
@@ -166,20 +132,9 @@ const Store = () => {
           <div className="product-grid normal-grid">
             {filteredProducts.map((product) => (
               <div key={product._id} className="product-wrapper">
-                <ProductCard product={product} />
+                <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
                 <div className="product-actions">
-                  <button
-                    onClick={() => { setSelectedProduct(product); setShowEditModal(true); }}
-                    className="edit-button"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProduct(product._id)}
-                    className="delete-button"
-                  >
-                    Delete
-                  </button>
+                  {/* Remove Edit and Delete buttons */}
                   <button
                     onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
                     className="reviews-button"
@@ -193,29 +148,16 @@ const Store = () => {
         )}
       </div>
 
-      {showAddModal && <AddProductModal onClose={() => setShowAddModal(false)} onSave={handleAddProduct} />}
-      {showEditModal && <EditProductModal product={selectedProduct} onClose={() => setShowEditModal(false)} onSave={handleEditProduct} />}
-      {showProfileModal && loggedInUser && (
-        <ProfileModal
-          user={loggedInUser}
-          onClose={() => setShowProfileModal(false)}
-          onLogout={() => {
-            setShowProfileModal(false);
-            localStorage.removeItem('loggedInUser');
-            localStorage.removeItem('profilePic');
-            window.location.reload();
-          }}
-          onProfilePicChange={(url) => {
-            localStorage.setItem('profilePic', url);
-          }}
-        />
-      )}
+      {/* Remove AddProductModal and EditProductModal */}
       {showReviewsModal && (
         <ReviewsModal
           onClose={() => setShowReviewsModal(false)}
           reviews={selectedProduct ? selectedProduct.reviews : []}
           productName={selectedProduct ? selectedProduct.title : ''}
         />
+      )}
+      {showAuthModal && (
+        <AuthModal onClose={() => setShowAuthModal(false)} />
       )}
       <Footer className="store-footer" />
     </div>

@@ -57,6 +57,7 @@ export default function AuthModal({ onClose }) {
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginPassword, setLoginPassword] = useState("");
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
 
   function shuffleArray(array) {
@@ -253,8 +254,15 @@ export default function AuthModal({ onClose }) {
         username: user.username,
         email: user.email,
       };
-      onClose(userObj);
-      navigate("/landing-page"); // Redirect to homepage after successful login
+      setLoginSuccess(true); // Show login success message
+      // Fire a custom event so Navbar can update immediately
+      setTimeout(() => {
+        setLoginSuccess(false);
+        // Fire event for Navbar to update state
+        document.dispatchEvent(new Event('auth-login'));
+        onClose(userObj);
+        navigate("/landing-page");
+      }, 1200);
     } catch {
       setLoginError("A server error occurred. Please try again later.");
     }
@@ -426,6 +434,23 @@ export default function AuthModal({ onClose }) {
                   </p>
                   <p style={{ color: '#888', marginTop: 24 }}>
                     Redirecting to homepage...
+                  </p>
+                </div>
+              ) : loginSuccess ? (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 200,
+                  width: '100%',
+                  textAlign: 'center'
+                }}>
+                  <h2 style={{ color: '#2e7d32', fontWeight: 800, marginBottom: 16 }}>
+                    Login successful!
+                  </h2>
+                  <p style={{ color: '#888', marginTop: 24 }}>
+                    Redirecting...
                   </p>
                 </div>
               ) : (

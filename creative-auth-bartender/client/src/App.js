@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
 import Welcome from './pages/Welcome';
@@ -21,16 +21,13 @@ import SellerApplication from './pages/SellerApplication';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-export default function App() {
-  const [showAuthModal, setShowAuthModal] = useState(false);
+function AppRoutes({ handleLoginClick, showAuthModal, setShowAuthModal }) {
+  const location = useLocation();
+  const showNavbar = !["/", "/game"].includes(location.pathname);
 
-  // Helper to pass to Navbar for login button
-  const handleLoginClick = () => setShowAuthModal(true);
-
-  // Only render Navbar ONCE, and not inside any page component
   return (
-    <Router>
-      <Navbar onLoginClick={handleLoginClick} />
+    <>
+      {showNavbar && <Navbar onLoginClick={handleLoginClick} />}
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/game" element={<GameAuth />} />
@@ -47,12 +44,27 @@ export default function App() {
         <Route path="/become-seller" element={<BecomeSeller />} />
         <Route path="/become-seller/apply" element={<SellerApplication />} />
       </Routes>
-      {window.location.pathname !== "/" && window.location.pathname !== "/game" && (
-        <ChatWidget />
-      )}
+      {showNavbar && <ChatWidget />}
       {showAuthModal && (
         <AuthModal onClose={() => setShowAuthModal(false)} />
       )}
+    </>
+  );
+}
+
+export default function App() {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  // Helper to pass to Navbar for login button
+  const handleLoginClick = () => setShowAuthModal(true);
+
+  return (
+    <Router>
+      <AppRoutes
+        handleLoginClick={handleLoginClick}
+        showAuthModal={showAuthModal}
+        setShowAuthModal={setShowAuthModal}
+      />
     </Router>
   );
 }
