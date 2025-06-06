@@ -27,7 +27,7 @@ const PriceFilterPanel = ({
       <h2 className="filter-title">Filter by Price</h2>
       <Accordion alwaysOpen={false} className="filterAccordion" id="priceFilterAccordion">
         <Accordion.Item eventKey="0">
-          <Accordion.Header>Sort by Price</Accordion.Header>
+          <Accordion.Header>Sort</Accordion.Header>
           <Accordion.Body>
             <button
               className={`price-sort-btn ${
@@ -35,7 +35,7 @@ const PriceFilterPanel = ({
               }`}
               onClick={() => setPriceSort("low-high")}
             >
-              Price: Low to High
+              Low to High
             </button>
             <button
               className={`price-sort-btn ${
@@ -43,13 +43,13 @@ const PriceFilterPanel = ({
               }`}
               onClick={() => setPriceSort("high-low")}
             >
-              Price: High to Low
+              High to Low
             </button>
             <button
               className={`price-sort-btn ${priceSort === "a-z" ? "active" : ""}`}
               onClick={() => setPriceSort("a-z")}
             >
-              Name: A-Z
+              A - Z
             </button>
           </Accordion.Body>
         </Accordion.Item>
