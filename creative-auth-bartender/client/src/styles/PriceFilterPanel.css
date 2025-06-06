@@ -32,11 +32,12 @@
 }
 
 .accordion-header{
-  font-family: "Merriweather", serif;
+  font-family: "Gloock", serif;
+  font-weight: 400;
 }
 
 .accordion-body{
-  font-family: "Gloock", serif;
+  font-family: "Merriweather", serif;
 }
 
 .price-sort-btn {
