@@ -7,8 +7,11 @@ import ReviewsModal from '../components/ReviewsModal';
 import AuthModal from '../components/AuthModal';
 import AddProductModal from '../components/AddProductModal'; // If you have this component
 import EditProductModal from '../components/EditProductModal'; // If you have this component
+import PriceFilterPanel from '../components/PriceFilterPanel';
 import '../styles/StorePage.css';
+import '../styles/PriceFilterPanel.css';
 import Masonry from 'react-masonry-css';
+import priceRanges from '../constants/priceRanges'; // Assuming you have this constant defined
 
 const Store = () => {
   const getStoredUser = () => {
@@ -37,6 +40,8 @@ const Store = () => {
   const [showReviewsModal, setShowReviewsModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [priceSort, setPriceSort] = useState(""); // "low-high" | "high-low" | ""
+  const [priceRangeIdx, setPriceRangeIdx] = useState(priceRanges.length - 1); // default to "All"
 
   // Add admin check
   const isAdmin = (() => {
@@ -79,8 +84,19 @@ const Store = () => {
           p.category.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
+    // Price range filter
+    const { min, max } = priceRanges[priceRangeIdx];
+    if (priceRangeIdx !== priceRanges.length - 1) { // not "All"
+      updated = updated.filter(p => p.price >= min && p.price < max);
+    }
+    // Price sort
+    if (priceSort === "low-high") {
+      updated.sort((a, b) => a.price - b.price);
+    } else if (priceSort === "high-low") {
+      updated.sort((a, b) => b.price - a.price);
+    }
     setFilteredProducts(updated);
-  }, [searchQuery, categoryFilter, products]);
+  }, [searchQuery, categoryFilter, products, priceSort, priceRangeIdx]);
 
   const breakpointCols = {
     default: 4,
@@ -153,58 +169,67 @@ const Store = () => {
             </button>
           )}
         </div>
-
-        {useMasonry ? (
-          <Masonry
-            breakpointCols={breakpointCols}
-            className="product-grid"
-            columnClassName="product-grid-column"
-          >
-            {filteredProducts.map((product) => (
-              <div key={product._id} className="product-wrapper">
-                <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
-                <div className="product-actions">
-                  {/* Admin-only Edit/Delete buttons */}
-                  {isAdmin && (
-                    <>
-                      <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
-                      <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-                    className="reviews-button"
-                  >
-                    Reviews
-                  </button>
+        <div className="main-content">
+          {useMasonry ? (
+            <Masonry
+              breakpointCols={breakpointCols}
+              className="product-grid"
+              columnClassName="product-grid-column"
+            >
+              {filteredProducts.map((product) => (
+                <div key={product._id} className="product-wrapper">
+                  <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
+                  <div className="product-actions">
+                    {/* Admin-only Edit/Delete buttons */}
+                    {isAdmin && (
+                      <>
+                        <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                        <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                      </>
+                    )}
+                    <button
+                      onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                      className="reviews-button"
+                    >
+                      Reviews
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </Masonry>
-        ) : (
-          <div className="product-grid normal-grid">
-            {filteredProducts.map((product) => (
-              <div key={product._id} className="product-wrapper">
-                <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
-                <div className="product-actions">
-                  {/* Admin-only Edit/Delete buttons */}
-                  {isAdmin && (
-                    <>
-                      <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
-                      <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-                    className="reviews-button"
-                  >
-                    Reviews
-                  </button>
+              ))}
+            </Masonry>
+          ) : (
+            <div className="product-grid normal-grid">
+              {filteredProducts.map((product) => (
+                <div key={product._id} className="product-wrapper">
+                  <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
+                  <div className="product-actions">
+                    {/* Admin-only Edit/Delete buttons */}
+                    {isAdmin && (
+                      <>
+                        <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                        <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                      </>
+                    )}
+                    <button
+                      onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                      className="reviews-button"
+                    >
+                      Reviews
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="right-sidebar">
+          <PriceFilterPanel
+            priceSort={priceSort}
+            setPriceSort={setPriceSort}
+            priceRangeIdx={priceRangeIdx}
+            setPriceRangeIdx={setPriceRangeIdx}
+          />
+        </div>
       </div>
 
       {/* AddProductModal for admin */}
