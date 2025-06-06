@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useCart } from '../context/CartContext';
 import '../styles/CheckoutPage.css';
@@ -82,7 +81,6 @@ const Checkout = () => {
 
   return (
     <div className="checkout-page">
-      <Navbar />
       <div className="checkout-container">
         <h1>Checkout</h1>
 
