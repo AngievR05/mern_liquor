@@ -1,10 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileModal({ user, onClose, onLogout, onProfilePicChange }) {
-  const [profilePic, setProfilePic] = useState(user.profilePic || null);
+  const [profilePic, setProfilePic] = useState(() => {
+    // Try to get from loggedInUser first, then fallback to localStorage
+    try {
+      const userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (userObj && userObj.profilePic) return userObj.profilePic;
+      return localStorage.getItem('profilePic') || null;
+    } catch {
+      return null;
+    }
+  });
   const [preview, setPreview] = useState(user.profilePic || null);
   const [showWishlist, setShowWishlist] = useState(false);
   const [wishlist, setWishlist] = useState([]);
+  const navigate = useNavigate();
 
   // Always reload wishlist from localStorage when showWishlist changes to true
   useEffect(() => {
@@ -32,14 +43,40 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
     return () => window.removeEventListener('focus', syncWishlist);
   }, [showWishlist]);
 
-  function handleFileChange(e) {
+  // Keep profilePic in sync with loggedInUser/profilePic in localStorage
+  useEffect(() => {
+    try {
+      const userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (userObj && userObj.profilePic) {
+        setProfilePic(userObj.profilePic);
+      } else {
+        setProfilePic(localStorage.getItem('profilePic') || null);
+      }
+    } catch {
+      setProfilePic(localStorage.getItem('profilePic') || null);
+    }
+  }, []);
+
+  // Save profilePic to localStorage and to loggedInUser on change
+  const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    setProfilePic(file);
-    setPreview(url);
-    if (onProfilePicChange) onProfilePicChange(url, file);
-  }
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const url = event.target.result;
+      setProfilePic(url);
+      localStorage.setItem('profilePic', url);
+      // Also update loggedInUser in localStorage
+      try {
+        const userObj = JSON.parse(localStorage.getItem('loggedInUser'));
+        if (userObj) {
+          localStorage.setItem('loggedInUser', JSON.stringify({ ...userObj, profilePic: url }));
+        }
+      } catch {}
+      if (onProfilePicChange) onProfilePicChange(url, file);
+    };
+    reader.readAsDataURL(file);
+  };
 
   if (showWishlist) {
     return (
@@ -102,56 +139,78 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
         >×</button>
         <h2 style={{ marginBottom: 18, color: '#350b0f', fontWeight: 800 }}>Profile</h2>
         <div style={{ marginBottom: 18, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <label htmlFor="profile-pic-input" style={{ cursor: 'pointer' }}>
-            {preview ? (
-              <img src={preview} alt="Profile" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', marginBottom: 8, border: '2px solid #e1bb3e' }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+            {profilePic ? (
+              <img
+                src={profilePic}
+                alt="Profile"
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: '2px solid #e1bb3e'
+                }}
+              />
             ) : (
               <div style={{
-                width: 80, height: 80, borderRadius: '50%', background: '#eee', marginBottom: 8,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 32, border: '2px solid #e1bb3e'
-              }}>+</div>
+                width: 64,
+                height: 64,
+                borderRadius: '50%',
+                background: "#eee",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 32,
+                color: "#9b1c23"
+              }}>
+                ?
+              </div>
             )}
-          </label>
-          <input
-            id="profile-pic-input"
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-          />
-          <button
-            type="button"
-            onClick={() => document.getElementById('profile-pic-input').click()}
-            style={{
-              background: '#e1bb3e',
-              color: '#350b0f',
-              border: 'none',
-              borderRadius: 8,
-              padding: '6px 16px',
-              fontWeight: 700,
-              fontSize: 14,
-              cursor: 'pointer',
-              marginTop: 4
-            }}
-          >
-            {preview ? "Change Profile Picture" : "Set Profile Picture"}
-          </button>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                cursor: "pointer",
+                fontSize: 15,
+                color: "#9b1c23"
+              }}
+            >
+              Change Profile Picture
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleProfilePicChange}
+              />
+            </label>
+          </div>
         </div>
         <div style={{ marginBottom: 18, fontSize: 18 }}>
           <b>Username:</b> {user.username}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', alignItems: 'center' }}>
-          <button style={{
-            width: '80%',
-            background: '#e1bb3e',
-            color: '#350b0f',
-            border: 'none',
-            borderRadius: 8,
-            padding: '10px 0',
-            fontWeight: 700,
-            fontSize: 16,
-            cursor: 'pointer'
-          }}>
+          <button
+            onClick={() => {
+              onClose && onClose();
+              navigate("/wishlist");
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              color: "#9b1c23",
+              background: "#fff",
+              border: "1px solid #e1bb3e",
+              borderRadius: 8,
+              padding: "8px 18px",
+              fontWeight: 700,
+              fontSize: 16,
+              cursor: "pointer",
+              marginTop: 16
+            }}
+          >
             View Wishlist
           </button>
           <button style={{

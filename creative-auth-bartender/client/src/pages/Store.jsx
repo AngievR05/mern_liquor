@@ -154,6 +154,7 @@ const Store = () => {
           onClose={() => setShowReviewsModal(false)}
           reviews={selectedProduct ? selectedProduct.reviews : []}
           productName={selectedProduct ? selectedProduct.title : ''}
+          productId={selectedProduct ? selectedProduct._id : undefined}
         />
       )}
       {showAuthModal && (

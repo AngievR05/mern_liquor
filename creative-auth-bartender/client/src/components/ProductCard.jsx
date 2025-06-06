@@ -3,8 +3,16 @@ import { useCart } from '../context/CartContext';
 import '../styles/ProductCard.css';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
-const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
+const ProductCard = ({
+  product,
+  showAddToCart = true,
+  onLoginToBuy,
+  showDescription,
+  onWishlistChange,
+  onAddToCartFromWishlist
+}) => {
   const [expanded, setExpanded] = useState(false);
+  const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
 
   const loggedInUser = (() => {
@@ -15,7 +23,6 @@ const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
     }
   })();
 
-  // Wishlist state (local, for instant UI feedback)
   const [wishlisted, setWishlisted] = useState(() => {
     try {
       const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
@@ -25,18 +32,25 @@ const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
     }
   });
 
-  const handleWishlist = () => {
+  const handleWishlist = (e) => {
+    e.stopPropagation && e.stopPropagation();
     let wishlist = [];
     try {
       wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
     } catch {}
+    let newWishlisted;
     if (wishlisted) {
       wishlist = wishlist.filter(item => item._id !== product._id);
+      newWishlisted = false;
     } else {
       wishlist.push(product);
+      newWishlisted = true;
     }
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    setWishlisted(!wishlisted);
+    setWishlisted(newWishlisted);
+    if (onWishlistChange) {
+      onWishlistChange(product._id, newWishlisted);
+    }
   };
 
   // Toggle expanded state on card click (except on Add to Cart button)
@@ -52,6 +66,16 @@ const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
     setExpanded((prev) => !prev);
   };
 
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    addToCart(product);
+    setAdded(true);
+    if (onAddToCartFromWishlist) {
+      onAddToCartFromWishlist(product);
+    }
+    setTimeout(() => setAdded(false), 1200); // Show success for 1.2s
+  };
+
   return (
     <div
       className={`product-card${expanded ? " expanded" : ""}`}
@@ -60,24 +84,8 @@ const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
     >
       <img src={product.image} alt={product.title} className="product-image" />
       <div className="product-info">
-        <div className="product-title">{product.title}</div>
-        <div className="category-stock">
-          <span className="product-category">{product.category}</span>
-          <span className="product-stock">Stock: {product.stock}</span>
-        </div>
-        <div className="price-rating">
-          <span className="product-price">R {product.price.toFixed(2)}</span>
-          <span className="product-rating">★ {product.rating || 0}</span>
-        </div>
-        {expanded && (
-          <>
-            <div className="product-description">{product.description}</div>
-          </>
-        )}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {/* Star rating or icon here */}
-          {/* ...existing star icon code... */}
-          {/* Heart icon for wishlist (only if logged in) */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+          <div className="product-title">{product.title}</div>
           {loggedInUser && (
             <span
               style={{ cursor: "pointer", color: wishlisted ? "#e35537" : "#bdbdbd", fontSize: 20 }}
@@ -88,6 +96,17 @@ const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
             </span>
           )}
         </div>
+        <div className="category-stock">
+          <span className="product-category">{product.category}</span>
+          <span className="product-stock">Stock: {product.stock}</span>
+        </div>
+        <div className="price-rating">
+          <span className="product-price">R {product.price.toFixed(2)}</span>
+          <span className="product-rating">★ {product.rating || 0}</span>
+        </div>
+        {(expanded || showDescription) && product.description && (
+          <div className="product-description">{product.description}</div>
+        )}
         {showAddToCart && (
           !loggedInUser ? (
             <button
@@ -110,12 +129,15 @@ const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
           ) : (
             <button
               className="add-to-cart-btn"
-              onClick={e => {
-                e.stopPropagation(); // Prevent card expand/collapse when clicking button
-                addToCart(product);
+              onClick={handleAddToCart}
+              style={{
+                background: added ? "#2ecc40" : undefined,
+                color: added ? "#fff" : undefined,
+                transition: "background 0.2s, color 0.2s"
               }}
+              disabled={added}
             >
-              Add to Cart
+              {added ? "Successfully added to cart" : "Add to Cart"}
             </button>
           )
         )}

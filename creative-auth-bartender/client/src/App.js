@@ -18,6 +18,7 @@ import AuthModal from './components/AuthModal';
 import Navbar from './components/Navbar';
 import BecomeSeller from './pages/BecomeSeller';
 import SellerApplication from './pages/SellerApplication';
+import Wishlist from './pages/Wishlist';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -43,6 +44,7 @@ function AppRoutes({ handleLoginClick, showAuthModal, setShowAuthModal }) {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/become-seller" element={<BecomeSeller />} />
         <Route path="/become-seller/apply" element={<SellerApplication />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
       {showNavbar && <ChatWidget />}
       {showAuthModal && (
