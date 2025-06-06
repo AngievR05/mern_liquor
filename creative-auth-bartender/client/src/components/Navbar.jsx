@@ -286,7 +286,7 @@ export default function Navbar({ onLoginClick }) {
           className="become-seller-btn"
           style={{
             marginLeft: 16,
-            marginTop: 8,
+            marginTop: 0,
             background: "#e1bb3e",
             color: "#350b0f",
             border: "none",
