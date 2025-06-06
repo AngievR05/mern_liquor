@@ -94,6 +94,8 @@ const Store = () => {
       updated.sort((a, b) => a.price - b.price);
     } else if (priceSort === "high-low") {
       updated.sort((a, b) => b.price - a.price);
+    } else if (priceSort === "a-z") {
+      updated.sort((a, b) => a.title.localeCompare(b.title));
     }
     setFilteredProducts(updated);
   }, [searchQuery, categoryFilter, products, priceSort, priceRangeIdx]);

@@ -45,6 +45,12 @@ const PriceFilterPanel = ({
             >
               Price: High to Low
             </button>
+            <button
+              className={`price-sort-btn ${priceSort === "a-z" ? "active" : ""}`}
+              onClick={() => setPriceSort("a-z")}
+            >
+              Name: A-Z
+            </button>
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
