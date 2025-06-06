@@ -5,6 +5,8 @@ import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
 import ReviewsModal from '../components/ReviewsModal';
 import AuthModal from '../components/AuthModal';
+import AddProductModal from '../components/AddProductModal'; // If you have this component
+import EditProductModal from '../components/EditProductModal'; // If you have this component
 import '../styles/StorePage.css';
 import Masonry from 'react-masonry-css';
 
@@ -35,6 +37,21 @@ const Store = () => {
   const [showReviewsModal, setShowReviewsModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+  // Add admin check
+  const isAdmin = (() => {
+    try {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      return user && user.isAdmin;
+    } catch {
+      return false;
+    }
+  })();
+
+  // Add state for modals if not present
+  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [showEditProductModal, setShowEditProductModal] = useState(false);
+  const [editProduct, setEditProduct] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -93,6 +110,27 @@ const Store = () => {
   // Handler for ProductCard ghost button
   const handleLoginToBuy = () => setShowAuthModal(true);
 
+  // Add product handler
+  const handleAddProduct = () => setShowAddProductModal(true);
+
+  // Edit product handler
+  const handleEditProduct = (product) => {
+    setEditProduct(product);
+    setShowEditProductModal(true);
+  };
+
+  // Delete product handler
+  const handleDeleteProduct = async (productId) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await fetch(`/api/products/${productId}`, { method: 'DELETE' });
+      setProducts(products => products.filter(p => p._id !== productId));
+      setFilteredProducts(filtered => filtered.filter(p => p._id !== productId));
+    } catch (err) {
+      alert('Failed to delete product');
+    }
+  };
+
   return (
     <div className="store-page">
       <div className="store-layout">
@@ -104,7 +142,16 @@ const Store = () => {
             setFilteredProducts={setFilteredProducts}
           />
           <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} className="filter-panel" />
-          {/* Remove Add Product button */}
+          {/* Add Product button for admin */}
+          {isAdmin && (
+            <button
+              className="store-add-product-btn"
+              onClick={handleAddProduct}
+              style={{ marginTop: 16 }}
+            >
+              Add Product
+            </button>
+          )}
         </div>
 
         {useMasonry ? (
@@ -117,7 +164,13 @@ const Store = () => {
               <div key={product._id} className="product-wrapper">
                 <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
                 <div className="product-actions">
-                  {/* Remove Edit and Delete buttons */}
+                  {/* Admin-only Edit/Delete buttons */}
+                  {isAdmin && (
+                    <>
+                      <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                      <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                    </>
+                  )}
                   <button
                     onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
                     className="reviews-button"
@@ -134,7 +187,13 @@ const Store = () => {
               <div key={product._id} className="product-wrapper">
                 <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
                 <div className="product-actions">
-                  {/* Remove Edit and Delete buttons */}
+                  {/* Admin-only Edit/Delete buttons */}
+                  {isAdmin && (
+                    <>
+                      <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                      <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                    </>
+                  )}
                   <button
                     onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
                     className="reviews-button"
@@ -148,7 +207,27 @@ const Store = () => {
         )}
       </div>
 
-      {/* Remove AddProductModal and EditProductModal */}
+      {/* AddProductModal for admin */}
+      {isAdmin && showAddProductModal && (
+        <AddProductModal
+          onClose={() => setShowAddProductModal(false)}
+          onProductAdded={product => {
+            setProducts(products => [...products, product]);
+            setFilteredProducts(filtered => [...filtered, product]);
+          }}
+        />
+      )}
+      {/* EditProductModal for admin */}
+      {isAdmin && showEditProductModal && editProduct && (
+        <EditProductModal
+          product={editProduct}
+          onClose={() => setShowEditProductModal(false)}
+          onProductUpdated={updatedProduct => {
+            setProducts(products => products.map(p => p._id === updatedProduct._id ? updatedProduct : p));
+            setFilteredProducts(filtered => filtered.map(p => p._id === updatedProduct._id ? updatedProduct : p));
+          }}
+        />
+      )}
       {showReviewsModal && (
         <ReviewsModal
           onClose={() => setShowReviewsModal(false)}
