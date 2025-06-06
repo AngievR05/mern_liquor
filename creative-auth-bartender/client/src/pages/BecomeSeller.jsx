@@ -151,8 +151,8 @@ export default function BecomeSeller() {
           boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
         }}
       >
-        <h2 style={{ textAlign: "center", color: "#e1bb3e", marginBottom: 28, fontWeight: 800 }}>
-          Benefits of Selling With Us
+        <h2 style={{ textAlign: "center", color: "#e1bb3e", marginBottom: 28, fontWeight: 800, letterSpacing: 2 }}>
+          Benefits of  Selling With Us
         </h2>
         <ul style={{
           listStyle: "none",

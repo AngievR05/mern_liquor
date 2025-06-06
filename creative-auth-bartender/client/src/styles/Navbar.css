@@ -72,21 +72,15 @@ body{
 }
 
 .navbar-login-btn,
-.navbar-profile-btn {
-  background: var(--White);
-  color: var(--Aubergine);
-  border: none;
-  border-radius: 8px;
+.navbar-profile-btn,
+.become-seller-btn {
+  display: flex;
+  align-items: center;
+  height: 40px; /* or match your navbar height */
+  margin: 0;
   padding: 8px 18px;
-  font-weight: 700;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  margin-left: 0;
-  width: fit-content;
-  height: fit-content;
+  box-sizing: border-box;
 }
-
 
 .navbar-login-btn:hover,
 .navbar-profile-btn:hover {

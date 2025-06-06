@@ -4,6 +4,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import "../styles/Navbar.css";
 import LogoNoText from "../assets/Logo-no-text.svg";
+import ShinyText from './ShinyText';
 
 export default function Navbar({ onLoginClick }) {
   const navigate = useNavigate();
@@ -154,17 +155,18 @@ export default function Navbar({ onLoginClick }) {
             onClick={onLoginClick}
             style={{
               marginLeft: 16,
-              background: '#9b1c23',
+              background: '#e1bb3e',
               color: '#fff',
               border: 'none',
               borderRadius: 8,
               padding: '8px 18px',
               fontWeight: 700,
               fontSize: 16,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              boxShadow: 'inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7)',
             }}
           >
-            Login
+            <ShinyText text="Log in" disabled={false} speed={3} className="nav-button-text" />
           </button>
         )}
         {/* Only show Profile button if logged in */}
@@ -181,7 +183,8 @@ export default function Navbar({ onLoginClick }) {
               padding: '8px 18px',
               fontWeight: 700,
               fontSize: 16,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              boxShadow: 'inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7)',
             }}
           >
             Profile
@@ -283,20 +286,22 @@ export default function Navbar({ onLoginClick }) {
           className="become-seller-btn"
           style={{
             marginLeft: 16,
+            marginTop: 8,
             background: "#e1bb3e",
             color: "#350b0f",
             border: "none",
             borderRadius: 8,
-            padding: "8px 18px",
+            padding: "0 18px",
             fontWeight: 700,
             fontSize: 16,
             cursor: "pointer",
+            boxShadow: 'inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7)',
           }}
           onClick={() => {
             window.location.href = "/become-seller";
           }}
         >
-          Become a Seller
+          <ShinyText text="Sell" disabled={false} speed={3} className="nav-button-text" />
         </button>
       </div>
     </nav>
