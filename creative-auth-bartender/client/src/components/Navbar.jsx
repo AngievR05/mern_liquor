@@ -10,13 +10,13 @@ export default function Navbar({ onLoginClick }) {
   const location = useLocation();
   const { cartItems } = useCart();
   // Fix: Always check localStorage for loggedInUser on every render
-  const loggedInUser = (() => {
+  const [loggedInUser, setLoggedInUser] = React.useState(() => {
     try {
       return JSON.parse(localStorage.getItem('loggedInUser'));
     } catch {
       return null;
     }
-  })();
+  });
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
   const [profilePic, setProfilePic] = React.useState(null);
 
@@ -43,6 +43,25 @@ export default function Navbar({ onLoginClick }) {
       window.removeEventListener('storage', syncPic);
       window.removeEventListener('focus', syncPic);
       document.removeEventListener('auth-login', syncPic);
+    };
+  }, []);
+
+  // Listen for login/logout events to update state
+  React.useEffect(() => {
+    const syncUser = () => {
+      try {
+        setLoggedInUser(JSON.parse(localStorage.getItem('loggedInUser')));
+      } catch {
+        setLoggedInUser(null);
+      }
+    };
+    window.addEventListener('storage', syncUser);
+    window.addEventListener('focus', syncUser);
+    document.addEventListener('auth-login', syncUser);
+    return () => {
+      window.removeEventListener('storage', syncUser);
+      window.removeEventListener('focus', syncUser);
+      document.removeEventListener('auth-login', syncUser);
     };
   }, []);
 

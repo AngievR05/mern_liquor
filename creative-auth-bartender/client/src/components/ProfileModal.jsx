@@ -1,8 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function ProfileModal({ user, onClose, onLogout, onProfilePicChange }) {
   const [profilePic, setProfilePic] = useState(user.profilePic || null);
   const [preview, setPreview] = useState(user.profilePic || null);
+  const [showWishlist, setShowWishlist] = useState(false);
+  const [wishlist, setWishlist] = useState([]);
+
+  // Always reload wishlist from localStorage when showWishlist changes to true
+  useEffect(() => {
+    if (showWishlist) {
+      try {
+        setWishlist(JSON.parse(localStorage.getItem('wishlist')) || []);
+      } catch {
+        setWishlist([]);
+      }
+    }
+  }, [showWishlist]);
+
+  // Also reload wishlist when window regains focus (in case user hearts in another tab)
+  useEffect(() => {
+    const syncWishlist = () => {
+      if (showWishlist) {
+        try {
+          setWishlist(JSON.parse(localStorage.getItem('wishlist')) || []);
+        } catch {
+          setWishlist([]);
+        }
+      }
+    };
+    window.addEventListener('focus', syncWishlist);
+    return () => window.removeEventListener('focus', syncWishlist);
+  }, [showWishlist]);
 
   function handleFileChange(e) {
     const file = e.target.files[0];
@@ -11,6 +39,37 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
     setProfilePic(file);
     setPreview(url);
     if (onProfilePicChange) onProfilePicChange(url, file);
+  }
+
+  if (showWishlist) {
+    return (
+      <div className="profile-modal">
+        <button onClick={() => setShowWishlist(false)} style={{ float: "right", margin: 8 }}>Back</button>
+        <h2 style={{ marginTop: 0 }}>My Wishlist</h2>
+        {wishlist.length === 0 ? (
+          <div style={{ color: "#888", margin: 24 }}>No products in your wishlist.</div>
+        ) : (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
+            {wishlist.map(product => (
+              <div key={product._id} style={{
+                border: "1px solid #e1bb3e",
+                borderRadius: 10,
+                padding: 16,
+                width: 220,
+                background: "#fff",
+                color: "#350b0f"
+              }}>
+                <img src={product.image} alt={product.title} style={{ width: "100%", borderRadius: 8, marginBottom: 8 }} />
+                <h4 style={{ margin: "8px 0" }}>{product.title}</h4>
+                <div style={{ fontWeight: 500, color: "#9b1c23" }}>R{product.price}</div>
+                <div style={{ fontSize: 14, color: "#888", margin: "8px 0" }}>{product.category}</div>
+                {/* Optionally: Add remove from wishlist button here */}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   }
 
   return (

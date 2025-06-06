@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import '../styles/ProductCard.css';
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
   const [expanded, setExpanded] = useState(false);
@@ -13,6 +14,30 @@ const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
       return null;
     }
   })();
+
+  // Wishlist state (local, for instant UI feedback)
+  const [wishlisted, setWishlisted] = useState(() => {
+    try {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      return wishlist.some(item => item._id === product._id);
+    } catch {
+      return false;
+    }
+  });
+
+  const handleWishlist = () => {
+    let wishlist = [];
+    try {
+      wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    } catch {}
+    if (wishlisted) {
+      wishlist = wishlist.filter(item => item._id !== product._id);
+    } else {
+      wishlist.push(product);
+    }
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    setWishlisted(!wishlisted);
+  };
 
   // Toggle expanded state on card click (except on Add to Cart button)
   const handleCardClick = (e) => {
@@ -49,6 +74,20 @@ const ProductCard = ({ product, showAddToCart = true, onLoginToBuy }) => {
             <div className="product-description">{product.description}</div>
           </>
         )}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {/* Star rating or icon here */}
+          {/* ...existing star icon code... */}
+          {/* Heart icon for wishlist (only if logged in) */}
+          {loggedInUser && (
+            <span
+              style={{ cursor: "pointer", color: wishlisted ? "#e35537" : "#bdbdbd", fontSize: 20 }}
+              title={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+              onClick={handleWishlist}
+            >
+              {wishlisted ? <FaHeart /> : <FaRegHeart />}
+            </span>
+          )}
+        </div>
         {showAddToCart && (
           !loggedInUser ? (
             <button

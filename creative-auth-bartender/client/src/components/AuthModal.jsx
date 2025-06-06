@@ -19,7 +19,8 @@ export default function AuthModal({ onClose }) {
     lastName: "",
     email: "",
     username: "",
-    password: ""
+    password: "",
+    idNumber: "" // <-- Add this field
   });
   const [registerError, setRegisterError] = useState("");
   const [registerLoading, setRegisterLoading] = useState(false);
@@ -34,6 +35,7 @@ export default function AuthModal({ onClose }) {
   const [showPasswordHintBox, setShowPasswordHintBox] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [underageError, setUnderageError] = useState(""); // <-- Add this line with other useState hooks
 
   // Trivia questions for registration
   const triviaQuestions = [
@@ -47,16 +49,18 @@ export default function AuthModal({ onClose }) {
     birthCity: ""
   });
 
-  // Remove trivia from login process
-  const [loginStep, setLoginStep] = useState(0); // 0: email, 1: password
+  // Add state for login trivia
+  const [loginStep, setLoginStep] = useState(0); // 0: email, 1: password, 2: trivia
   const [loginContact, setLoginContact] = useState(""); // email only
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginTriviaIndex, setLoginTriviaIndex] = useState(null);
+  const [loginTriviaAnswer, setLoginTriviaAnswer] = useState("");
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
 
   // Add these state hooks for login
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
-  const [loginPassword, setLoginPassword] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -70,11 +74,45 @@ export default function AuthModal({ onClose }) {
     return arr;
   }
 
+  // Helper to check age from South African ID number (YYMMDD...)
+  function getAgeFromIdNumber(idNumber) {
+    if (!/^\d{13}$/.test(idNumber)) return null;
+    const year = parseInt(idNumber.slice(0, 2), 10);
+    const month = parseInt(idNumber.slice(2, 4), 10);
+    const day = parseInt(idNumber.slice(4, 6), 10);
+    // Assume IDs from 00-21 are 2000+, else 1900+
+    const currentYear = new Date().getFullYear() % 100;
+    const century = year <= currentYear ? 2000 : 1900;
+    const birthDate = new Date(century + year, month - 1, day);
+    if (isNaN(birthDate.getTime())) return null;
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
   // Registration submit with trivia
   async function handleRegisterSubmit(e) {
     e.preventDefault();
     setRegisterError("");
+    setUnderageError(""); // Reset underage error
     setRegisterLoading(true);
+
+    // Check age from ID number
+    const age = getAgeFromIdNumber(registerForm.idNumber);
+    if (age === null) {
+      setUnderageError("Please enter a valid South African ID number.");
+      setRegisterLoading(false);
+      return;
+    }
+    if (age < 18) {
+      setUnderageError("You are not allowed on the site because you need to be 18 years old and above.");
+      setRegisterLoading(false);
+      return;
+    }
 
     // Password validation: at least 1 capital letter and 1 special character
     const password = registerForm.password;
@@ -139,6 +177,7 @@ export default function AuthModal({ onClose }) {
           username: registerForm.username,
           email: registerForm.email,
           password: registerForm.password,
+          idNumber: registerForm.idNumber, // <-- Include ID number
           trivia: hashedTrivia
         })
       });
@@ -173,6 +212,9 @@ export default function AuthModal({ onClose }) {
         username: registerForm.username,
         email: registerForm.email,
       };
+      // Save user to localStorage and fire event for Navbar
+      localStorage.setItem('loggedInUser', JSON.stringify(userObj));
+      document.dispatchEvent(new Event('auth-login'));
       setTimeout(() => {
         setShowSuccess(false);
         onClose(userObj); // Pass user to parent
@@ -211,35 +253,47 @@ export default function AuthModal({ onClose }) {
         setLoginLoading(false);
         return;
       }
-      setLoginStep(1); // Show password field directly
+      setLoginStep(1); // Show password field
     } catch {
       setLoginError("A server error occurred. Please try again later.");
     }
     setLoginLoading(false);
   }
 
-  async function handleLoginPasswordSubmit(e) {
+  // After password, show trivia question
+  function handleLoginPasswordContinue(e) {
+    e.preventDefault();
+    setLoginError("");
+    // Pick a random trivia question index
+    const idx = Math.floor(Math.random() * triviaQuestions.length);
+    setLoginTriviaIndex(idx);
+    setLoginStep(2);
+  }
+
+  async function handleLoginTriviaSubmit(e) {
     e.preventDefault();
     setLoginError("");
     setLoginLoading(true);
 
-    // Log the password being sent for debugging
-    console.log('DEBUG: Password sent to backend:', loginPassword);
-
-    // Use the dedicated /login endpoint for password check
+    // Send email, password, and trivia answer to backend
     const email = loginContact.trim().toLowerCase();
+    const triviaKey = triviaQuestions[loginTriviaIndex].key;
+    const triviaAnswer = loginTriviaAnswer.trim();
+
     try {
       const res = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          password: loginPassword // This must be the plain password, not a hash!
+          password: loginPassword,
+          triviaKey,
+          triviaAnswer
         })
       });
       if (!res.ok) {
         const data = await res.json();
-        setLoginError(data.message || "Incorrect email or password.");
+        setLoginError(data.message || "Incorrect email, password, or trivia answer.");
         setLoginLoading(false);
         return;
       }
@@ -254,12 +308,11 @@ export default function AuthModal({ onClose }) {
         username: user.username,
         email: user.email,
       };
-      setLoginSuccess(true); // Show login success message
-      // Fire a custom event so Navbar can update immediately
+      localStorage.setItem('loggedInUser', JSON.stringify(userObj));
+      document.dispatchEvent(new Event('auth-login'));
+      setLoginSuccess(true);
       setTimeout(() => {
         setLoginSuccess(false);
-        // Fire event for Navbar to update state
-        document.dispatchEvent(new Event('auth-login'));
         onClose(userObj);
         navigate("/landing-page");
       }, 1200);
@@ -485,6 +538,32 @@ export default function AuthModal({ onClose }) {
                       }}
                       required
                     />
+                    <input
+                      type="text"
+                      placeholder="ID Number"
+                      value={registerForm.idNumber}
+                      onChange={e => setRegisterForm(f => ({ ...f, idNumber: e.target.value }))}
+                      style={{
+                        padding: '12px 16px',
+                        borderRadius: 8,
+                        border: '1px solid #e9c4b4',
+                        fontSize: 16,
+                        marginBottom: 8
+                      }}
+                      required
+                    />
+                    {underageError && (
+                      <div style={{
+                        color: '#b71c1c',
+                        fontSize: 14,
+                        marginBottom: 8,
+                        background: '#fffbe7',
+                        borderRadius: 6,
+                        padding: '6px 10px'
+                      }}>
+                        {underageError}
+                      </div>
+                    )}
                     <input
                       type="email"
                       placeholder="Email"
@@ -725,7 +804,66 @@ export default function AuthModal({ onClose }) {
                             type="button"
                             className='login-btn'
                             disabled={loginLoading}
-                            onClick={handleLoginPasswordSubmit}
+                            onClick={handleLoginPasswordContinue}
+                          >
+                            Continue
+                          </button>
+                        </>
+                      )}
+                      {loginStep === 2 && (
+                        <>
+                          <input
+                            type="email"
+                            value={loginContact}
+                            disabled
+                            style={{
+                              padding: '12px 16px',
+                              borderRadius: 8,
+                              border: '1px solid #e9c4b4',
+                              fontSize: 16,
+                              marginBottom: 8,
+                              background: "#f3f3f3"
+                            }}
+                          />
+                          <input
+                            type="password"
+                            value={loginPassword}
+                            disabled
+                            style={{
+                              padding: '12px 16px',
+                              borderRadius: 8,
+                              border: '1px solid #e9c4b4',
+                              fontSize: 16,
+                              marginBottom: 8,
+                              background: "#f3f3f3"
+                            }}
+                          />
+                          {/* Always show the question label if index is set */}
+                          {typeof loginTriviaIndex === "number" && triviaQuestions[loginTriviaIndex] && (
+                            <label style={{ fontWeight: 500, marginBottom: 4 }}>
+                              {triviaQuestions[loginTriviaIndex].label}
+                            </label>
+                          )}
+                          <input
+                            type="text"
+                            placeholder="Answer"
+                            value={loginTriviaAnswer}
+                            onChange={e => setLoginTriviaAnswer(e.target.value)}
+                            style={{
+                              padding: '12px 16px',
+                              borderRadius: 8,
+                              border: '1px solid #e9c4b4',
+                              fontSize: 16,
+                              marginBottom: 8
+                            }}
+                            required
+                          />
+                          {loginError && <div style={{ color: 'red', marginBottom: 8 }}>{loginError}</div>}
+                          <button
+                            type="button"
+                            className='login-btn'
+                            disabled={loginLoading}
+                            onClick={handleLoginTriviaSubmit}
                           >
                             {loginLoading ? "Logging in..." : "Login"}
                           </button>
