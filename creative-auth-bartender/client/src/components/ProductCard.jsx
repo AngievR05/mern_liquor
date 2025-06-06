@@ -53,9 +53,7 @@ const ProductCard = ({
     }
   };
 
-  // Toggle expanded state on card click (except on Add to Cart button)
   const handleCardClick = (e) => {
-    // Prevent toggle if clicking the add-to-cart button or its children
     if (
       showAddToCart &&
       (e.target.closest('.add-to-cart-btn') ||
@@ -73,8 +71,10 @@ const ProductCard = ({
     if (onAddToCartFromWishlist) {
       onAddToCartFromWishlist(product);
     }
-    setTimeout(() => setAdded(false), 1200); // Show success for 1.2s
+    setTimeout(() => setAdded(false), 1200);
   };
+
+  const displayRating = product.averageRating || 0;
 
   return (
     <div
@@ -102,7 +102,7 @@ const ProductCard = ({
         </div>
         <div className="price-rating">
           <span className="product-price">R {product.price.toFixed(2)}</span>
-          <span className="product-rating">★ {product.rating || 0}</span>
+          <span className="product-rating">★ {displayRating.toFixed(2)}</span>
         </div>
         {(expanded || showDescription) && product.description && (
           <div className="product-description">{product.description}</div>
