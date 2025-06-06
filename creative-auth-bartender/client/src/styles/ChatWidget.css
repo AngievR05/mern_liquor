@@ -6,8 +6,9 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+/* Toggle Button */
 .chat-toggle {
-  background: linear-gradient(135deg,rgb(77, 9, 14) 0%,rgb(117, 9, 21) 60%, var(--Old-Brick) 100%);
+  background: linear-gradient(135deg, rgb(77, 9, 14) 0%, rgb(117, 9, 21) 60%, var(--Old-Brick, #9b1c23) 100%);
   color: #fff;
   border: none;
   border-radius: 50px;
@@ -24,6 +25,7 @@
   box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.72), inset -2px -2px 10px rgba(255, 255, 255, 0.3); 
 }
 
+/* Chat Box */
 .chat-box {
   width: 280px;
   height: 340px;
@@ -43,11 +45,12 @@
     opacity: 0;
   }
   to {
-    transform: translateY(0px);
+    transform: translateY(0);
     opacity: 1;
   }
 }
 
+/* Message Container */
 .chat-messages {
   flex: 1;
   padding: 10px;
@@ -58,6 +61,7 @@
   scroll-behavior: smooth;
 }
 
+/* Messages */
 .chat-message {
   max-width: 70%;
   padding: 8px 12px;
@@ -66,11 +70,6 @@
   word-wrap: break-word;
   line-height: 1.4;
   animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .chat-message.bot,
@@ -82,10 +81,28 @@
 
 .chat-message.user {
   align-self: flex-end;
-  background: var(--Aubergine);
-  color: white;
+  background: var(--Aubergine, #350b0f);
+  color: #fff;
 }
 
+.chat-message.typing {
+  font-style: italic;
+  color: #999;
+  font-size: 12px;
+  animation: bounce 0.4s ease infinite alternate;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(3px); }
+}
+
+/* Input */
 .chat-input {
   display: flex;
   border-top: 1px solid #ddd;
@@ -104,28 +121,16 @@
 }
 
 .chat-input button {
-  background: var(--Old-Brick);
+  background: var(--Old-Brick, #9b1c23);
   border: none;
   color: white;
   padding: 0 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .chat-input button:hover {
-  background: var(--Anzac);
+  background: var(--Anzac, #e0ba3e);
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
-}
-
-.chat-message.typing {
-  font-style: italic;
-  color: #999;
-  font-size: 12px;
-  animation: bounce 0.4s ease infinite alternate;
-}
-
-@keyframes bounce {
-  from { transform: translateY(0px); }
-  to { transform: translateY(3px); }
 }

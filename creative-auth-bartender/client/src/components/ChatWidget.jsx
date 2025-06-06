@@ -16,15 +16,13 @@ const ChatWidget = () => {
       ? JSON.parse(stored)
       : [
           {
-            text:
-              'Hi! Welcome to The Drunken Giraffe 🦒🍷. How can we assist you today? You can ask for pages like "about us", "store", or "cart"!',
+            text: 'Hi! Welcome to The Drunken Giraffe 🦒🍷. You can ask for pages like "about", "store", or "cart"!',
             sender: 'bot',
           },
         ];
   });
   const [botTyping, setBotTyping] = useState(false);
   const [showContact, setShowContact] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,17 +68,15 @@ const ChatWidget = () => {
 
       const navResponse = handleNavigation(message);
       setBotTyping(true);
+
       setTimeout(() => {
         const botMsg = navResponse
           ? { text: navResponse, sender: 'bot' }
-          : {
-              text:
-                "I'm here to help! Try asking for 'about us', 'store', or 'cart'.",
-              sender: 'bot',
-            };
+          : { text: 'I\'m here to help! Try asking for "about us", "store", or "cart".', sender: 'bot' };
+
         setMessages((prev) => [...prev, botMsg]);
         setBotTyping(false);
-      }, 1000);
+      }, 1200);
     }
   };
 
@@ -96,10 +92,17 @@ const ChatWidget = () => {
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         <button className="chat-toggle" onClick={() => setShowChat(!showChat)}>
           <FaComments style={{ marginRight: 6 }} />
-          {showChat ? <ShinyText text="Close Chat" disabled={false} speed={3} className='chat-shiny-text' /> : <ShinyText text="Chat" disabled={false} speed={3} className='chat-shiny-text' />}
+          <ShinyText
+            text={showChat ? 'Close Chat' : 'Chat'}
+            disabled={false}
+            speed={3}
+            className="chat-shiny-text"
+          />
         </button>
         <button
           className="contact-toggle"
+          title="Contact Us"
+          onClick={() => setShowContact(true)}
           style={{
             background: '#fff',
             border: '1px solid #e1bb3e',
@@ -112,8 +115,6 @@ const ChatWidget = () => {
             cursor: 'pointer',
             marginLeft: 4
           }}
-          title="Contact Us"
-          onClick={() => setShowContact(true)}
         >
           <FaQuestionCircle color="#9b1c23" size={20} />
         </button>
@@ -192,9 +193,9 @@ const ChatWidget = () => {
           <div style={{ color: '#444', fontSize: 16, marginBottom: 8 }}>
             <b>Contact Centre Hours:</b>
             <div>Monday to Saturday: 8am – 5pm</div>
-            <div>Sunday and Public Holidays: 9am – 4pm</div>
+            <div>Sunday & Public Holidays: 9am – 4pm</div>
             <div style={{ marginTop: 6, fontSize: 15, color: '#b71c1c' }}>
-              Contact center is closed on Good Friday, Christmas Day, Day of Goodwill and New Year's Day.
+              Closed on Good Friday, Christmas Day, Day of Goodwill & New Year's Day.
             </div>
           </div>
         </div>
