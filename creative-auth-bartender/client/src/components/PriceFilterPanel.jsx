@@ -25,7 +25,7 @@ const PriceFilterPanel = ({
   return (
     <div className="price-filter-panel">
       <h2 className="filter-title">Filter by Price</h2>
-      <Accordion alwaysOpen={false} className="filterAccordion">
+      <Accordion alwaysOpen={false} className="filterAccordion" id="priceFilterAccordion">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Sort by Price</Accordion.Header>
           <Accordion.Body>

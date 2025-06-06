@@ -19,6 +19,10 @@
   box-sizing: border-box;
 }
 
+#priceFilterAccordion {
+  margin: 16px 0 0 0;
+}
+
 .accordion,
 .accordion-item,
 .accordion-header,
