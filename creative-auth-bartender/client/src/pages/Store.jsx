@@ -12,6 +12,7 @@ import '../styles/StorePage.css';
 import '../styles/PriceFilterPanel.css';
 import Masonry from 'react-masonry-css';
 import priceRanges from '../constants/priceRanges'; // Assuming you have this constant defined
+import Accordion from 'react-bootstrap/Accordion';
 
 const Store = () => {
   const getStoredUser = () => {
@@ -42,6 +43,7 @@ const Store = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [priceSort, setPriceSort] = useState(""); // "low-high" | "high-low" | ""
   const [priceRangeIdx, setPriceRangeIdx] = useState(priceRanges.length - 1); // default to "All"
+  const [activeFilterAccordion, setActiveFilterAccordion] = useState('0');
 
   // Add admin check
   const isAdmin = (() => {
@@ -159,13 +161,50 @@ const Store = () => {
             products={products}
             setFilteredProducts={setFilteredProducts}
           />
-          <FilterPanel categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter} className="filter-panel" />
-          {/* Add Product button for admin */}
+          <Accordion
+            activeKey={activeFilterAccordion}
+            onSelect={setActiveFilterAccordion}
+            className="category-filter-accordion"
+            style={{ marginBottom: 8 }}
+          >
+            <Accordion.Item eventKey="0">
+              <Accordion.Header>Filter by Category</Accordion.Header>
+              <Accordion.Body>
+                <FilterPanel
+                  categoryFilter={categoryFilter}
+                  setCategoryFilter={setCategoryFilter}
+                />
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+          <Accordion
+            activeKey={activeFilterAccordion}
+            onSelect={setActiveFilterAccordion}
+            className="price-filter-accordion"
+            style={{ marginBottom: 0,
+              marginTop: 8,
+              width: '100%',
+              backgroundColor: '#000000',
+              marginLeft: 0,
+             }}
+          >
+            <Accordion.Item eventKey="1">
+              <Accordion.Header>Filter by Price</Accordion.Header>
+              <Accordion.Body>
+                <PriceFilterPanel
+                  priceSort={priceSort}
+                  setPriceSort={setPriceSort}
+                  priceRangeIdx={priceRangeIdx}
+                  setPriceRangeIdx={setPriceRangeIdx}
+                />
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
           {isAdmin && (
             <button
               className="store-add-product-btn"
               onClick={handleAddProduct}
-              style={{ marginTop: 16 }}
+              style={{ marginTop: 16, width: '100%' }}
             >
               Add Product
             </button>
@@ -224,14 +263,14 @@ const Store = () => {
             </div>
           )}
         </div>
-        <div className="right-sidebar">
+        {/* <div className="right-sidebar">
           <PriceFilterPanel
             priceSort={priceSort}
             setPriceSort={setPriceSort}
             priceRangeIdx={priceRangeIdx}
             setPriceRangeIdx={setPriceRangeIdx}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* AddProductModal for admin */}

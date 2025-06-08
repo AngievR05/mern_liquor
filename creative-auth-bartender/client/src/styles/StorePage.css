@@ -188,3 +188,29 @@
   flex: 1 1 0;
   min-width: 0;
 }
+
+.category-filter-accordion,
+.price-filter-accordion {
+  width: 100%;
+  margin-left: -0px;
+  margin-top: 0;
+}
+
+.category-filter-accordion .accordion-item,
+.price-filter-accordion .accordion-item {
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.category-filter-accordion .accordion-header,
+.price-filter-accordion .accordion-header {
+  font-family: "Gloock", serif;
+  font-weight: 600;
+}
+
+.category-filter-accordion .accordion-body,
+.price-filter-accordion .accordion-body {
+  background: #f9f9f9;
+  font-family: "Merriweather", serif;
+}

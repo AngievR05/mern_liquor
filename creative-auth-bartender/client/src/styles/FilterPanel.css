@@ -10,7 +10,7 @@
   overflow-x: hidden; /* Prevent horizontal overflow */
   display: flex;
   flex-direction: column;
-  max-height: 560px;
+  max-height: 400px;
 }
 
 .filterAccordion,
