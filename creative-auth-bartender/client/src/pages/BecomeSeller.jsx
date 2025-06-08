@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import cellarBackground from "../assets/cellarBackground.jpeg";
 
 export default function BecomeSeller() {
   const [form, setForm] = useState({
@@ -12,7 +13,18 @@ export default function BecomeSeller() {
     website: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [parallaxOffset, setParallaxOffset] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Only allow negative offset (never positive)
+      const offset = Math.min(0, -window.scrollY * 0.5);
+      setParallaxOffset(offset);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,7 +38,10 @@ export default function BecomeSeller() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(135deg, #350b0f 0%, #9b1c23 100%)",
+      backgroundImage: `url(${cellarBackground})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
       color: "#fff",
       display: "flex",
       flexDirection: "column",
@@ -34,14 +49,21 @@ export default function BecomeSeller() {
       padding: "0",
     }}>
       {/* Hero/Banner Section */}
-      <div style={{
-        width: "100%",
-        background: "linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)",
-        color: "#350b0f",
-        padding: "48px 0 32px 0",
-        textAlign: "center",
-        marginBottom: 32,
-      }}>
+      <div
+        style={{
+          width: "100%",
+          background: "linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)",
+          color: "#350b0f",
+          padding: "48px 0 32px 0",
+          textAlign: "center",
+          marginBottom: 32,
+          position: "relative",
+          zIndex: 2,
+          transform: `translateY(${parallaxOffset}px)`,
+          transition: "transform 0.1s linear",
+          willChange: "transform",
+        }}
+      >
         <h1 style={{ fontSize: 38, fontWeight: 800, margin: 0 }}>
           Sell Your Alcohol or Accessories on The Drunken Giraffe
         </h1>
@@ -73,11 +95,14 @@ export default function BecomeSeller() {
           width: "100%",
           maxWidth: 900,
           margin: "0 auto 40px auto",
-          background: "rgba(255,255,255,0.07)",
+          background: "rgba(0, 0, 0, 0.56)",
           borderRadius: 16,
           padding: "32px 16px 24px 16px",
           color: "#fff",
-          boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
+          boxShadow: "0 2px 12px rgba(0, 0, 0, 0.6)",
+          backdropFilter: "blur(2px)",
+          mixBlendMode: "hard-light",
+          border: "1px solid rgba(255, 255, 255, 0.47)",
         }}
       >
         <h2 style={{ textAlign: "center", color: "#e1bb3e", marginBottom: 28, fontWeight: 800 }}>
@@ -94,7 +119,7 @@ export default function BecomeSeller() {
             flex: 1,
             minWidth: 220,
             maxWidth: 300,
-            background: "rgba(255,255,255,0.10)",
+            background: "rgba(0, 0, 0, 0.61)",
             borderRadius: 12,
             padding: 24,
             margin: "0 8px",
@@ -109,7 +134,7 @@ export default function BecomeSeller() {
             flex: 1,
             minWidth: 220,
             maxWidth: 300,
-            background: "rgba(255,255,255,0.10)",
+            background: "rgba(0, 0, 0, 0.61)",
             borderRadius: 12,
             padding: 24,
             margin: "0 8px",
@@ -124,7 +149,7 @@ export default function BecomeSeller() {
             flex: 1,
             minWidth: 220,
             maxWidth: 300,
-            background: "rgba(255,255,255,0.10)",
+            background: "rgba(0, 0, 0, 0.61)",
             borderRadius: 12,
             padding: 24,
             margin: "0 8px",
@@ -144,11 +169,14 @@ export default function BecomeSeller() {
           width: "100%",
           maxWidth: 900,
           margin: "0 auto 40px auto",
-          background: "rgba(255,255,255,0.07)",
+          background: "rgba(0, 0, 0, 0.56)",
           borderRadius: 16,
           padding: "32px 16px 24px 16px",
           color: "#fff",
           boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
+          backdropFilter: "blur(2px)",
+          mixBlendMode: "hard-light",
+          border: "1px solid rgba(255, 255, 255, 0.47)",
         }}
       >
         <h2 style={{ textAlign: "center", color: "#e1bb3e", marginBottom: 28, fontWeight: 800, letterSpacing: 2 }}>
@@ -167,14 +195,14 @@ export default function BecomeSeller() {
             flex: 1,
             minWidth: 220,
             maxWidth: 300,
-            background: "rgba(255,255,255,0.10)",
+            background: "rgba(0, 0, 0, 0.56)",
             borderRadius: 12,
             padding: 24,
             margin: "0 8px",
             boxShadow: "0 1px 6px rgba(0,0,0,0.08)",
-            fontSize: 16,
+            fontSize: 24,
             color: "#fff",
-            fontWeight: 500
+            fontWeight: 700,
           }}>
             Easy inventory management
           </li>
@@ -182,14 +210,14 @@ export default function BecomeSeller() {
             flex: 1,
             minWidth: 220,
             maxWidth: 300,
-            background: "rgba(255,255,255,0.10)",
+            background: "rgba(0, 0, 0, 0.56)",
             borderRadius: 12,
             padding: 24,
             margin: "0 8px",
             boxShadow: "0 1px 6px rgba(0,0,0,0.08)",
-            fontSize: 16,
+            fontSize: 24,
             color: "#fff",
-            fontWeight: 500
+            fontWeight: 700,
           }}>
             Access to thousands of customers
           </li>
@@ -197,44 +225,47 @@ export default function BecomeSeller() {
             flex: 1,
             minWidth: 220,
             maxWidth: 300,
-            background: "rgba(255,255,255,0.10)",
+            background: "rgba(0, 0, 0, 0.56)",
             borderRadius: 12,
             padding: 24,
             margin: "0 8px",
             boxShadow: "0 1px 6px rgba(0,0,0,0.08)",
-            fontSize: 16,
+            fontSize: 24,
             color: "#fff",
-            fontWeight: 500
+            fontWeight: 700,
           }}>
             Secure and reliable payments
           </li>
           <li style={{
             flex: 1,
-            minWidth: 220,
-            maxWidth: 300,
-            background: "rgba(255,255,255,0.10)",
+            // minWidth: 220,
+            // maxWidth: 300,
+            width: "100%",
+            background: "rgba(0, 0, 0, 0.56)",
             borderRadius: 12,
             padding: 24,
             margin: "0 8px",
             boxShadow: "0 1px 6px rgba(0,0,0,0.08)",
-            fontSize: 16,
+            fontSize: 24,
             color: "#fff",
-            fontWeight: 500
+            fontWeight: 700,
           }}>
             Marketing and promotions for top sellers
           </li>
           <li style={{
             flex: 1,
-            minWidth: 220,
-            maxWidth: 300,
-            background: "rgba(255,255,255,0.10)",
+            // minWidth: 220,
+            // maxWidth: 300,
+            width: "100%",
+            background: "rgba(0, 0, 0, 0.56)",
             borderRadius: 12,
             padding: 24,
             margin: "0 8px",
             boxShadow: "0 1px 6px rgba(0,0,0,0.08)",
-            fontSize: 16,
+            fontSize: 24,
             color: "#fff",
-            fontWeight: 500
+            fontWeight: 700,
+            // mixBlendMode: "screen"
           }}>
             Compliance support for alcohol regulations
           </li>
@@ -247,11 +278,14 @@ export default function BecomeSeller() {
           width: "100%",
           maxWidth: 900,
           margin: "0 auto 40px auto",
-          background: "rgba(255,255,255,0.07)",
+          background: "rgba(0, 0, 0, 0.56)",
           borderRadius: 16,
           padding: "32px 16px 24px 16px",
           color: "#fff",
           boxShadow: "0 2px 12px rgba(0,0,0,0.10)",
+          backdropFilter: "blur(2px)",
+          mixBlendMode: "hard-light",
+          border: "1px solid rgba(255, 255, 255, 0.47)",
         }}
       >
         <h2 style={{ textAlign: "center", color: "#e1bb3e", marginBottom: 28, fontWeight: 800 }}>
@@ -296,8 +330,10 @@ export default function BecomeSeller() {
             fontWeight: 800,
             fontSize: 22,
             cursor: "pointer",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
-            transition: "background 0.2s"
+            boxShadow: "inset 3px 3px 5px #2a070b25, inset -3px -3px 5px #2a070b25",
+            transition: "background 0.2s",
+            width: "100%",
+            margin: "-50px 600px 0 600px",
           }}
           onClick={() => navigate("/become-seller/apply")}
         >
