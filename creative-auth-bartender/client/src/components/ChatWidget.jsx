@@ -23,6 +23,7 @@ const ChatWidget = () => {
   });
   const [botTyping, setBotTyping] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [bottomOffset, setBottomOffset] = useState(20);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +37,35 @@ const ChatWidget = () => {
   useEffect(() => {
     localStorage.setItem('chatMessages', JSON.stringify(messages));
   }, [messages]);
+
+  useEffect(() => {
+    function handleScroll() {
+      const footer = document.getElementById('footer');
+      if (!footer) return;
+
+      const footerRect = footer.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // If the footer is visible in the viewport
+      if (footerRect.top < windowHeight) {
+        // Move the widget up so it sits above the footer
+        const overlap = windowHeight - footerRect.top;
+        setBottomOffset(overlap + 20);
+      } else {
+        // Footer not visible, stick to default
+        setBottomOffset(20);
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    handleScroll(); // Initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
 
   const handleNavigation = (text) => {
     const lower = text.toLowerCase();
@@ -88,7 +118,15 @@ const ChatWidget = () => {
   };
 
   return (
-    <div className="chat-widget">
+    <div
+      className="chat-widget"
+      style={{
+        position: 'fixed',
+        right: 20,
+        bottom: bottomOffset,
+        zIndex: 2000,
+      }}
+    >
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         <button className="chat-toggle" onClick={() => setShowChat(!showChat)}>
           <FaComments style={{ marginRight: 6 }} />

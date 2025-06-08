@@ -8,8 +8,9 @@ import FacebookVector from "../assets/Facebook-Vector.svg";
 import YouTubeVector from "../assets/YouTube-Vector.svg";
 
 const Footer = () => {
+  const footerRef = React.useRef();
   return (
-    <div className="footer">
+    <div className="footer" ref={footerRef} id="footer">
         <div className="footer-logo">
             <img src={WhiteLogo} alt="Logo" className="footer-logo-image" />
         </div>
