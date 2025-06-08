@@ -89,6 +89,7 @@
   font-weight: bold;
 }
 
+
 .product-stock,
 .product-rating {
   font-size: 0.9rem;
@@ -200,7 +201,7 @@
 
 .product-rating {
   font-size: 14px;
-  color: var(--White) !important;
+  color: var(--Anzac) !important;
   font-weight: bold;
 }
 
@@ -229,7 +230,7 @@
 
 .price-rating{
   font-size: 14px;
-  color: var(--White) !important;
+  /* color: var(--White) !important; */
   font-weight: 200;
   margin-top: 8px;
   display: flex;
@@ -317,7 +318,7 @@
   margin: 0;                /* Remove default margins */
   padding: 0;
   font-size: 14px;
-  color: var(--White) !important;
+  /* color: var(--White) !important; */
   font-weight: bold;
   line-height: 1.2;         /* Ensures consistent line height */
   display: flex;
@@ -348,6 +349,7 @@
 
 .review-stars {
   margin-bottom: 4px;
+  color: var(--Anzac);
 }
 
 .review-user {
