@@ -9,6 +9,8 @@
 - jsonwebtoken
 - socket.io
 - swagger-jsdoc
+- @aws-sdk/client-s3
+- @google-cloud/storage
 
 **Client-side :**
 - react-router-dom

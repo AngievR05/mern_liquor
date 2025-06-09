@@ -8,6 +8,7 @@ import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 
+
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
@@ -88,6 +89,8 @@ app.post('/api/admin/login', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
 
 // HTTP + Socket.io server
 const server = http.createServer(app);
