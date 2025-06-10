@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
   trivia: {
     type: Object, // Example: { favDrink: string, firstPet: string, birthCity: string }
     required: false
+  },
+  profilePic: {
+    type: String,
+    required: false
   }
 });
 

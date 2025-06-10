@@ -2,17 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfileModal({ user, onClose, onLogout, onProfilePicChange }) {
-  const [profilePic, setProfilePic] = useState(() => {
+  // Always load the latest profilePic from localStorage
+  const getProfilePic = () => {
     try {
       const userObj = JSON.parse(localStorage.getItem('loggedInUser'));
       return userObj?.profilePic || localStorage.getItem('profilePic') || null;
     } catch {
       return null;
     }
-  });
+  };
+  const [profilePic, setProfilePic] = useState(getProfilePic());
   const [showWishlist, setShowWishlist] = useState(false);
   const [wishlist, setWishlist] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Sync with user prop if it changes
+    setProfilePic(getProfilePic());
+  }, [user]);
 
   useEffect(() => {
     if (showWishlist) {
@@ -32,21 +39,29 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
     formData.append('profilePic', file);
 
     try {
+      // Upload image to backend
       const res = await fetch('/api/users/upload-profile-pic', {
         method: 'POST',
         body: formData,
       });
 
       const data = await res.json();
-      if (data.imagePath) {
-        const imgPath = `/uploads/${data.imagePath}`;
-        setProfilePic(imgPath);
-        localStorage.setItem('profilePic', imgPath);
+      if (data.path) {
+        const imgPath = data.path;
+        // Update profilePic in backend user record
+        await fetch('/api/users/update-profile-pic', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: user.email, profilePic: imgPath })
+        });
+        // Always update both localStorage and user object
         const userObj = JSON.parse(localStorage.getItem('loggedInUser'));
         if (userObj) {
           const updatedUser = { ...userObj, profilePic: imgPath };
           localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
         }
+        localStorage.setItem('profilePic', imgPath);
+        setProfilePic(imgPath);
         if (onProfilePicChange) onProfilePicChange(imgPath);
       } else {
         alert('Failed to upload image.');
@@ -57,6 +72,15 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
     }
   };
 
+  // Helper to resolve image path for local uploads
+  const resolveProfilePic = (src) => {
+    if (!src) return null;
+    if (src.startsWith("/uploads")) {
+      return process.env.PUBLIC_URL + src;
+    }
+    return src;
+  };
+
   return (
     <div className="profile-modal-wrapper">
       <div className="profile-modal">
@@ -64,7 +88,7 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
         <h2>Profile</h2>
         <div className="profile-pic-wrapper">
           {profilePic ? (
-            <img src={profilePic} alt="Profile" className="profile-pic" />
+            <img src={resolveProfilePic(profilePic)} alt="Profile" className="profile-pic" />
           ) : (
             <div className="profile-placeholder">?</div>
           )}

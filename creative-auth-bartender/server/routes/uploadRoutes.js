@@ -29,7 +29,7 @@ const upload = multer({
 });
 
 router.post('/upload-profile-pic', (req, res) => {
-  upload.single('image')(req, res, (err) => {
+  upload.single('profilePic')(req, res, (err) => {
     if (err) {
       return res.status(400).json({ message: err.message });
     }

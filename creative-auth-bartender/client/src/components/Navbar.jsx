@@ -19,13 +19,20 @@ export default function Navbar({ onLoginClick }) {
     }
   });
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
-  const [profilePic, setProfilePic] = React.useState(null);
+  const [profilePic, setProfilePic] = React.useState(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      return user && user.profilePic ? user.profilePic : localStorage.getItem('profilePic') || null;
+    } catch {
+      return null;
+    }
+  });
 
   // Keep profilePic in sync with localStorage (but NOT loggedInUser, which is now always live)
   React.useEffect(() => {
     try {
       const user = JSON.parse(localStorage.getItem('loggedInUser'));
-      setProfilePic(user && user.profilePic ? user.profilePic : null);
+      setProfilePic(user && user.profilePic ? user.profilePic : localStorage.getItem('profilePic') || null);
     } catch {
       setProfilePic(null);
     }
@@ -80,27 +87,37 @@ export default function Navbar({ onLoginClick }) {
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    setProfilePic(url);
-    // Update localStorage directly
-    const user = (() => {
-      try {
-        return JSON.parse(localStorage.getItem('loggedInUser'));
-      } catch {
-        return null;
-      }
-    })();
-    localStorage.setItem('profilePic', url);
-    if (user) {
-      localStorage.setItem('loggedInUser', JSON.stringify({ ...user, profilePic: url }));
-    }
+    const formData = new FormData();
+    formData.append('profilePic', file);
+    fetch('/api/users/upload-profile-pic', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(async data => {
+        if (data.path) {
+          // Update backend user record
+          const user = JSON.parse(localStorage.getItem('loggedInUser'));
+          await fetch('/api/users/update-profile-pic', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: user.email, profilePic: data.path })
+          });
+          // Always update both localStorage and user object
+          if (user) {
+            localStorage.setItem('loggedInUser', JSON.stringify({ ...user, profilePic: data.path }));
+          }
+          localStorage.setItem('profilePic', data.path);
+          setProfilePic(data.path);
+        }
+      });
   };
 
-  // Resolve uploaded image paths correctly from /uploads
-  const getProfileImageSrc = (src) => {
+  // Helper to resolve image path for local uploads
+  const resolveProfilePic = (src) => {
     if (!src) return null;
     if (src.startsWith("/uploads")) {
-      return `${process.env.PUBLIC_URL}${src}`; // for local static access
+      return process.env.PUBLIC_URL + src;
     }
     return src;
   };
@@ -235,7 +252,7 @@ export default function Navbar({ onLoginClick }) {
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               {profilePic ? (
                 <img
-                  src={profilePic}
+                  src={resolveProfilePic(profilePic)}
                   alt="Profile"
                   style={{
                     width: 48,

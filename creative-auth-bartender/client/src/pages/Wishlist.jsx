@@ -44,15 +44,36 @@ export default function Wishlist() {
 
   if (!wishlist.length) {
     return (
-      <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, color: '#9b1c23', fontWeight: 700 }}>
+      <div style={{
+        minHeight: '100vh',
+        width: '100vw',
+        background: '#000',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 22,
+        color: '#9b1c23',
+        fontWeight: 700,
+        position: 'relative',
+        boxSizing: 'border-box'
+      }}>
         No products in your wishlist.
       </div>
     );
   }
 
   return (
-    <div style={{ padding: 32 }}>
-      <h2 style={{ color: "#9b1c23", marginBottom: 24 }}>My Wishlist</h2>
+    <div
+      style={{
+        padding: 32,
+        background: "#000",
+        minHeight: "100vh",
+        width: "100vw", // Ensure full viewport width
+        position: "relative", // Prevents body background from showing
+        boxSizing: "border-box"
+      }}
+    >
+      <h2 style={{ color: "#e1bb3e", marginBottom: 24 }}>My Wishlist</h2>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 24 }}>
         {wishlist.map(product => (
           <div key={product._id} className="product-wrapper">
@@ -70,3 +91,4 @@ export default function Wishlist() {
     </div>
   );
 }
+

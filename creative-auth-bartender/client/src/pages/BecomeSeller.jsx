@@ -6,12 +6,82 @@ import cellarBackground from "../assets/cellarBackground.jpeg";
 function SellerDashboard({ seller }) {
   // Start fresh: remove all dashboard content
   return (
-    <div style={{
-      padding: 32,
-      minHeight: "100vh",
-      background: "#000",
-      color: "#fff"
-    }}>
+    <div
+      style={{
+        padding: 32,
+        minHeight: "100vh",
+        background: "#000",
+        color: "#fff"
+      }}
+    >
+      <h2 style={{ color: "#e1bb3e", marginBottom: 32 }}>
+        Welcome, {seller.username}
+      </h2>
+      <div style={{
+        background: "#181818",
+        borderRadius: 12,
+        padding: 32,
+        maxWidth: 700,
+        marginBottom: 32,
+        color: "#fff",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.10)"
+      }}>
+        <h3 style={{ color: "#e1bb3e", marginBottom: 18 }}>
+          How to Add a Product to Your Store
+        </h3>
+        <div style={{ fontSize: 16, lineHeight: 1.7 }}>
+          <b>Follow these simple steps to list your product for sale on the platform:</b>
+          <ol style={{ marginTop: 16, marginBottom: 0, paddingLeft: 24 }}>
+            <li style={{ marginBottom: 12 }}>
+              <b>Navigate to the Store Page</b><br />
+              Start by heading to the main Store page of your website.
+            </li>
+            <li style={{ marginBottom: 12 }}>
+              <b>Select the "My Store" Section</b><br />
+              At the top of the page, you'll see two sections: "Home" and "My Store".<br />
+              Click on "My Store" to manage your products and listings.
+            </li>
+            <li style={{ marginBottom: 12 }}>
+              <b>Click "Add Product"</b><br />
+              Just below the filter options, you'll find a button labeled "Add Product".<br />
+              Click it to open the product submission form.
+            </li>
+            <li style={{ marginBottom: 12 }}>
+              <b>Fill in Product Details</b><br />
+              Enter all the required product information, including:
+              <ul style={{ marginTop: 6, marginBottom: 6, paddingLeft: 20 }}>
+                <li>Product name</li>
+                <li>Description</li>
+                <li>Category (Alcohol or Accessory)</li>
+                <li>Price</li>
+                <li>Product images</li>
+                <li>Available stock</li>
+                <li>Any relevant compliance or license info (for alcohol products)</li>
+              </ul>
+              Make sure all details are accurate and professional to appeal to buyers.
+            </li>
+            <li style={{ marginBottom: 12 }}>
+              <b>Submit Your Product</b><br />
+              Once you've filled out the form, click "Submit".<br />
+              Your product will go live immediately upon approval (if required), and will appear under your "My Store" section.
+            </li>
+            <li style={{ marginBottom: 12 }}>
+              <b>Manage Your Listings</b><br />
+              All your live products will be displayed under "My Store".<br />
+              Each product card will have options to:
+              <ul style={{ marginTop: 6, marginBottom: 6, paddingLeft: 20 }}>
+                <li>Edit product details</li>
+                <li>Delete the product if it's no longer available</li>
+              </ul>
+            </li>
+            <li>
+              <b>Preview Your Product as a Buyer</b><br />
+              To see how your product appears to shoppers, return to the "Home" section.<br />
+              Use the search bar to find your listing and view it as a buyer would.
+            </li>
+          </ol>
+        </div>
+      </div>
       {/* Seller Dashboard will be rebuilt here */}
     </div>
   );

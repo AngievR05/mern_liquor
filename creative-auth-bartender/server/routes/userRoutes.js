@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
 
 // REGISTER
 router.post('/register', async (req, res) => {
-  const { email, username, firstName, lastName, password, trivia } = req.body;
+  const { email, username, firstName, lastName, password, trivia, profilePic } = req.body;
 
   if (!username || !email || !password) {
     return res.status(400).json({ message: 'Username, email, and password are required' });
@@ -58,7 +58,8 @@ router.post('/register', async (req, res) => {
       firstName,
       lastName,
       password: hashedPassword,
-      trivia: hashedTrivia
+      trivia: hashedTrivia,
+      profilePic // Save profilePic if provided
     });
 
     res.status(201).json({
@@ -66,7 +67,8 @@ router.post('/register', async (req, res) => {
       username: user.username,
       email: user.email,
       firstName: user.firstName,
-      lastName: user.lastName
+      lastName: user.lastName,
+      profilePic: user.profilePic // Return profilePic
     });
   } catch (err) {
     res.status(500).json({ message: 'Server error during registration' });
@@ -94,7 +96,8 @@ router.post('/login', async (req, res) => {
     res.json({
       _id: user._id,
       username: user.username,
-      email: user.email
+      email: user.email,
+      profilePic: user.profilePic // Return profilePic
       // Optional: add token here
     });
   } catch (err) {
@@ -145,6 +148,25 @@ router.post('/check-exists', async (req, res) => {
     return res.status(400).json({ message: 'No email or username provided' });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// UPDATE PROFILE PIC
+router.post('/update-profile-pic', async (req, res) => {
+  const { email, profilePic } = req.body;
+  if (!email || !profilePic) {
+    return res.status(400).json({ message: 'Email and profilePic required' });
+  }
+  try {
+    const user = await User.findOneAndUpdate(
+      { email: email.trim().toLowerCase() },
+      { profilePic },
+      { new: true }
+    );
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({ profilePic: user.profilePic });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error updating profile picture' });
   }
 });
 

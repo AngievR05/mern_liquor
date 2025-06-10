@@ -4,31 +4,49 @@ import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import '../styles/CartPage.css';
 
-const getStoredUser = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-    return user || null;
-  } catch {
-    return null;
-  }
-};
-
 export default function Cart() {
-  const loggedInUser = getStoredUser();
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
 
-  if (!loggedInUser) {
+  // Detect before login state (example: no user in localStorage)
+  const user = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("loggedInUser"));
+    } catch {
+      return null;
+    }
+  })();
+
+  if (!user) {
     return (
-      <div style={{
-        minHeight: '60vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 22,
-        color: '#9b1c23',
-        fontWeight: 700
-      }}>
-        No items – please log in to add products.
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#000",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            color: "#e1bb3e",
+            fontWeight: 700,
+            fontSize: 28,
+            textAlign: "center",
+            fontFamily: "'Montserrat', 'Segoe UI', Arial, sans-serif",
+            letterSpacing: 1,
+            background: "rgba(30,30,30,0.85)",
+            padding: "40px 32px",
+            borderRadius: 16,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+            border: "1px solid #e1bb3e"
+          }}
+        >
+          Please log in to view your cart.<br />
+          <span style={{ fontWeight: 400, fontSize: 18, color: "#e9c4b4" }}>
+            Sign in to continue shopping and checkout your favorite drinks!
+          </span>
+        </div>
       </div>
     );
   }
