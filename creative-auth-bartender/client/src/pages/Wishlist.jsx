@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 
+function getWishlistKey() {
+  try {
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (user && user.email) return `wishlist_${user.email}`;
+    if (user && user.username) return `wishlist_${user.username}`;
+  } catch {}
+  return "wishlist_guest";
+}
+
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
     try {
-      setWishlist(JSON.parse(localStorage.getItem('wishlist')) || []);
+      setWishlist(JSON.parse(localStorage.getItem(getWishlistKey())) || []);
     } catch {
       setWishlist([]);
     }
@@ -16,18 +25,20 @@ export default function Wishlist() {
   const handleWishlistChange = (productId, isWishlisted) => {
     if (!isWishlisted) {
       setWishlist(prev => prev.filter(item => item._id !== productId));
+      localStorage.setItem(getWishlistKey(), JSON.stringify(
+        (JSON.parse(localStorage.getItem(getWishlistKey())) || []).filter(item => item._id !== productId)
+      ));
     }
   };
 
   // Remove product from wishlist when added to cart
   const handleAddToCartAndRemove = (product) => {
-    // Remove from wishlist in localStorage
     let wishlistArr = [];
     try {
-      wishlistArr = JSON.parse(localStorage.getItem('wishlist')) || [];
+      wishlistArr = JSON.parse(localStorage.getItem(getWishlistKey())) || [];
     } catch {}
     wishlistArr = wishlistArr.filter(item => item._id !== product._id);
-    localStorage.setItem('wishlist', JSON.stringify(wishlistArr));
+    localStorage.setItem(getWishlistKey(), JSON.stringify(wishlistArr));
     setWishlist(wishlistArr);
   };
 
@@ -51,6 +62,7 @@ export default function Wishlist() {
               onWishlistChange={handleWishlistChange}
               showAddToCart={true}
               onAddToCartFromWishlist={handleAddToCartAndRemove}
+              wishlistKey={getWishlistKey()}
             />
           </div>
         ))}
