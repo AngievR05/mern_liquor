@@ -155,17 +155,20 @@ export default function Navbar({ onLoginClick }) {
             onClick={onLoginClick}
             style={{
               marginLeft: 16,
-              background: '#9b1c23',
-              color: '#fff',
-              border: 'none',
+              marginTop: 0,
+              background: "#e1bb3e",
+              color: "#350b0f",
+              border: "none",
               borderRadius: 8,
-              padding: '8px 18px',
+              padding: "10px 28px",
               fontWeight: 700,
               fontSize: 16,
-              cursor: 'pointer'
+              cursor: "pointer",
+              boxShadow: 'inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7)',
+              transition: "background 0.2s, color 0.2s"
             }}
           >
-            Login
+            <ShinyText text="Login" disabled={false} speed={3} className="nav-button-text" />
           </button>
         )}
         {/* Only show Profile button if logged in */}

@@ -537,36 +537,20 @@ export default function BecomeSeller() {
           willChange: "transform",
         }}
       >
-        <div
-          className="seller-banner"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            background: "#e1bb3e",
-            padding: "32px 48px",
-            borderRadius: 16,
-            marginBottom: 40,
-          }}
-        >
+        <div className="seller-banner" style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          background: "#e1bb3e",
+          padding: "32px 48px",
+          borderRadius: 16,
+          marginBottom: 40
+        }}>
           <div>
-            <h1
-              style={{
-                color: "#350b0f",
-                fontWeight: 800,
-                fontSize: 36,
-                margin: 0,
-              }}
-            >
+            <h1 style={{ color: "#350b0f", fontWeight: 800, fontSize: 36, margin: 0 }}>
               Become a Seller
             </h1>
-            <p
-              style={{
-                color: "#350b0f",
-                fontSize: 20,
-                margin: "12px 0 0 0",
-              }}
-            >
+            <p style={{ color: "#350b0f", fontSize: 20, margin: "12px 0 0 0" }}>
               Join our marketplace and reach thousands of customers.
             </p>
           </div>
@@ -580,22 +564,22 @@ export default function BecomeSeller() {
                 padding: "14px 32px",
                 fontWeight: 700,
                 fontSize: 18,
-                cursor: "pointer",
+                cursor: "pointer"
               }}
-              onClick={() => (window.location.href = "/become-seller/apply")}
+              onClick={() => window.location.href = "/become-seller/apply"}
             >
               Apply Now
             </button>
             <button
               style={{
-                background: "#fff",
-                color: "#9b1c23",
-                border: "2px solid #9b1c23",
+                background: "#9b1c23",
+                color: "#fff",
+                border: "none",
                 borderRadius: 8,
                 padding: "14px 32px",
                 fontWeight: 700,
                 fontSize: 18,
-                cursor: "pointer",
+                cursor: "pointer"
               }}
               onClick={() => setShowSellerLogin(true)}
             >
