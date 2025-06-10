@@ -541,13 +541,19 @@ export default function BecomeSeller() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          background: "#e1bb3e",
+          background: "linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)",
           padding: "32px 48px",
           borderRadius: 16,
           marginBottom: 40
         }}>
           <div>
-            <h1 style={{ color: "#350b0f", fontWeight: 800, fontSize: 36, margin: 0 }}>
+            <h1 style={{ 
+              color: "var(--Old-Brick)",
+               fontWeight: 800,
+                fontSize: 42,
+                 margin: 0,
+                 textShadow: "0 0 4px var(--Old-Brick)",
+                  }}>
               Become a Seller
             </h1>
             <p style={{ color: "#350b0f", fontSize: 20, margin: "12px 0 0 0" }}>
@@ -557,14 +563,15 @@ export default function BecomeSeller() {
           <div style={{ display: "flex", gap: 18 }}>
             <button
               style={{
-                background: "#9b1c23",
+                background: "var(--Old-Brick)",
                 color: "#fff",
                 border: "none",
                 borderRadius: 8,
                 padding: "14px 32px",
                 fontWeight: 700,
                 fontSize: 18,
-                cursor: "pointer"
+                cursor: "pointer",
+                boxShadow: "inset 3px 3px 5px #2a070b25, inset -3px -3px 5px #2a070b25",
               }}
               onClick={() => window.location.href = "/become-seller/apply"}
             >
@@ -572,14 +579,15 @@ export default function BecomeSeller() {
             </button>
             <button
               style={{
-                background: "#9b1c23",
-                color: "#fff",
+                background: "var(--Anzac)",
+                color: "var(--Aubergine)",
                 border: "none",
                 borderRadius: 8,
                 padding: "14px 32px",
                 fontWeight: 700,
                 fontSize: 18,
-                cursor: "pointer"
+                cursor: "pointer",
+                boxShadow: "inset 3px 3px 5px #2a070b25, inset -3px -3px 5px #2a070b25",
               }}
               onClick={() => setShowSellerLogin(true)}
             >
