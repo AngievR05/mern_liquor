@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: false,
-    unique: false,
+    unique: false,  // Not unique, but consider making it unique if your app demands
     lowercase: true,
     trim: true
   },
@@ -42,20 +42,14 @@ const userSchema = new mongoose.Schema({
     type: String
   },
   trivia: {
-    type: Object, // { favDrink: string, firstPet: string, birthCity: string }
+    type: Object, // Example: { favDrink: string, firstPet: string, birthCity: string }
     required: false
   }
 });
 
-// REMOVE this pre-save hook to avoid double-hashing passwords
-// userSchema.pre('save', async function (next) {
-//   if (!this.isModified('password') || !this.password) return next();
-//   const salt = await bcrypt.genSalt(10);
-//   this.password = await bcrypt.hash(this.password, salt);
-//   next();
-// });
+// Removed pre-save hook to avoid double hashing - you handle hashing in your routes
 
-// Method to compare passwords
+// Method to compare password during login
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

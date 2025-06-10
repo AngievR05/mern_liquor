@@ -44,7 +44,8 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
         localStorage.setItem('profilePic', imgPath);
         const userObj = JSON.parse(localStorage.getItem('loggedInUser'));
         if (userObj) {
-          localStorage.setItem('loggedInUser', JSON.stringify({ ...userObj, profilePic: imgPath }));
+          const updatedUser = { ...userObj, profilePic: imgPath };
+          localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
         }
         if (onProfilePicChange) onProfilePicChange(imgPath);
       } else {
@@ -72,9 +73,7 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
             <input type="file" accept="image/*" hidden onChange={handleProfilePicChange} />
           </label>
         </div>
-        <div className="user-info">
-          <b>Username:</b> {user.username}
-        </div>
+        <div className="user-info"><b>Username:</b> {user.username}</div>
         <button className="wishlist-btn" onClick={() => setShowWishlist(true)}>View Wishlist</button>
         {user?.isAdmin && (
           <button onClick={() => { onClose(); navigate("/dashboard"); }} className="admin-btn">
