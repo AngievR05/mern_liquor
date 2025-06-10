@@ -107,6 +107,12 @@ const sellerApplicationSchema = new mongoose.Schema({
 });
 const SellerApplication = mongoose.models.SellerApplication || mongoose.model('SellerApplication', sellerApplicationSchema);
 
+// Add status field to SellerApplication if not present
+// (If you want to default to "Pending" on new applications)
+if (!sellerApplicationSchema.paths.status) {
+  sellerApplicationSchema.add({ status: { type: String, default: "Pending" } });
+}
+
 // Seller application endpoint (local file storage, like product images)
 app.post('/api/seller/apply', upload.single('licenseFile'), async (req, res) => {
   try {
@@ -172,6 +178,156 @@ app.post('/api/seller/apply', upload.single('licenseFile'), async (req, res) => 
   }
 });
 
+// Endpoint to get all seller applications (for admin dashboard)
+app.get('/api/seller/applications', async (req, res) => {
+  try {
+    const applications = await SellerApplication.find().sort({ createdAt: -1 });
+    res.json(applications);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+// PATCH endpoint to update seller application status
+app.patch('/api/seller/applications/:id/status', async (req, res) => {
+  try {
+    const { status } = req.body;
+    const validStatuses = ["Pending", "Approved", "Rejected"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+    const application = await SellerApplication.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    // Send acceptance email if status is Approved
+    if (status === "Approved") {
+      try {
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+          }
+        });
+
+        await transporter.sendMail({
+          from: `"The Drunken Giraffe" <${process.env.EMAIL_USER}>`,
+          to: application.email,
+          subject: "Seller Application Approved",
+          html: `
+            <h2>Congratulations!</h2>
+            <p>Dear ${application.ownerName || application.businessName},</p>
+            <p>Your seller application has been <b>approved</b>! Please wait for a follow-up email with your login details and next steps.</p>
+            <p>Thank you for joining The Drunken Giraffe.</p>
+            <p>Best regards,<br/>The Drunken Giraffe Team</p>
+          `
+        });
+      } catch (mailErr) {
+        console.error('Failed to send acceptance email:', mailErr);
+      }
+    }
+
+    // Send rejection email if status is Rejected
+    if (status === "Rejected") {
+      try {
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+          }
+        });
+
+        await transporter.sendMail({
+          from: `"The Drunken Giraffe" <${process.env.EMAIL_USER}>`,
+          to: application.email,
+          subject: "Seller Application Rejected",
+          html: `
+            <h2>Application Update</h2>
+            <p>Dear ${application.ownerName || application.businessName},</p>
+            <p>We regret to inform you that your seller application has been <b>rejected</b>.</p>
+            <p>If you believe this was a mistake or need more information, please contact our support team at <a href="mailto:support@thedrunkengiraffe.com">support@thedrunkengiraffe.com</a>.</p>
+            <p>Best regards,<br/>The Drunken Giraffe Team</p>
+          `
+        });
+      } catch (mailErr) {
+        console.error('Failed to send rejection email:', mailErr);
+      }
+    }
+
+    res.json(application);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// Seller model (for registered sellers)
+const sellerSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true }, // For production, hash this!
+  email: { type: String, required: true, unique: true },
+  businessName: String,
+  ownerName: String,
+  createdAt: { type: Date, default: Date.now }
+});
+const Seller = mongoose.models.Seller || mongoose.model('Seller', sellerSchema);
+
+// Seller registration endpoint (called by admin from dashboard)
+app.post('/api/sellers/register', async (req, res) => {
+  const { username, password, email, businessName, ownerName } = req.body;
+  if (!username || !password || !email) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+  try {
+    let seller = await Seller.findOne({ email });
+    if (seller) {
+      // Update username and password for existing seller
+      seller.username = username;
+      seller.password = password; // For production, hash the password!
+      await seller.save();
+      return res.status(200).json({ message: "Seller updated", seller });
+    }
+    // Otherwise, create new seller
+    seller = new Seller({ username, password, email, businessName, ownerName });
+    await seller.save();
+    res.status(201).json({ message: "Seller registered", seller });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// Seller login endpoint
+app.post('/api/sellers/login', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: "Username and password required" });
+  }
+  try {
+    const seller = await Seller.findOne({ username });
+    if (!seller) {
+      return res.status(404).json({ message: "Seller not found" });
+    }
+    // For production, compare hashed passwords!
+    if (seller.password !== password) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+    res.json({
+      username: seller.username,
+      email: seller.email,
+      businessName: seller.businessName,
+      ownerName: seller.ownerName
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 // HTTP + Socket.io server
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -210,3 +366,22 @@ mongoose.connect(process.env.MONGO_URI)
 // npm install socket.io
 
 // After install, run `npm start` again.
+
+// Update productRoutes.js or add this filter to your products endpoint if not already present:
+app.get('/api/products', async (req, res) => {
+  try {
+    const filter = {};
+    if (req.query.seller) {
+      filter.seller = req.query.seller;
+    }
+    // Only filter by companyName if seller is not specified
+    if (req.query.companyName && !req.query.seller) {
+      filter.companyName = req.query.companyName;
+    }
+    // ...add more filters as needed...
+    const products = await mongoose.model('Product').find(filter);
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});

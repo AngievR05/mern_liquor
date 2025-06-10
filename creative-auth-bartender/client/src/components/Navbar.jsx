@@ -155,40 +155,60 @@ export default function Navbar({ onLoginClick }) {
             onClick={onLoginClick}
             style={{
               marginLeft: 16,
-              background: '#e1bb3e',
+              background: '#9b1c23',
               color: '#fff',
               border: 'none',
               borderRadius: 8,
               padding: '8px 18px',
               fontWeight: 700,
               fontSize: 16,
-              cursor: 'pointer',
-              boxShadow: 'inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7)',
+              cursor: 'pointer'
             }}
           >
-            <ShinyText text="Log in" disabled={false} speed={3} className="nav-button-text" />
+            Login
           </button>
         )}
         {/* Only show Profile button if logged in */}
         {loggedInUser && (
-          <button
-            className="profile-btn"
-            onClick={() => setShowProfileMenu((v) => !v)}
-            style={{
-              marginLeft: 16,
-              background: '#e1bb3e',
-              color: '#350b0f',
-              border: 'none',
-              borderRadius: 8,
-              padding: '8px 18px',
-              fontWeight: 700,
-              fontSize: 16,
-              cursor: 'pointer',
-              boxShadow: 'inset 4px 4px 10px rgba(255, 255, 255, 0.3), inset -2px -2px 10px rgba(0, 0, 0, 0.7)',
-            }}
-          >
-            Profile
-          </button>
+          <>
+            <button
+              className="profile-btn"
+              onClick={() => setShowProfileMenu((v) => !v)}
+              style={{
+                marginLeft: 16,
+                background: '#e1bb3e',
+                color: '#350b0f',
+                border: 'none',
+                borderRadius: 8,
+                padding: '8px 18px',
+                fontWeight: 700,
+                fontSize: 16,
+                cursor: 'pointer'
+              }}
+            >
+              Profile
+            </button>
+            {/* Show Dashboard button for admin */}
+            {loggedInUser.isAdmin && (
+              <button
+                className="dashboard-btn"
+                style={{
+                  marginLeft: 16,
+                  background: "#e1bb3e",
+                  color: "#350b0f",
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "8px 18px",
+                  fontWeight: 700,
+                  fontSize: 16,
+                  cursor: "pointer"
+                }}
+                onClick={() => window.location.href = "/dashboard"}
+              >
+                Dashboard
+              </button>
+            )}
+          </>
         )}
         {/* ...existing code for profile dropdown menu... */}
         {showProfileMenu && loggedInUser && (

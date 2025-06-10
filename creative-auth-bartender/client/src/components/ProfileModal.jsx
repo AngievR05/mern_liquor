@@ -213,6 +213,31 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
           >
             View Wishlist
           </button>
+          {/* Dashboard button for admin */}
+          {user && user.isAdmin && (
+            <button
+              onClick={() => {
+                onClose && onClose();
+                navigate("/dashboard");
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                color: "#9b1c23",
+                background: "#fff",
+                border: "1px solid #e1bb3e",
+                borderRadius: 8,
+                padding: "8px 18px",
+                fontWeight: 700,
+                fontSize: 16,
+                cursor: "pointer",
+                marginTop: 0
+              }}
+            >
+              Dashboard
+            </button>
+          )}
           <button style={{
             width: '80%',
             background: '#e1bb3e',
