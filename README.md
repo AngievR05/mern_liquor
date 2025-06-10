@@ -75,7 +75,7 @@ Visit the app at:
 | Area           | Features                                                                 |
 |----------------|--------------------------------------------------------------------------|
 | 🔐 Auth        | Game login + accessible fallback                                          |
-| 🛍 Products    | View, add, edit, delete products with image upload support               |
+| 🛍 Products    | View, add, edit, delete, and like products with image upload support               |
 | 💬 Reviews     | Add star ratings (1–5 in 0.25 steps) and comments per product             |
 | 🛒 Cart        | Local cart, quantity control, order saving, validation, email receipt     |
 | 🤖 Chat Bot    | Typing delay, smart replies, page navigation, iOS-style UI                |
@@ -180,11 +180,8 @@ Future: Add automated tests with Vitest or Cypress
 
 ## 8. 🔭 Roadmap / Future Improvements
 
-- [ ] User dashboard to track orders  
-- [ ] Product wishlist system  
-- [ ] Upload profile pictures to database  
-- [ ] Admin-only product permissions  
-- [ ] Bot memory (session state)  
+- [ ] User dashboard to track orders   
+- [ ] Upload profile pictures to database    
 - [ ] Deployment to Render/Vercel/Mongo Atlas  
 
 ---
