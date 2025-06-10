@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/SellerApplication.css";
+import CheersCelebrations from "../assets/CheersCelebrations.jpg";
 
 const sellerStories = [
 	{
@@ -16,6 +17,17 @@ const sellerStories = [
 	},
 	// Add more stories as needed
 ];
+
+function getRandomPosition(containerWidth, containerHeight, storyWidth = 320, storyHeight = 100) {
+	// Avoid the title area at the top (reserve 116px), and 16px from all other sides
+	const minY = 116;
+	const maxY = containerHeight - storyHeight - 16;
+	const minX = 16;
+	const maxX = containerWidth - storyWidth - 16;
+	const top = Math.floor(Math.random() * (maxY - minY) + minY);
+	const left = Math.floor(Math.random() * (maxX - minX) + minX);
+	return { top, left };
+}
 
 export default function SellerApplication() {
 	const [form, setForm] = useState({
@@ -78,154 +90,216 @@ export default function SellerApplication() {
 		setSubmitting(false);
 	};
 
-  return (
-    <div className="seller-app-root">
-      {/* Application Form (Left) */}
-      <div className="seller-app-form-container">
-        <h2 className="seller-app-form-title">
-          Seller Application
-        </h2>
-        {submitted ? (
-          <div className="seller-app-success-message">
-            <h3>Thank you for your application!</h3>
-            <p>
-              Our team will review your submission and contact you at <b>{form.email}</b>.<br />
-              We look forward to partnering with you!
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="seller-app-form">
-            <label>
-              Business Name
-              <input
-                type="text"
-                name="businessName"
-                value={form.businessName}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Business Owner Full Name
-              <input
-                type="text"
-                name="ownerName"
-                value={form.ownerName}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Email
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Phone
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Business Type
-              <select
-                name="businessType"
-                value={form.businessType}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select type</option>
-                <option value="Brewery">Brewery</option>
-                <option value="Retailer">Retailer</option>
-                <option value="Accessories Brand">Accessories Brand</option>
-                <option value="Distillery">Distillery</option>
-                <option value="Other">Other</option>
-              </select>
-            </label>
-            <label>
-              Business Registration Number
-              <input
-                type="text"
-                name="registrationNumber"
-                value={form.registrationNumber}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Upload Liquor License
-              <input
-                type="file"
-                name="licenseFile"
-                accept=".pdf,.jpg,.jpeg,.png"
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Product Types You Intend to Sell
-              <input
-                type="text"
-                name="productTypes"
-                value={form.productTypes}
-                onChange={handleChange}
-                required
-                placeholder="e.g. Gin, Whiskey, Glassware"
-              />
-            </label>
-            <label>
-              Website or Social Media Links
-              <input
-                type="text"
-                name="website"
-                value={form.website}
-                onChange={handleChange}
-                placeholder="https://yourbusiness.com or @yourhandle"
-              />
-            </label>
-            <label className="seller-app-checkbox-label">
-              <input
-                type="checkbox"
-                name="confirmLicensed"
-                checked={form.confirmLicensed}
-                onChange={handleChange}
-                required
-              />
-              I confirm I am licensed to sell alcohol in my country.
-            </label>
-            {submitError && (
-              <div className="seller-app-error">{submitError}</div>
-            )}
-            <button
-              type="submit"
-              disabled={submitting}
-            >
-              {submitting ? "Submitting..." : "Submit Application"}
-            </button>
-          </form>
-        )}
-      </div>
-      {/* Seller Success Stories (Right) */}
-      <div className="seller-app-stories-container">
-        <h2 className="seller-app-stories-title">Seller Success Stories</h2>
-        <div className="seller-app-stories-list">
-          {sellerStories.map((story, idx) => (
-            <div key={idx} className="seller-app-story">
-              <h4 className="seller-app-story-title">{story.name}</h4>
-              <p style={{ margin: 0 }}>{story.story}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+	// Floating stories logic
+	const [currentStoryIdx, setCurrentStoryIdx] = useState(0);
+	const [fadeState, setFadeState] = useState("show"); // "show" | "hide"
+	const [position, setPosition] = useState({ top: 120, left: 120 });
+	const bgRef = useRef();
+
+	useEffect(() => {
+		let fadeOutTimeout, nextTimeout;
+		const showDuration = 12000; // 12s
+		const fadeDuration = 1200; // 1.2s
+
+		function setRandomPos() {
+			if (bgRef.current) {
+				const rect = bgRef.current.getBoundingClientRect();
+				const pos = getRandomPosition(rect.width, rect.height);
+				setPosition(pos);
+			}
+		}
+
+		setFadeState("show");
+		setRandomPos();
+
+		fadeOutTimeout = setTimeout(() => setFadeState("hide"), showDuration - fadeDuration);
+		nextTimeout = setTimeout(() => {
+			setCurrentStoryIdx((idx) => (idx + 1) % sellerStories.length);
+			setFadeState("show");
+		}, showDuration);
+
+		return () => {
+			clearTimeout(fadeOutTimeout);
+			clearTimeout(nextTimeout);
+		};
+		// eslint-disable-next-line
+	}, [currentStoryIdx]);
+
+	// When fading in, pick a new random position
+	useEffect(() => {
+		if (fadeState === "show" && bgRef.current) {
+			const rect = bgRef.current.getBoundingClientRect();
+			setPosition(getRandomPosition(rect.width, rect.height));
+		}
+	}, [fadeState]);
+
+	useEffect(() => {
+		// Save previous overflow value
+		const prevOverflow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+		return () => {
+			document.body.style.overflow = prevOverflow;
+		};
+	}, []);
+
+	return (
+		<div className="seller-app-root">
+			{/* Application Form (Left) */}
+			<div className="seller-app-form-container">
+				<h2 className="seller-app-form-title">
+					Seller Application
+				</h2>
+				{submitted ? (
+					<div className="seller-app-success-message">
+						<h3>Thank you for your application!</h3>
+						<p>
+							Our team will review your submission and contact you at <b>{form.email}</b>.<br />
+							We look forward to partnering with you!
+						</p>
+					</div>
+				) : (
+					<form onSubmit={handleSubmit} className="seller-app-form">
+						<label>
+							Business Name
+							<input
+								type="text"
+								name="businessName"
+								value={form.businessName}
+								onChange={handleChange}
+								required
+							/>
+						</label>
+						<label>
+							Business Owner Full Name
+							<input
+								type="text"
+								name="ownerName"
+								value={form.ownerName}
+								onChange={handleChange}
+								required
+							/>
+						</label>
+						<label>
+							Email
+							<input
+								type="email"
+								name="email"
+								value={form.email}
+								onChange={handleChange}
+								required
+							/>
+						</label>
+						<label>
+							Phone
+							<input
+								type="tel"
+								name="phone"
+								value={form.phone}
+								onChange={handleChange}
+								required
+							/>
+						</label>
+						<label>
+							Business Type
+							<select
+								name="businessType"
+								value={form.businessType}
+								onChange={handleChange}
+								required
+							>
+								<option value="">Select type</option>
+								<option value="Brewery">Brewery</option>
+								<option value="Retailer">Retailer</option>
+								<option value="Accessories Brand">Accessories Brand</option>
+								<option value="Distillery">Distillery</option>
+								<option value="Other">Other</option>
+							</select>
+						</label>
+						<label>
+							Business Registration Number
+							<input
+								type="text"
+								name="registrationNumber"
+								value={form.registrationNumber}
+								onChange={handleChange}
+								required
+							/>
+						</label>
+						<label>
+							Upload Liquor License
+							<input
+								type="file"
+								name="licenseFile"
+								accept=".pdf,.jpg,.jpeg,.png"
+								onChange={handleChange}
+								required
+							/>
+						</label>
+						<label>
+							Product Types You Intend to Sell
+							<input
+								type="text"
+								name="productTypes"
+								value={form.productTypes}
+								onChange={handleChange}
+								required
+								placeholder="e.g. Gin, Whiskey, Glassware"
+							/>
+						</label>
+						<label>
+							Website or Social Media Links
+							<input
+								type="text"
+								name="website"
+								value={form.website}
+								onChange={handleChange}
+								placeholder="https://yourbusiness.com or @yourhandle"
+							/>
+						</label>
+						<label className="seller-app-checkbox-label">
+							<input
+								type="checkbox"
+								name="confirmLicensed"
+								checked={form.confirmLicensed}
+								onChange={handleChange}
+								required
+							/>
+							I confirm I am licensed to sell alcohol in my country.
+						</label>
+						{submitError && (
+							<div className="seller-app-error">{submitError}</div>
+						)}
+						<button
+							type="submit"
+							disabled={submitting}
+						>
+							{submitting ? "Submitting..." : "Submit Application"}
+						</button>
+					</form>
+				)}
+			</div>
+			{/* Seller Success Stories (Right) */}
+			<div
+				className="seller-app-stories-bg"
+				ref={bgRef}
+				style={{
+					backgroundImage: `url(${CheersCelebrations})`,
+				}}
+			>
+				<div className="seller-app-stories-title">Seller Success Stories</div>
+				<div
+					className={`seller-app-floating-story ${fadeState}`}
+					style={{
+						top: position.top,
+						left: position.left,
+					}}
+				>
+					<div className="seller-app-story-title">
+						{sellerStories[currentStoryIdx].name}
+					</div>
+					<div>{sellerStories[currentStoryIdx].story}</div>
+				</div>
+			</div>
+		</div>
+	);
 }

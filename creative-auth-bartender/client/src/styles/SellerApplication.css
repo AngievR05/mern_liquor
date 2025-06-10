@@ -1,6 +1,6 @@
 .seller-app-root {
   min-height: 100vh;
-  background: linear-gradient(135deg, #350b0f 0%, #9b1c23 100%);
+  background: linear-gradient(135deg,#5e4723 0%, #bd9446 100%);
   color: #fff;
   display: flex;
   flex-direction: row;
@@ -8,6 +8,7 @@
   justify-content: center;
   padding: 48px 0;
   gap: 48px;
+  y-overflow: hidden; /* Prevents y-overflow */
 }
 
 @media (max-width: 900px) {
@@ -28,18 +29,27 @@
   width: 100%;
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
   min-height: 600px;
+  max-height: 80vh; /* or match your image's max-height */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.seller-app-form-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .seller-app-form-title {
   text-align: center;
   margin-bottom: 28px;
-  color: #9b1c23;
+  color: var(--Anzac, #e1bb3e);
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
 }
 
 .seller-app-success-message {
@@ -155,13 +165,83 @@
   justify-content: flex-start;
 }
 
+.seller-app-stories-bg {
+  position: relative;
+  width: 50vw;
+  min-width: 320px;
+  max-width: 700px;
+  height: 80vh;
+  min-height: 400px;
+  max-height: 800px;
+  background: url('../assets/CheersCelebrations.jpg') center center/cover no-repeat;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .seller-app-stories-title {
-  color: #e1bb3e;
-  margin-bottom: 28px;
-  text-align: center;
-  font-size: 1.5rem;
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--Anzac, #e1bb3e);
+  background: rgba(23, 26, 41, 0);
+  padding: 10px 32px;
+  border-radius: 12px;
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.01em;
+  z-index: 2;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  backdrop-filter: blur(2px);
+}
+
+.seller-app-floating-story {
+  position: absolute;
+  min-width: 220px;
+  max-width: 340px;
+  background: rgba(4, 4, 9, 0.34);
+  color: var(--White, #fff);
+  backdrop-filter: saturate(180%) contrast(90%) brightness(95%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  padding: 18px 20px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  mix-blend-mode: hard-light;
+}
+
+.seller-app-floating-story.show {
+  opacity: 1;
+  transition: opacity 1.2s;
+}
+
+.seller-app-floating-story.hide {
+  opacity: 0;
+  transition: opacity 1.2s;
+}
+
+.seller-app-floating-story .seller-app-story-title {
+  color: var(--Anzac, #e1bb3e);
+  margin-bottom: 8px;
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  letter-shadow: 0 0 2px 1px rgba(0,0,0,0.5);
 }
 
 .seller-app-stories-list {
@@ -199,5 +279,26 @@
   .seller-app-root {
     padding: 16px 0;
     gap: 18px;
+  }
+}
+
+@media (max-width: 900px) {
+  .seller-app-stories-bg {
+    width: 98vw;
+    min-width: 0;
+    max-width: 100vw;
+    height: 50vh;
+    min-height: 300px;
+    max-height: 400px;
+  }
+  .seller-app-floating-story {
+    min-width: 160px;
+    max-width: 90vw;
+    font-size: 1rem;
+    padding: 12px 10px;
+  }
+  .seller-app-stories-title {
+    font-size: 1.2rem;
+    padding: 8px 12px;
   }
 }
