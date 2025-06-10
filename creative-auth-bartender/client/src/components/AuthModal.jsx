@@ -275,7 +275,7 @@ export default function AuthModal({ onClose }) {
   function handleLoginPasswordContinue(e) {
     e.preventDefault();
     setLoginError("");
-    // Pick a random trivia question index
+    // Pick a random trivia question index each time user logs in
     const idx = Math.floor(Math.random() * triviaQuestions.length);
     setLoginTriviaIndex(idx);
     setLoginStep(2);
@@ -1111,7 +1111,7 @@ export default function AuthModal({ onClose }) {
                               />
                               {/* Always show the question label if index is set */}
                               {typeof loginTriviaIndex === "number" && triviaQuestions[loginTriviaIndex] && (
-                                <label style={{ fontWeight: 500, marginBottom: 4 }}>
+                                <label style={{ fontWeight: 500, marginBottom: 4, color: "#000" }}>
                                   {triviaQuestions[loginTriviaIndex].label}
                                 </label>
                               )}

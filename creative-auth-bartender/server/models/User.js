@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema({
   },
   verificationCode: {
     type: String
+  },
+  trivia: {
+    type: Object, // { favDrink: string, firstPet: string, birthCity: string }
+    required: false
   }
 });
 

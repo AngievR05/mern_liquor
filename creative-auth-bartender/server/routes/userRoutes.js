@@ -42,12 +42,12 @@ router.post('/register', async (req, res) => {
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Hash trivia answers with sha256 (or bcrypt if you want, but keep consistent)
+    // Save all trivia answers (already hashed on frontend)
     let hashedTrivia = {};
     if (trivia && typeof trivia === 'object') {
       for (const key in trivia) {
         if (trivia[key]) {
-          hashedTrivia[key] = trivia[key]; // Already hashed on frontend, or hash here if needed
+          hashedTrivia[key] = trivia[key];
         }
       }
     }
@@ -57,8 +57,8 @@ router.post('/register', async (req, res) => {
       username,
       firstName,
       lastName,
-      password: hashedPassword, // Save hashed password
-      trivia: hashedTrivia
+      password: hashedPassword,
+      trivia: hashedTrivia // <-- Save all trivia answers
     });
     res.status(201).json({
       _id: user._id,

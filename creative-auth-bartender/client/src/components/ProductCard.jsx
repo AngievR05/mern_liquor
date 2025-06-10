@@ -3,13 +3,23 @@ import { useCart } from '../context/CartContext';
 import '../styles/ProductCard.css';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
+function getWishlistKey() {
+  try {
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (user && user.email) return `wishlist_${user.email}`;
+    if (user && user.username) return `wishlist_${user.username}`;
+  } catch {}
+  return "wishlist_guest";
+}
+
 const ProductCard = ({
   product,
   showAddToCart = true,
   onLoginToBuy,
   showDescription,
   onWishlistChange,
-  onAddToCartFromWishlist
+  onAddToCartFromWishlist,
+  wishlistKey // optional, fallback to getWishlistKey()
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [added, setAdded] = useState(false);
@@ -23,9 +33,10 @@ const ProductCard = ({
     }
   })();
 
+  const key = wishlistKey || getWishlistKey();
   const [wishlisted, setWishlisted] = useState(() => {
     try {
-      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const wishlist = JSON.parse(localStorage.getItem(key)) || [];
       return wishlist.some(item => item._id === product._id);
     } catch {
       return false;
@@ -36,7 +47,7 @@ const ProductCard = ({
     e.stopPropagation && e.stopPropagation();
     let wishlist = [];
     try {
-      wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      wishlist = JSON.parse(localStorage.getItem(key)) || [];
     } catch {}
     let newWishlisted;
     if (wishlisted) {
@@ -46,7 +57,7 @@ const ProductCard = ({
       wishlist.push(product);
       newWishlisted = true;
     }
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    localStorage.setItem(key, JSON.stringify(wishlist));
     setWishlisted(newWishlisted);
     if (onWishlistChange) {
       onWishlistChange(product._id, newWishlisted);
