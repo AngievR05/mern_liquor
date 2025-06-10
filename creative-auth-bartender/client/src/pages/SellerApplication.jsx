@@ -30,6 +30,8 @@ export default function SellerApplication() {
     confirmLicensed: false,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -42,9 +44,37 @@ export default function SellerApplication() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitError("");
+    setSubmitting(true);
+
+    // Prepare form data for multipart/form-data
+    const formData = new FormData();
+    Object.entries(form).forEach(([key, value]) => {
+      if (key === "licenseFile" && value) {
+        formData.append("licenseFile", value);
+      } else {
+        formData.append(key, value);
+      }
+    });
+
+    try {
+      const res = await fetch("/api/seller/apply", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        setSubmitError(err.message || "Submission failed");
+        setSubmitting(false);
+        return;
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError("Submission failed. Please try again.");
+    }
+    setSubmitting(false);
   };
 
   return (
@@ -200,6 +230,9 @@ export default function SellerApplication() {
               />
               I confirm I am licensed to sell alcohol in my country.
             </label>
+            {submitError && (
+              <div style={{ color: "red", marginBottom: 8 }}>{submitError}</div>
+            )}
             <button
               type="submit"
               style={{
@@ -213,8 +246,9 @@ export default function SellerApplication() {
                 cursor: "pointer",
                 marginTop: 8
               }}
+              disabled={submitting}
             >
-              Submit Application
+              {submitting ? "Submitting..." : "Submit Application"}
             </button>
           </form>
         )}

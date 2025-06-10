@@ -7,6 +7,7 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
+import nodemailer from 'nodemailer';
 
 
 import productRoutes from './routes/productRoutes.js';
@@ -90,7 +91,86 @@ app.post('/api/admin/login', async (req, res) => {
   }
 });
 
+// SellerApplication model
+const sellerApplicationSchema = new mongoose.Schema({
+  businessName: String,
+  ownerName: String,
+  email: String,
+  phone: String,
+  businessType: String,
+  registrationNumber: String,
+  productTypes: String,
+  website: String,
+  confirmLicensed: Boolean,
+  liquorLicenseFile: String, // path to uploaded file
+  createdAt: { type: Date, default: Date.now }
+});
+const SellerApplication = mongoose.models.SellerApplication || mongoose.model('SellerApplication', sellerApplicationSchema);
 
+// Seller application endpoint (local file storage, like product images)
+app.post('/api/seller/apply', upload.single('licenseFile'), async (req, res) => {
+  try {
+    const {
+      businessName,
+      ownerName,
+      email,
+      phone,
+      businessType,
+      registrationNumber,
+      productTypes,
+      website,
+      confirmLicensed
+    } = req.body;
+
+    if (!businessName || !ownerName || !email || !phone || !businessType || !registrationNumber || !productTypes || !req.file) {
+      return res.status(400).json({ message: 'Missing required fields or file' });
+    }
+
+    // Save application to MongoDB, store file path
+    const application = new SellerApplication({
+      businessName,
+      ownerName,
+      email,
+      phone,
+      businessType,
+      registrationNumber,
+      productTypes,
+      website,
+      confirmLicensed: confirmLicensed === "true" || confirmLicensed === true,
+      liquorLicenseFile: `/uploads/${req.file.filename}`
+    });
+    await application.save();
+
+    // Send confirmation email
+    try {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+
+      await transporter.sendMail({
+        from: `"The Drunken Giraffe" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: "Seller Application Received",
+        html: `
+          <h2>Thank you for your application!</h2>
+          <p>Dear ${ownerName || businessName},</p>
+          <p>We have received your seller application and liquor license. Our team will review your submission and contact you soon.</p>
+          <p>Best regards,<br/>The Drunken Giraffe Team</p>
+        `
+      });
+    } catch (mailErr) {
+      console.error('Failed to send confirmation email:', mailErr);
+    }
+
+    res.status(201).json({ message: 'Application submitted', application });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
 
 // HTTP + Socket.io server
 const server = http.createServer(app);
