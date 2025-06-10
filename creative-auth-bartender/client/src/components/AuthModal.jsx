@@ -1141,59 +1141,8 @@ export default function AuthModal({ onClose }) {
                             </>
                           )}
                         </form>
-                        <div style={{ textAlign: 'center', margin: '18px 0 0 0', color: '#888', fontSize: 15 }}>
-                          Or continue with Socials
-                        </div>
-                        <div style={{ display: 'flex', gap: 16, marginTop: 16, justifyContent: 'center' }}>
-                          <button
-                            style={{
-                              flex: 1,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: 10,
-                              background: '#fff',
-                              border: '1px solid #d1d5db',
-                              borderRadius: 8,
-                              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                              padding: '10px 0',
-                              fontWeight: 600,
-                              fontSize: 16,
-                              color: '#222',
-                              cursor: 'pointer',
-                              transition: 'box-shadow 0.2s',
-                            }}
-                            onMouseOver={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)'}
-                            onMouseOut={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.06)'}
-                          >
-                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: 22, height: 22 }} />
-                            Google
-                          </button>
-                          <button
-                            style={{
-                              flex: 1,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: 10,
-                              background: '#fff',
-                              border: '1px solid #d1d5db',
-                              borderRadius: 8,
-                              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                              padding: '10px 0',
-                              fontWeight: 600,
-                              fontSize: 16,
-                              color: '#222',
-                              cursor: 'pointer',
-                              transition: 'box-shadow 0.2s',
-                            }}
-                            onMouseOver={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)'}
-                            onMouseOut={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.06)'}
-                          >
-                            <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook" style={{ width: 22, height: 22 }} />
-                            Facebook
-                          </button>
-                        </div>
+                    
+                        {/* Removed Google and Facebook login buttons */}
                         <div style={{ marginTop: 32, textAlign: 'center', fontSize: 15, color: '#888' }}>
                           Don't have an account?
                           <button

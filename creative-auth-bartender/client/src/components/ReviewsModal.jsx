@@ -70,24 +70,26 @@ export default function ReviewsModal({ onClose, reviews: initialReviews, product
           aria-label="Close"
         >×</button>
         {/* Add Review button in the top left corner */}
-        <button
-          onClick={() => setShowAddReview(true)}
-          style={{
-            position: "absolute",
-            top: 12,
-            left: 12,
-            background: "#e1bb3e",
-            color: "#350b0f",
-            border: "none",
-            borderRadius: 8,
-            padding: "6px 14px",
-            fontWeight: 700,
-            fontSize: 15,
-            cursor: "pointer"
-          }}
-        >
-          Add Review
-        </button>
+        {loggedInUser && (
+          <button
+            onClick={() => setShowAddReview(true)}
+            style={{
+              position: "absolute",
+              top: 12,
+              left: 12,
+              background: "#e1bb3e",
+              color: "#350b0f",
+              border: "none",
+              borderRadius: 8,
+              padding: "6px 14px",
+              fontWeight: 700,
+              fontSize: 15,
+              cursor: "pointer"
+            }}
+          >
+            Add Review
+          </button>
+        )}
         <h2 style={{ color: "#9b1c23", marginBottom: 18, textAlign: "center" }}>
           Reviews for {productName}
         </h2>
