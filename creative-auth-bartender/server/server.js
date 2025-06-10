@@ -360,14 +360,7 @@ mongoose.connect(process.env.MONGO_URI)
     console.error('MongoDB connection error:', err);
   });
 
-// Your error means the package "socket.io" is not installed in your server directory.
 
-// To fix, run this command in your server folder:
-// npm install socket.io
-
-// After install, run `npm start` again.
-
-// Update productRoutes.js or add this filter to your products endpoint if not already present:
 app.get('/api/products', async (req, res) => {
   try {
     const filter = {};
