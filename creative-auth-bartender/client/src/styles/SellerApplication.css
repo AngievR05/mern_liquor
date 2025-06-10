@@ -197,8 +197,7 @@
   letter-spacing: 0.01em;
   z-index: 2;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  backdrop-filter: blur(2px);
+  width: 100%;
 }
 
 .seller-app-floating-story {
