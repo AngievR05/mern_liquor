@@ -54,7 +54,7 @@
   overflow-y: auto;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
-  backdrop-filter: saturate(180%) contrast(90%) brightness(95%) blur(4px);
+  backdrop-filter: saturate(180%) contrast(90%) brightness(95%) blur(20px);
   border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
