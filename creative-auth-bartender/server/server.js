@@ -8,14 +8,13 @@ import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 import nodemailer from 'nodemailer';
-import OpenAI from 'openai';
+
 
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 
 dotenv.config();
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const app = express();
 const __dirname = path.resolve();
@@ -46,26 +45,6 @@ app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 
-app.post('/api/ai-chat', async (req, res) => {
-  const { message } = req.body;
-  if (!message) return res.status(400).json({ error: 'Message required' });
-
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages: [
-        { role: "system", content: "You're a helpful, friendly assistant for an online liquor store called The Drunken Giraffe. Keep replies short and clear." },
-        { role: "user", content: message }
-      ]
-    });
-
-    const reply = completion.choices[0]?.message?.content || "Sorry, I didn't quite catch that.";
-    res.json({ reply });
-  } catch (err) {
-    console.error('OpenAI error:', err);
-    res.status(500).json({ error: 'AI response failed' });
-  }
-});
 
 
 // --- Admin Model using Mongoose ---
