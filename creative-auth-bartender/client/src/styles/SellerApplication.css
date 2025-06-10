@@ -198,6 +198,8 @@
   z-index: 2;
   text-align: center;
   width: 100%;
+  mix-blend-mode: hard-light;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.81);
 }
 
 .seller-app-floating-story {
