@@ -45,6 +45,8 @@ export default function SellerApplication() {
 	const [submitted, setSubmitted] = useState(false);
 	const [submitError, setSubmitError] = useState("");
 	const [submitting, setSubmitting] = useState(false);
+	const [dragActive, setDragActive] = useState(false);
+	const [previewUrl, setPreviewUrl] = useState(null);
 
 	const handleChange = (e) => {
 		const { name, value, type, checked, files } = e.target;
@@ -55,6 +57,37 @@ export default function SellerApplication() {
 		} else {
 			setForm({ ...form, [name]: value });
 		}
+	};
+
+	const handleFileChange = (e) => {
+		const file = e.target.files[0];
+		if (file) {
+			setForm({ ...form, licenseFile: file });
+			setPreviewUrl(URL.createObjectURL(file));
+		}
+	};
+
+	const handleDrop = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setDragActive(false);
+		const file = e.dataTransfer.files[0];
+		if (file) {
+			setForm({ ...form, licenseFile: file });
+			setPreviewUrl(URL.createObjectURL(file));
+		}
+	};
+
+	const handleDragOver = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setDragActive(true);
+	};
+
+	const handleDragLeave = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setDragActive(false);
 	};
 
 	const handleSubmit = async (e) => {
@@ -227,13 +260,35 @@ export default function SellerApplication() {
 						</label>
 						<label>
 							Upload Liquor License
-							<input
-								type="file"
-								name="licenseFile"
-								accept=".pdf,.jpg,.jpeg,.png"
-								onChange={handleChange}
-								required
-							/>
+							<div
+								className={`seller-app-dropzone${dragActive ? " drag-active" : ""}`}
+								onDrop={handleDrop}
+								onDragOver={handleDragOver}
+								onDragLeave={handleDragLeave}
+							>
+								<input
+									type="file"
+									name="licenseFile"
+									accept=".pdf,.jpg,.jpeg,.png"
+									onChange={handleFileChange}
+									className="seller-app-file-input"
+									style={{ display: "none" }}
+									id="licenseFileInput"
+								/>
+								<label htmlFor="licenseFileInput" className="seller-app-dropzone-label">
+									{previewUrl ? (
+										<img
+											src={previewUrl}
+											alt="Preview"
+											className="seller-app-dropzone-preview"
+										/>
+									) : (
+										<span>
+											Drag & drop your file here or <span className="seller-app-dropzone-browse">browse</span>
+										</span>
+									)}
+								</label>
+							</div>
 						</label>
 						<label>
 							Product Types You Intend to Sell
