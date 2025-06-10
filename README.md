@@ -83,7 +83,49 @@ Visit the app at:
 
 ### Screenshots
 
-(Add screenshots of: Game login screen, Store page, Cart, and Chat UI)
+## Welcome Screenshot
+
+![Welcome](creative-auth-bartender/client/src/assets/screenshots/Welcome.png)
+
+## Game Screenshot
+
+![Game](creative-auth-bartender/client/src/assets/screenshots/Game.png)
+
+## Home Screenshot
+
+![Home](creative-auth-bartender/client/src/assets/screenshots/Home.png)
+
+## Chat Widget Screenshot
+
+![Chat Widget](creative-auth-bartender/client/src/assets/screenshots/Chat.png)
+
+## About Screenshot
+
+![About](creative-auth-bartender/client/src/assets/screenshots/About.png)
+
+## Store Screenshot
+
+![Store](creative-auth-bartender/client/src/assets/screenshots/Store.png)
+
+## Cart Screenshot
+
+![Cart](creative-auth-bartender/client/src/assets/screenshots/Cart.png)
+
+## Checkout Screenshot
+
+![Checkout](creative-auth-bartender/client/src/assets/screenshots/Checkout.png)
+
+## Dashboard Screenshot
+
+![Dashboard](creative-auth-bartender/client/src/assets/screenshots/Dashboard.png)
+
+## Seller Screenshot
+
+![Seller](creative-auth-bartender/client/src/assets/screenshots/Seller.png)
+
+## Application Screenshot
+
+![Application](creative-auth-bartender/client/src/assets/screenshots/Application.png)
 
 ---
 
