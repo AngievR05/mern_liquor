@@ -1,0 +1,203 @@
+.seller-app-root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #350b0f 0%, #9b1c23 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 0;
+  gap: 48px;
+}
+
+@media (max-width: 900px) {
+  .seller-app-root {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 32px 0;
+  }
+}
+
+.seller-app-form-container {
+  background: #fff;
+  color: #350b0f;
+  border-radius: 18px;
+  padding: 40px 28px 32px 28px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.seller-app-form-title {
+  text-align: center;
+  margin-bottom: 28px;
+  color: #9b1c23;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.seller-app-success-message {
+  text-align: center;
+  color: #2e7d32;
+  font-size: 1.1rem;
+  padding: 24px 0;
+}
+
+.seller-app-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.seller-app-form label {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.seller-app-form input[type="text"],
+.seller-app-form input[type="email"],
+.seller-app-form input[type="tel"],
+.seller-app-form input[type="file"],
+.seller-app-form select {
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1.5px solid #e9c4b4;
+  margin-top: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border 0.2s, box-shadow 0.2s;
+  background: #f9f6f3;
+}
+
+.seller-app-form input[type="text"]:focus,
+.seller-app-form input[type="email"]:focus,
+.seller-app-form input[type="tel"]:focus,
+.seller-app-form input[type="file"]:focus,
+.seller-app-form select:focus {
+  border-color: #9b1c23;
+  outline: none;
+  box-shadow: 0 0 0 2px #e1bb3e33;
+}
+
+.seller-app-form input[type="file"] {
+  padding: 4px 0;
+  background: transparent;
+}
+
+.seller-app-form input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  accent-color: #9b1c23;
+}
+
+.seller-app-form .seller-app-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.98rem;
+}
+
+.seller-app-form .seller-app-error {
+  color: #c62828;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.seller-app-form button[type="submit"] {
+  background: linear-gradient(90deg, #e1bb3e 60%, #e35537 100%);
+  color: #350b0f;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px rgba(155,28,35,0.08);
+}
+
+.seller-app-form button[type="submit"]:hover:not(:disabled) {
+  background: linear-gradient(90deg, #e35537 60%, #e1bb3e 100%);
+  color: #fff;
+}
+
+.seller-app-form button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.seller-app-stories-container {
+  flex: 1;
+  min-width: 320px;
+  max-width: 420px;
+  background: rgba(255,255,255,0.13);
+  border-radius: 18px;
+  padding: 36px 28px;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  height: fit-content;
+  max-height: 700px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.seller-app-stories-title {
+  color: #e1bb3e;
+  margin-bottom: 28px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.seller-app-stories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.seller-app-story {
+  background: rgba(255,255,255,0.18);
+  border-radius: 12px;
+  padding: 20px 18px;
+  color: #350b0f;
+  font-weight: 500;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.10);
+  font-size: 1.04rem;
+  position: relative;
+}
+
+.seller-app-story-title {
+  color: #9b1c23;
+  margin-bottom: 8px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 600px) {
+  .seller-app-form-container,
+  .seller-app-stories-container {
+    max-width: 98vw;
+    min-width: 0;
+    padding: 18px 4vw;
+  }
+  .seller-app-root {
+    padding: 16px 0;
+    gap: 18px;
+  }
+}
