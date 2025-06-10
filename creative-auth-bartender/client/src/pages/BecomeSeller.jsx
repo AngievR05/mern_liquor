@@ -982,3 +982,39 @@ export default function BecomeSeller() {
     </div>
   );
 }
+
+function LiquorLicenseUpload() {
+  return (
+    <>
+      <label
+        htmlFor="liquorLicenseFile"
+        style={{
+          fontWeight: 700,
+          color: "#e1bb3e",
+          marginBottom: 8,
+          display: "block"
+        }}
+      >
+        Upload Liquor License
+      </label>
+      <div style={{ color: "#000", fontSize: 14, marginBottom: 8 }}>
+        File type must be: <b>jpg, jpeg, img, or png</b>
+      </div>
+      <input
+        type="file"
+        id="liquorLicenseFile"
+        name="liquorLicenseFile"
+        accept=".jpg,.jpeg,.png,.img,image/jpeg,image/png,image/jpg"
+        required
+        style={{ marginBottom: 8 }}
+      />
+    </>
+  );
+}
+
+// In your seller application form (where you upload the liquor license), use the <LiquorLicenseUpload /> component:
+
+<div style={{ marginTop: 24 }}>
+  <h3 style={{ color: "#e1bb3e", marginBottom: 12 }}>Liquor License</h3>
+  <LiquorLicenseUpload />
+</div>

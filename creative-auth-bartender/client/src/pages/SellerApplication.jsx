@@ -187,6 +187,7 @@ export default function SellerApplication() {
             </label>
             <label>
               Upload Liquor License
+             
               <input
                 type="file"
                 name="licenseFile"
@@ -196,6 +197,9 @@ export default function SellerApplication() {
                 style={{ marginTop: 4 }}
               />
             </label>
+            <div style={{ color: "#000", fontSize: 14, marginBottom: 8 }}>
+        File type must be: <b>jpg, jpeg, img or png</b>
+      </div>
             <label>
               Product Types You Intend to Sell
               <input
