@@ -116,7 +116,17 @@ const ProductCard = ({
           <span className="product-rating">★ {displayRating.toFixed(2)}</span>
         </div>
         {(expanded || showDescription) && product.description && (
-          <div className="product-description">{product.description}</div>
+          <div
+            className="product-description"
+            style={{
+              wordBreak: "break-word",
+              whiteSpace: "pre-line",
+              overflowWrap: "break-word",
+              maxWidth: "100%",
+            }}
+          >
+            {product.description}
+          </div>
         )}
         {showAddToCart && (
           !loggedInUser ? (

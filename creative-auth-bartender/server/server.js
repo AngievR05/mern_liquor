@@ -9,10 +9,10 @@ import fs from 'fs';
 import multer from 'multer';
 import nodemailer from 'nodemailer';
 
-
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 
 dotenv.config();
 
@@ -35,10 +35,12 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
 const upload = multer({ storage });
-app.post('/api/upload', upload.single('image'), (req, res) => {
-  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-  res.json({ filePath: `/uploads/${req.file.filename}` });
-});
+// Remove old inline /api/upload route if present
+// app.post('/api/upload', ...);
+
+// Mount upload routes for profile pictures
+app.use('/api', uploadRoutes);
+app.use('/api/users', uploadRoutes); // Allow /api/users/upload-profile-pic for compatibility
 
 // API routes
 app.use('/api/products', productRoutes);

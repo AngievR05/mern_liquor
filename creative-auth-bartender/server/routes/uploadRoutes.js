@@ -28,6 +28,7 @@ const upload = multer({
   }
 });
 
+// Update: allow both /api/upload-profile-pic and /api/users/upload-profile-pic for compatibility
 router.post('/upload-profile-pic', (req, res) => {
   upload.single('profilePic')(req, res, (err) => {
     if (err) {

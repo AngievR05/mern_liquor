@@ -58,6 +58,12 @@ const Store = () => {
   const [showEditProductModal, setShowEditProductModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
 
+  // New state for seller products
+  const [sellerProducts, setSellerProducts] = useState([]);
+
+  // Show/hide external seller products page
+  const [showSellerProductsPage, setShowSellerProductsPage] = useState(false);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -70,6 +76,22 @@ const Store = () => {
       }
     };
     fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    // Fetch all products added by sellers (i.e., products with a seller field)
+    const fetchSellerProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        // Filter products that have a seller field (not empty/undefined/null)
+        const sellerProds = data.filter(p => p.seller && p.seller.trim() !== "");
+        setSellerProducts(sellerProds);
+      } catch (err) {
+        setSellerProducts([]);
+      }
+    };
+    fetchSellerProducts();
   }, []);
 
   useEffect(() => {
@@ -213,53 +235,130 @@ const Store = () => {
         <div className="main-content">
           <div>
             <h2 style={{ color: "#e1bb3e", marginBottom: 24 }}>All Products</h2>
-            {useMasonry ? (
-              <Masonry
-                breakpointCols={breakpointCols}
-                className="product-grid"
-                columnClassName="product-grid-column"
+            {/* --- External Seller Products Section Button --- */}
+            <div style={{ margin: "0 0 32px 0", display: "flex", alignItems: "center" }}>
+              <button
+                style={{
+                  background: "linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)",
+                  color: "#350b0f",
+                  border: "none",
+                  borderRadius: 24,
+                  padding: "14px 32px",
+                  fontWeight: 700,
+                  fontSize: 18,
+                  cursor: "pointer",
+                  boxShadow: "0 2px 8px #e1bb3e22",
+                  marginRight: 18,
+                }}
+                onClick={() => setShowSellerProductsPage(true)}
               >
-                {filteredProducts.map((product) => (
-                  <div key={product._id} className="product-wrapper">
-                    <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
-                    <div className="product-actions">
-                      {isAdmin && (
-                        <>
-                          <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
-                          <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
-                        </>
-                      )}
-                      <button
-                        onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-                        className="reviews-button"
-                      >
-                        Reviews
-                      </button>
-                    </div>
+                View External Seller Products
+              </button>
+            </div>
+            {/* Hide main store if viewing seller products */}
+            {!showSellerProductsPage && (
+              <>
+                {useMasonry ? (
+                  <Masonry
+                    breakpointCols={breakpointCols}
+                    className="product-grid"
+                    columnClassName="product-grid-column"
+                  >
+                    {filteredProducts.map((product) => (
+                      <div key={product._id} className="product-wrapper">
+                        <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
+                        <div className="product-actions">
+                          {isAdmin && (
+                            <>
+                              <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                              <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                            </>
+                          )}
+                          <button
+                            onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                            className="reviews-button"
+                          >
+                            Reviews
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </Masonry>
+                ) : (
+                  <div className="product-grid normal-grid">
+                    {filteredProducts.map((product) => (
+                      <div key={product._id} className="product-wrapper">
+                        <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
+                        <div className="product-actions">
+                          {isAdmin && (
+                            <>
+                              <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                              <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                            </>
+                          )}
+                          <button
+                            onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                            className="reviews-button"
+                          >
+                            Reviews
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </Masonry>
-            ) : (
-              <div className="product-grid normal-grid">
-                {filteredProducts.map((product) => (
-                  <div key={product._id} className="product-wrapper">
-                    <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
-                    <div className="product-actions">
-                      {isAdmin && (
-                        <>
-                          <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
-                          <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
-                        </>
-                      )}
-                      <button
-                        onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-                        className="reviews-button"
-                      >
-                        Reviews
-                      </button>
-                    </div>
+                )}
+              </>
+            )}
+            {/* --- External Seller Products Page --- */}
+            {showSellerProductsPage && (
+              <div style={{ marginTop: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
+                  <h2 style={{ color: "#e1bb3e", marginBottom: 0, marginRight: 24 }}>External Seller Products</h2>
+                  <button
+                    style={{
+                      background: "#232323",
+                      color: "#e1bb3e",
+                      border: "none",
+                      borderRadius: 18,
+                      padding: "10px 28px",
+                      fontWeight: 700,
+                      fontSize: 16,
+                      cursor: "pointer",
+                      marginLeft: 8,
+                      boxShadow: "0 2px 8px #0006"
+                    }}
+                    onClick={() => setShowSellerProductsPage(false)}
+                  >
+                    Back to All Products
+                  </button>
+                </div>
+                {sellerProducts.length === 0 ? (
+                  <div style={{ color: "#fff", fontWeight: 500, fontSize: 18, marginTop: 24 }}>
+                    No external seller products available.
                   </div>
-                ))}
+                ) : (
+                  <div className="product-grid normal-grid">
+                    {sellerProducts.map((product) => (
+                      <div key={product._id} className="product-wrapper">
+                        <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
+                        <div className="product-actions">
+                          {isAdmin && (
+                            <>
+                              <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                              <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                            </>
+                          )}
+                          <button
+                            onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                            className="reviews-button"
+                          >
+                            Reviews
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

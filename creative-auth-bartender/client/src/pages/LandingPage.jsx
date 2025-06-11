@@ -68,11 +68,19 @@ const LandingPage = () => {
     setProfilePic(url);
     setLoggedInUser((prev) => (prev ? { ...prev, profilePic: url } : prev));
     localStorage.setItem('profilePic', url);
-    // Optionally, update user in localStorage as well
     if (loggedInUser) {
       localStorage.setItem('loggedInUser', JSON.stringify({ ...loggedInUser, profilePic: url }));
     }
+    // Force update everywhere
+    window.dispatchEvent(new Event('storage'));
   }
+
+  // Listen for profilePic changes and force re-render
+  React.useEffect(() => {
+    const syncPic = () => setProfilePic(getStoredProfilePic());
+    window.addEventListener('storage', syncPic);
+    return () => window.removeEventListener('storage', syncPic);
+  }, []);
 
   // Show login modal on logout
   function handleLogout() {

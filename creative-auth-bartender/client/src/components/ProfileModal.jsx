@@ -17,8 +17,11 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Sync with user prop if it changes
+    // Sync with user prop if it changes or when storage changes
+    const syncPic = () => setProfilePic(getProfilePic());
     setProfilePic(getProfilePic());
+    window.addEventListener('storage', syncPic);
+    return () => window.removeEventListener('storage', syncPic);
   }, [user]);
 
   useEffect(() => {
@@ -63,6 +66,8 @@ export default function ProfileModal({ user, onClose, onLogout, onProfilePicChan
         localStorage.setItem('profilePic', imgPath);
         setProfilePic(imgPath);
         if (onProfilePicChange) onProfilePicChange(imgPath);
+        // Force update everywhere
+        window.dispatchEvent(new Event('storage'));
       } else {
         alert('Failed to upload image.');
       }

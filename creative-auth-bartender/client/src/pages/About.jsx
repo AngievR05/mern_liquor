@@ -40,6 +40,13 @@ const About = () => {
   const profilePic = getStoredProfilePic();
   const [showProfileModal, setShowProfileModal] = useState(false);
 
+  // Listen for profilePic changes and force re-render
+  React.useEffect(() => {
+    const syncPic = () => {};
+    window.addEventListener('storage', syncPic);
+    return () => window.removeEventListener('storage', syncPic);
+  }, []);
+
   return (
     <div className="about-page">
       <div className="hero-about">
@@ -113,8 +120,9 @@ const About = () => {
             window.location.reload(); // Or navigate to landing page if you want
           }}
           onProfilePicChange={(url) => {
-            // Optionally update profilePic in localStorage if changed from About page
             localStorage.setItem('profilePic', url);
+            // Force update everywhere
+            window.dispatchEvent(new Event('storage'));
           }}
         />
       )}

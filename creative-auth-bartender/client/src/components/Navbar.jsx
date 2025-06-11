@@ -30,20 +30,15 @@ export default function Navbar({ onLoginClick }) {
 
   // Keep profilePic in sync with localStorage (but NOT loggedInUser, which is now always live)
   React.useEffect(() => {
-    try {
-      const user = JSON.parse(localStorage.getItem('loggedInUser'));
-      setProfilePic(user && user.profilePic ? user.profilePic : localStorage.getItem('profilePic') || null);
-    } catch {
-      setProfilePic(null);
-    }
     const syncPic = () => {
       try {
         const user = JSON.parse(localStorage.getItem('loggedInUser'));
-        setProfilePic(user && user.profilePic ? user.profilePic : null);
+        setProfilePic(user && user.profilePic ? user.profilePic : localStorage.getItem('profilePic') || null);
       } catch {
         setProfilePic(null);
       }
     };
+    syncPic();
     window.addEventListener('storage', syncPic);
     window.addEventListener('focus', syncPic);
     document.addEventListener('auth-login', syncPic);
@@ -89,7 +84,7 @@ export default function Navbar({ onLoginClick }) {
     if (!file) return;
     const formData = new FormData();
     formData.append('profilePic', file);
-    fetch('/api/users/upload-profile-pic', {
+    fetch('/api/upload-profile-pic', {
       method: 'POST',
       body: formData,
     })
@@ -109,6 +104,8 @@ export default function Navbar({ onLoginClick }) {
           }
           localStorage.setItem('profilePic', data.path);
           setProfilePic(data.path);
+          // Force update everywhere
+          window.dispatchEvent(new Event('storage'));
         }
       });
   };
