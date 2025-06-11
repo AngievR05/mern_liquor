@@ -142,12 +142,30 @@ export default function Navbar({ onLoginClick }) {
         >
           About
         </Link>
-        <Link
-          to="/store"
-          className={location.pathname === "/store" ? "active" : ""}
-        >
-          Store
-        </Link>
+        {/* Show both Store and My Store for sellers */}
+        {loggedInUser && loggedInUser.isSeller ? (
+          <>
+            <Link
+              to="/store"
+              className={location.pathname === "/store" ? "active" : ""}
+            >
+              Store
+            </Link>
+            <Link
+              to="/seller-store"
+              className={location.pathname === "/seller-store" ? "active" : ""}
+            >
+              My Store
+            </Link>
+          </>
+        ) : (
+          <Link
+            to="/store"
+            className={location.pathname === "/store" ? "active" : ""}
+          >
+            Store
+          </Link>
+        )}
       </div>
 
       <div className="navLinksRight">

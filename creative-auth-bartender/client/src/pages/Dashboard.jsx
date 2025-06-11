@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import ReactDOM from "react-dom";
 
 // SellerRegisterModal component
 function SellerRegisterModal({ application, onClose, onRegister }) {
@@ -105,7 +106,7 @@ function SellerRegisterModal({ application, onClose, onRegister }) {
               marginBottom: 8
             }}
           />
-          {error && <div style={{ color: "red", marginBottom: 8 }}>{error}</div>}
+          {error && <div style={{ color: "white", marginBottom: 8 }}>{error}</div>}
           <button
             type="submit"
             style={{
@@ -141,6 +142,30 @@ export default function Dashboard() {
   const [statusDropdown, setStatusDropdown] = useState(null); // app._id of open dropdown
   const [activeTab, setActiveTab] = useState("pending"); // "pending" | "approved" | "rejected"
   const [showSellerRegister, setShowSellerRegister] = useState(null); // application object
+
+  // Dropdown state and refs
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 });
+  const statusBtnRefs = useRef({});
+
+  // Close dropdown on outside click or Escape key
+  useEffect(() => {
+    if (!statusDropdown) return;
+    const handleClick = (e) => {
+      // If click is inside the dropdown, do nothing
+      const dropdown = document.getElementById("status-dropdown-portal");
+      if (dropdown && dropdown.contains(e.target)) return;
+      setStatusDropdown(null);
+    };
+    const handleEsc = (e) => {
+      if (e.key === "Escape") setStatusDropdown(null);
+    };
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [statusDropdown]);
 
   useEffect(() => {
     // Fetch all seller applications from backend
@@ -221,142 +246,238 @@ export default function Dashboard() {
   const rejectedApps = applications.filter(app => app.status === "Rejected");
 
   // Table rendering helper
-  const renderTable = (apps, showStatusDropdown = true, showRegister = false) => (
-    <table style={{ width: "100%", borderCollapse: "collapse", background: "#181818" }}>
-      <thead>
-        <tr style={{ background: "#222" }}>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Business Name</th>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Owner</th>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Email</th>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Business Type</th>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Product Types</th>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Website/SocialMedia</th>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>License</th>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Submitted</th>
-          <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Status</th>
-          {showRegister && (
-            <th style={{ padding: 8, border: "1px solid #444", color: "#e1bb3e" }}>Register</th>
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {apps.map(app => (
-          <tr key={app._id} style={{ background: "#111" }}>
-            <td style={{ padding: 8, border: "1px solid #333", color: "#fff" }}>{app.businessName}</td>
-            <td style={{ padding: 8, border: "1px solid #333", color: "#fff" }}>{app.ownerName}</td>
-            <td style={{ padding: 8, border: "1px solid #333", color: "#fff" }}>{app.email}</td>
-            <td style={{ padding: 8, border: "1px solid #333", color: "#fff" }}>{app.businessType}</td>
-            <td style={{ padding: 8, border: "1px solid #333", color: "#fff" }}>{app.productTypes}</td>
-            <td style={{ padding: 8, border: "1px solid #333" }}>
-              {app.website ? (
-                <a href={app.website} target="_blank" rel="noopener noreferrer" style={{ color: "#e1bb3e" }}>
-                  {app.website}
-                </a>
-              ) : "-"}
-            </td>
-            <td style={{ padding: 8, border: "1px solid #333" }}>
-              {app.liquorLicenseFile && (
-                <button
-                  style={{
-                    background: "#e1bb3e",
-                    color: "#350b0f",
-                    border: "none",
-                    borderRadius: 6,
-                    padding: "6px 14px",
-                    fontWeight: 700,
-                    cursor: "pointer"
-                  }}
-                  onClick={() => setLicenseUrl(getLicenseFileUrl(app.liquorLicenseFile))}
-                >
-                  View
-                </button>
+  const renderTable = (
+    apps,
+    showStatusDropdown = true,
+    showRegister = false,
+    statusDropdown,
+    setStatusDropdown,
+    dropdownPos,
+    setDropdownPos,
+    statusBtnRefs
+  ) => {
+    // Helper to open dropdown and set position
+    const openDropdown = (appId) => {
+      const btn = statusBtnRefs.current[appId];
+      if (btn) {
+        const rect = btn.getBoundingClientRect();
+        setDropdownPos({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width
+        });
+      }
+      setStatusDropdown(appId);
+    };
+
+    return (
+      <div style={{
+        overflowX: "auto",
+        borderRadius: 16,
+        background: "#181818",
+        boxShadow: "0 4px 32px rgba(0,0,0,0.18)",
+        marginBottom: 32,
+        border: "1.5px solid rgb(0, 0, 0)",
+        padding: 0,
+        minWidth: 900,
+        maxWidth: "100%",
+        position: "relative"
+      }}>
+        <table style={{
+          width: "100%",
+          borderCollapse: "separate",
+          borderSpacing: 0,
+          background: "none",
+          borderRadius: 16,
+          overflow: "hidden",
+          fontFamily: '"Merriweather", serif',
+        }}>
+          <thead>
+            <tr style={{
+              background: "linear-gradient(90deg,rgb(26, 26, 26) 0%,rgb(26, 26, 26) 100%)",
+              color: "#e1bb3e",
+              fontWeight: 700,
+              fontSize: 16,
+              letterSpacing: 0.5,
+            }}>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Business Name</th>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Owner</th>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Email</th>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Business Type</th>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Product Types</th>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Website/SocialMedia</th>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>License</th>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Submitted</th>
+              <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Status</th>
+              {showRegister && (
+                <th style={{ padding: "16px 10px", border: "none", textAlign: "left" }}>Register</th>
               )}
-            </td>
-            <td style={{ padding: 8, border: "1px solid #333", color: "#fff" }}>
-              {new Date(app.createdAt).toLocaleString()}
-            </td>
-            <td style={{ padding: 8, border: "1px solid #333", color: "#e1bb3e", position: "relative" }}>
-              {showStatusDropdown ? (
-                <>
-                  <button
-                    style={{
-                      background: "#e1bb3e",
-                      color: "#350b0f",
-                      border: "none",
-                      borderRadius: 6,
-                      padding: "6px 18px",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      minWidth: 100
-                    }}
-                    onClick={() => setStatusDropdown(statusDropdown === app._id ? null : app._id)}
-                  >
-                    {app.status || "Pending"}
-                  </button>
-                  {statusDropdown === app._id && (
-                    <div
+            </tr>
+          </thead>
+          <tbody>
+            {apps.map((app, idx) => (
+              <tr
+                key={app._id}
+                style={{
+                  background: idx % 2 === 0 ? "#1a0406" : "#181818",
+                  color: "#fff",
+                  fontSize: 15,
+                  transition: "background 0.2s",
+                  borderRadius: 12,
+                  boxShadow: idx % 2 === 0 ? "0 1px 0rgb(255, 255, 255)" : "none",
+                }}
+                onMouseOver={e => e.currentTarget.style.background = "#2a070b"}
+                onMouseOut={e => e.currentTarget.style.background = idx % 2 === 0 ? "#1a0406" : "#181818"}
+              >
+                <td style={{ padding: "14px 10px", border: "none", fontWeight: 600, color: "#fff" }}>{app.businessName}</td>
+                <td style={{ padding: "14px 10px", border: "none" }}>{app.ownerName}</td>
+                <td style={{ padding: "14px 10px", border: "none" }}>{app.email}</td>
+                <td style={{ padding: "14px 10px", border: "none" }}>{app.businessType}</td>
+                <td style={{ padding: "14px 10px", border: "none" }}>{app.productTypes}</td>
+                <td style={{ padding: "14px 10px", border: "none" }}>
+                  {app.website ? (
+                    <a href={app.website} target="_blank" rel="noopener noreferrer"
                       style={{
-                        position: "absolute",
-                        top: "110%",
-                        left: 0,
-                        background: "#fff",
-                        border: "1px solid #e1bb3e",
-                        borderRadius: 6,
-                        zIndex: 10,
-                        minWidth: 120,
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.18)"
+                        color: "#fff",
+                        textDecoration: "underline",
+                        fontWeight: 500,
+                        wordBreak: "break-all"
+                      }}>
+                      {app.website}
+                    </a>
+                  ) : "-"
+                  }
+                </td>
+                <td style={{ padding: "14px 10px", border: "none" }}>
+                  {app.liquorLicenseFile && (
+                    <button
+                      style={{
+                        background: "linear-gradient(90deg, #e1bb3e 60%, #e1bb3e 100%)",
+                        color: "#350b0f",
+                        border: "none",
+                        borderRadius: 8,
+                        padding: "7px 18px",
+                        fontWeight: 700,
+                        fontSize: 15,
+                        cursor: "pointer",
+                        boxShadow: "inset 2px 2px 6px #fff3, inset -2px -2px 6px #0007",
+                        transition: "background 0.2s"
                       }}
+                      onClick={() => setLicenseUrl(getLicenseFileUrl(app.liquorLicenseFile))}
                     >
-                      {["Approved", "Rejected"].map(status => (
-                        <button
-                          key={status}
-                          style={{
-                            display: "block",
-                            width: "100%",
-                            background: "none",
-                            border: "none",
-                            color: "#350b0f",
-                            fontWeight: 700,
-                            padding: "10px 0",
-                            cursor: "pointer",
-                            borderBottom: status === "Rejected" ? "none" : "1px solid #eee"
-                          }}
-                          onClick={() => handleStatusChange(app._id, status)}
-                          disabled={app.status === status}
-                        >
-                          {status}
-                        </button>
-                      ))}
-                    </div>
+                      View
+                    </button>
                   )}
-                </>
-              ) : (
-                <span>{app.status}</span>
-              )}
-            </td>
-            {showRegister && (
-              <td style={{ padding: 8, border: "1px solid #333" }}>
-                <button
-                  style={{
-                    background: "#2d6cdf",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: 6,
-                    padding: "6px 18px",
-                    fontWeight: 700,
-                    cursor: "pointer"
-                  }}
-                  onClick={() => setShowSellerRegister(app)}
-                >
-                  Register
-                </button>
-              </td>
-            )}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+                </td>
+                <td style={{ padding: "14px 10px", border: "none", color: "#fff" }}>
+                  {new Date(app.createdAt).toLocaleString()}
+                </td>
+                <td style={{ padding: "14px 10px", border: "none", position: "relative" }}>
+                  {showStatusDropdown ? (
+                    <>
+                      <button
+                        ref={el => statusBtnRefs.current[app._id] = el}
+                        style={{
+                          background: app.status === "Approved"
+                            ? "linear-gradient(90deg,rgb(62, 225, 62) 60%, rgb(62, 225, 62)100%)"
+                            : app.status === "Rejected"
+                              ? "linear-gradient(90deg, #9b1c23 60%, #e35537 100%)"
+                              : "#e1bb3e",
+                          color: app.status === "Rejected" ? "#fff" : "#350b0f",
+                          border: "none",
+                          borderRadius: 8,
+                          padding: "7px 18px",
+                          fontWeight: 700,
+                          fontSize: 15,
+                          cursor: "pointer",
+                          minWidth: 100,
+                          boxShadow: "inset 2px 2px 6px #fff3, inset -2px -2px 6px #0007",
+                          transition: "background 0.2s"
+                        }}
+                        onClick={() => openDropdown(app._id)}
+                      >
+                        {app.status || "Pending"}
+                      </button>
+                      {/* Portal for dropdown */}
+                      {statusDropdown === app._id && ReactDOM.createPortal(
+                        <div
+                          id="status-dropdown-portal"
+                          style={{
+                            position: "absolute",
+                            top: dropdownPos.top,
+                            left: dropdownPos.left,
+                            minWidth: dropdownPos.width,
+                            background: "#fff",
+                            border: "1.5px solid #e1bb3e",
+                            borderRadius: 8,
+                            zIndex: 9999,
+                            boxShadow: "0 2px 16px rgba(0,0,0,0.28)",
+                            overflow: "hidden"
+                          }}
+                        >
+                          {["Approved", "Rejected"].map(status => (
+                            <button
+                              key={status}
+                              style={{
+                                display: "block",
+                                width: "100%",
+                                background: "none",
+                                border: "none",
+                                color: "#350b0f",
+                                fontWeight: 700,
+                                padding: "12px 0",
+                                cursor: "pointer",
+                                borderBottom: status === "Rejected" ? "none" : "1px solid #eee",
+                                fontSize: 15,
+                                transition: "background 0.2s",
+                              }}
+                              onClick={() => { handleStatusChange(app._id, status); setStatusDropdown(null); }}
+                              disabled={app.status === status}
+                              onMouseOver={e => e.currentTarget.style.background = "#e1bb3e22"}
+                              onMouseOut={e => e.currentTarget.style.background = "none"}
+                            >
+                              {status}
+                            </button>
+                          ))}
+                        </div>,
+                        document.body
+                      )}
+                    </>
+                  ) : (
+                    <span style={{
+                      color: app.status === "Approved" ? "#429b22" : app.status === "Rejected" ? "#e35537" : "#fff",
+                      fontWeight: 700
+                    }}>{app.status}</span>
+                  )}
+                </td>
+                {showRegister && (
+                  <td style={{ padding: "14px 10px", border: "none" }}>
+                    <button
+                      style={{
+                        background: "linear-gradient(90deg,rgb(121, 155, 34) 60%, rgb(121, 155, 34) 100%)",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: 8,
+                        padding: "7px 18px",
+                        fontWeight: 700,
+                        fontSize: 15,
+                        cursor: "pointer",
+                        boxShadow: "inset 2px 2px 6px #fff3, inset -2px -2px 6px #0007",
+                        transition: "background 0.2s"
+                      }}
+                      onClick={() => setShowSellerRegister(app)}
+                    >
+                      Register
+                    </button>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
     <div style={{
@@ -417,9 +538,39 @@ export default function Dashboard() {
         <div>Loading...</div>
       ) : (
         <>
-          {activeTab === "pending" && renderTable(pendingApps, true, false)}
-          {activeTab === "approved" && renderTable(approvedApps, false, true)}
-          {activeTab === "rejected" && renderTable(rejectedApps, false, false)}
+          {activeTab === "pending" &&
+            renderTable(
+              pendingApps,
+              true,
+              false,
+              statusDropdown,
+              setStatusDropdown,
+              dropdownPos,
+              setDropdownPos,
+              statusBtnRefs
+            )}
+          {activeTab === "approved" &&
+            renderTable(
+              approvedApps,
+              false,
+              true,
+              statusDropdown,
+              setStatusDropdown,
+              dropdownPos,
+              setDropdownPos,
+              statusBtnRefs
+            )}
+          {activeTab === "rejected" &&
+            renderTable(
+              rejectedApps,
+              false,
+              false,
+              statusDropdown,
+              setStatusDropdown,
+              dropdownPos,
+              setDropdownPos,
+              statusBtnRefs
+            )}
         </>
       )}
       {/* License popup */}

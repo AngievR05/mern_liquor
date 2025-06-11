@@ -6,8 +6,18 @@ export default function AddProductModal({ onClose, onSave }) {
     title: '', description: '', price: 0, category: '', stock: 0, image: ''
   });
 
+  // Get seller username from localStorage (not editable)
+  const sellerUsername = (() => {
+    try {
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      return user?.username || "";
+    } catch {
+      return "";
+    }
+  })();
+
   const handleChange = async (e) => {
-    const { name, value, files, type } = e.target;
+    const { name, value, files } = e.target;
     if (name === 'image' && files && files.length > 0) {
       const data = new FormData();
       data.append('image', files[0]);
@@ -17,7 +27,7 @@ export default function AddProductModal({ onClose, onSave }) {
     } else {
       setFormData(prev => ({
         ...prev,
-        [name]: type === 'number' ? Number(value) : value
+        [name]: value
       }));
     }
   };
@@ -25,16 +35,18 @@ export default function AddProductModal({ onClose, onSave }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Always set seller field to logged-in seller's username
+      const formWithSeller = { ...formData, seller: sellerUsername };
       const res = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formWithSeller),
       });
 
       let saved;
       if (res.ok) {
         saved = await res.json();
-        onSave(saved);
+        onSave(saved); // This updates the My Store page
         onClose();
       } else {
         let errorMsg = "Unknown error";
@@ -63,13 +75,17 @@ export default function AddProductModal({ onClose, onSave }) {
           <label>Description:</label>
           <textarea name="description" value={formData.description} onChange={handleChange} />
           <label>Price:</label>
-          <input name="price" type="number" value={formData.price} onChange={handleChange} />
+          <input name="price" value={formData.price} onChange={handleChange} />
           <label>Category:</label>
           <input name="category" value={formData.category} onChange={handleChange} />
           <label>Stock:</label>
-          <input name="stock" type="number" value={formData.stock} onChange={handleChange} />
+          <input name="stock" value={formData.stock} onChange={handleChange} />
           <label>Image:</label>
           <input type="file" name="image" accept="image/*" onChange={handleChange} />
+          {/* Show seller username for admin/audit, but not editable */}
+          <div style={{ margin: "8px 0", color: "#888", fontSize: 13 }}>
+            <b>Seller:</b> {sellerUsername}
+          </div>
           <div className="edit-buttons">
             <button type="submit">Save</button>
             <button type="button" onClick={onClose}>Cancel</button>

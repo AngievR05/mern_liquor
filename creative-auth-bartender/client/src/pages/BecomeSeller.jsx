@@ -1,85 +1,167 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaStore, FaPlusCircle, FaEdit, FaListAlt, FaEye, FaCheckCircle, FaClipboardList, FaBoxOpen } from "react-icons/fa";
 import cellarBackground from "../assets/cellarBackground.jpeg";
 
 // Seller personalized dashboard component
 function SellerDashboard({ seller }) {
-  // Start fresh: remove all dashboard content
+  // Improved step data with icons
+  const steps = [
+    {
+      icon: <FaStore size={32} color="#e1bb3e" />,
+      title: "Navigate to the My Store Page",
+      desc: "Start by heading to the My Store page of your website to manage your products and listings.."
+    },
+   
+    {
+      icon: <FaPlusCircle size={32} color="#e1bb3e" />,
+      title: 'Click "Add Product"',
+      desc: 'Just below the filter options, you\'ll find a button labeled "Add Product". Click it to open the product submission form.'
+    },
+    {
+      icon: <FaClipboardList size={32} color="#e1bb3e" />,
+      title: "Fill in Product Details",
+      desc: (
+        <>
+          Enter all the required product information, including:
+          <ul style={{ marginTop: 8, marginBottom: 0, paddingLeft: 20 }}>
+            <li>Product name</li>
+            <li>Description</li>
+            <li>Category (Alcohol or Accessory)</li>
+            <li>Price</li>
+            <li>Product images</li>
+            <li>Available stock</li>
+            <li>Any relevant compliance or license info (for alcohol products)</li>
+          </ul>
+          <span style={{ display: "block", marginTop: 8 }}>
+            Make sure all details are accurate and professional to appeal to buyers.
+          </span>
+        </>
+      )
+    },
+    {
+      icon: <FaCheckCircle size={32} color="#e1bb3e" />,
+      title: "Submit Your Product",
+      desc: "Once you've filled out the form, click \"Submit\". Your product will go live immediately upon approval (if required), and will appear under your \"My Store\" page as well as the store page."
+    },
+    {
+      icon: <FaEdit size={32} color="#e1bb3e" />,
+      title: "Manage Your Listings",
+      desc: (
+        <>
+          All your live products will be displayed under "My Store" page. Each product card will have options to:
+          <ul style={{ marginTop: 8, marginBottom: 0, paddingLeft: 20 }}>
+            <li>Edit product details</li>
+            <li>Delete the product if it's no longer available</li>
+          </ul>
+        </>
+      )
+    },
+    {
+      icon: <FaEye size={32} color="#e1bb3e" />,
+      title: "Preview Your Product as a Buyer",
+      desc: 'To see how your product appears to shoppers, return to the "Home" section. Use the search bar to find your listing and view it as a buyer would.'
+    }
+  ];
+
   return (
     <div
       style={{
         padding: 32,
         minHeight: "100vh",
         background: "#000",
-        color: "#fff"
+        color: "#fff",
+        fontFamily: '"Merriweather", serif'
       }}
     >
-      <h2 style={{ color: "#e1bb3e", marginBottom: 32 }}>
+      <h2 style={{
+        color: "#e1bb3e",
+        marginBottom: 32,
+        fontWeight: 800,
+        fontSize: 36,
+        letterSpacing: 1,
+        textShadow: "0 2px 12px #000"
+      }}>
         Welcome, {seller.username}
       </h2>
       <div style={{
-        background: "#181818",
-        borderRadius: 12,
-        padding: 32,
-        maxWidth: 700,
-        marginBottom: 32,
+        background: "linear-gradient(135deg, #181818 60%, #2a070b 100%)",
+        borderRadius: 18,
+        padding: "40px 32px 32px 32px",
+        maxWidth: 820,
+        margin: "0 auto 32px auto",
         color: "#fff",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.10)"
+        boxShadow: "0 4px 32px rgba(0,0,0,0.18)",
+        border: "1.5px solid #e1bb3e",
+        position: "relative"
       }}>
-        <h3 style={{ color: "#e1bb3e", marginBottom: 18 }}>
+        <h3 style={{
+          color: "#e1bb3e",
+          marginBottom: 28,
+          fontWeight: 700,
+          fontSize: 28,
+          letterSpacing: 0.5,
+          textAlign: "center",
+          textShadow: "0 2px 12px #000"
+        }}>
           How to Add a Product to Your Store
         </h3>
-        <div style={{ fontSize: 16, lineHeight: 1.7 }}>
-          <b>Follow these simple steps to list your product for sale on the platform:</b>
-          <ol style={{ marginTop: 16, marginBottom: 0, paddingLeft: 24 }}>
-            <li style={{ marginBottom: 12 }}>
-              <b>Navigate to the Store Page</b><br />
-              Start by heading to the main Store page of your website.
-            </li>
-            <li style={{ marginBottom: 12 }}>
-              <b>Select the "My Store" Section</b><br />
-              At the top of the page, you'll see two sections: "Home" and "My Store".<br />
-              Click on "My Store" to manage your products and listings.
-            </li>
-            <li style={{ marginBottom: 12 }}>
-              <b>Click "Add Product"</b><br />
-              Just below the filter options, you'll find a button labeled "Add Product".<br />
-              Click it to open the product submission form.
-            </li>
-            <li style={{ marginBottom: 12 }}>
-              <b>Fill in Product Details</b><br />
-              Enter all the required product information, including:
-              <ul style={{ marginTop: 6, marginBottom: 6, paddingLeft: 20 }}>
-                <li>Product name</li>
-                <li>Description</li>
-                <li>Category (Alcohol or Accessory)</li>
-                <li>Price</li>
-                <li>Product images</li>
-                <li>Available stock</li>
-                <li>Any relevant compliance or license info (for alcohol products)</li>
-              </ul>
-              Make sure all details are accurate and professional to appeal to buyers.
-            </li>
-            <li style={{ marginBottom: 12 }}>
-              <b>Submit Your Product</b><br />
-              Once you've filled out the form, click "Submit".<br />
-              Your product will go live immediately upon approval (if required), and will appear under your "My Store" section.
-            </li>
-            <li style={{ marginBottom: 12 }}>
-              <b>Manage Your Listings</b><br />
-              All your live products will be displayed under "My Store".<br />
-              Each product card will have options to:
-              <ul style={{ marginTop: 6, marginBottom: 6, paddingLeft: 20 }}>
-                <li>Edit product details</li>
-                <li>Delete the product if it's no longer available</li>
-              </ul>
-            </li>
-            <li>
-              <b>Preview Your Product as a Buyer</b><br />
-              To see how your product appears to shoppers, return to the "Home" section.<br />
-              Use the search bar to find your listing and view it as a buyer would.
-            </li>
-          </ol>
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 28,
+          marginTop: 12
+        }}>
+          {steps.map((step, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 22,
+                background: idx % 2 === 0 ? "rgba(255,255,255,0.04)" : "rgba(225,187,62,0.04)",
+                borderRadius: 14,
+                padding: "22px 18px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                borderLeft: `6px solid #e1bb3e`,
+                position: "relative"
+              }}
+            >
+              <div style={{
+                minWidth: 48,
+                minHeight: 48,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "#181818",
+                borderRadius: "50%",
+                boxShadow: "0 2px 8px #000a",
+                marginRight: 8,
+                border: "2px solid #e1bb3e"
+              }}>
+                <span>{step.icon}</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontWeight: 700,
+                  fontSize: 20,
+                  color: "#e1bb3e",
+                  marginBottom: 6,
+                  letterSpacing: 0.2
+                }}>
+                  Step {idx + 1}: {step.title}
+                </div>
+                <div style={{
+                  color: "#fff",
+                  fontSize: 16,
+                  lineHeight: 1.7,
+                  fontWeight: 400
+                }}>
+                  {step.desc}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
       {/* Seller Dashboard will be rebuilt here */}

@@ -1,26 +1,41 @@
 import express from 'express';
-import Product from '../models/Product.js';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
-// GET all products
-router.get('/', async (req, res) => {
-  try {
-    const products = await Product.find({});
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+const Product = mongoose.model('Product', new mongoose.Schema({
+  title: String,
+  description: String,
+  price: Number,
+  category: String,
+  stock: Number,
+  image: String,
+  seller: String, // must be present!
+  // ...other fields...
+}));
 
-// POST new product
+// POST /api/products - Save product to DB
 router.post('/', async (req, res) => {
   try {
     const product = new Product(req.body);
-    const saved = await product.save();
-    res.status(201).json(saved);
+    await product.save();
+    res.status(201).json(product);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(500).json({ message: 'Failed to save product', error: err.message });
+  }
+});
+
+// GET /api/products?seller=username - Get products for seller
+router.get('/', async (req, res) => {
+  try {
+    const filter = {};
+    if (req.query.seller) {
+      filter.seller = req.query.seller;
+    }
+    const products = await Product.find(filter);
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch products', error: err.message });
   }
 });
 

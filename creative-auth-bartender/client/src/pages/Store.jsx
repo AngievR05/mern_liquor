@@ -5,13 +5,13 @@ import SearchBar from '../components/SearchBar';
 import Footer from '../components/Footer';
 import ReviewsModal from '../components/ReviewsModal';
 import AuthModal from '../components/AuthModal';
-import AddProductModal from '../components/AddProductModal'; // If you have this component
-import EditProductModal from '../components/EditProductModal'; // If you have this component
+import AddProductModal from '../components/AddProductModal';
+import EditProductModal from '../components/EditProductModal';
 import PriceFilterPanel from '../components/PriceFilterPanel';
 import '../styles/StorePage.css';
 import '../styles/PriceFilterPanel.css';
 import Masonry from 'react-masonry-css';
-import priceRanges from '../constants/priceRanges'; // Assuming you have this constant defined
+import priceRanges from '../constants/priceRanges';
 import Accordion from 'react-bootstrap/Accordion';
 
 const Store = () => {
@@ -45,7 +45,6 @@ const Store = () => {
   const [priceRangeIdx, setPriceRangeIdx] = useState(priceRanges.length - 1); // default to "All"
   const [activeFilterAccordion, setActiveFilterAccordion] = useState('0');
 
-  // Add admin check
   const isAdmin = (() => {
     try {
       const user = JSON.parse(localStorage.getItem('loggedInUser'));
@@ -55,12 +54,9 @@ const Store = () => {
     }
   })();
 
-  // Add state for modals if not present
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [showEditProductModal, setShowEditProductModal] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
-  const [seller, setSeller] = useState(null);
-  const [activeTab, setActiveTab] = useState("home");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -88,12 +84,10 @@ const Store = () => {
           p.category.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    // Price range filter
     const { min, max } = priceRanges[priceRangeIdx];
-    if (priceRangeIdx !== priceRanges.length - 1) { // not "All"
+    if (priceRangeIdx !== priceRanges.length - 1) {
       updated = updated.filter(p => p.price >= min && p.price < max);
     }
-    // Price sort
     if (priceSort === "low-high") {
       updated.sort((a, b) => a.price - b.price);
     } else if (priceSort === "high-low") {
@@ -103,18 +97,6 @@ const Store = () => {
     }
     setFilteredProducts(updated);
   }, [searchQuery, categoryFilter, products, priceSort, priceRangeIdx]);
-
-  useEffect(() => {
-    try {
-      const user = JSON.parse(localStorage.getItem("loggedInUser"));
-      if (user && user.isSeller) setSeller(user);
-    } catch {}
-  }, []);
-
-  // Compute myProducts for seller
-  const myProducts = seller
-    ? filteredProducts.filter(p => p.seller === seller.username)
-    : [];
 
   const breakpointCols = {
     default: 4,
@@ -141,19 +123,15 @@ const Store = () => {
 
   const useMasonry = filteredProducts.length > currentCols;
 
-  // Handler for ProductCard ghost button
   const handleLoginToBuy = () => setShowAuthModal(true);
 
-  // Add product handler
   const handleAddProduct = () => setShowAddProductModal(true);
 
-  // Edit product handler
   const handleEditProduct = (product) => {
     setEditProduct(product);
     setShowEditProductModal(true);
   };
 
-  // Delete product handler
   const handleDeleteProduct = async (productId) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
@@ -163,6 +141,13 @@ const Store = () => {
     } catch (err) {
       alert('Failed to delete product');
     }
+  };
+
+  // Restore original AddProductModal usage
+  const handleProductAdded = (product) => {
+    setProducts(products => [...products, product]);
+    setFilteredProducts(filtered => [...filtered, product]);
+    setShowAddProductModal(false);
   };
 
   return (
@@ -215,8 +200,7 @@ const Store = () => {
               </Accordion.Body>
             </Accordion.Item>
           </Accordion>
-          {/* Show Add Product button only for admin, or for seller when in My Store tab */}
-          {(isAdmin || (seller && activeTab === "myStore")) && (
+          {isAdmin && (
             <button
               className="store-add-product-btn"
               onClick={() => setShowAddProductModal(true)}
@@ -227,194 +211,67 @@ const Store = () => {
           )}
         </div>
         <div className="main-content">
-          {/* Seller tab navigation */}
-          {seller && (
-            <div style={{ display: "flex", gap: 24, marginBottom: 32 }}>
-              <button
-                onClick={() => setActiveTab("home")}
-                style={{
-                  background: activeTab === "home" ? "#e1bb3e" : "#222",
-                  color: activeTab === "home" ? "#350b0f" : "#e1bb3e",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "10px 32px",
-                  fontWeight: 700,
-                  fontSize: 18,
-                  cursor: "pointer"
-                }}
+          <div>
+            <h2 style={{ color: "#e1bb3e", marginBottom: 24 }}>All Products</h2>
+            {useMasonry ? (
+              <Masonry
+                breakpointCols={breakpointCols}
+                className="product-grid"
+                columnClassName="product-grid-column"
               >
-                Home
-              </button>
-              <button
-                onClick={() => setActiveTab("myStore")}
-                style={{
-                  background: activeTab === "myStore" ? "#e1bb3e" : "#222",
-                  color: activeTab === "myStore" ? "#350b0f" : "#e1bb3e",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "10px 32px",
-                  fontWeight: 700,
-                  fontSize: 18,
-                  cursor: "pointer"
-                }}
-              >
-                My Store
-              </button>
-            </div>
-          )}
-          {/* Section Content */}
-          {(!seller || activeTab === "home") ? (
-            // Home tab: show the store as usual (buyer perspective)
-            <div>
-              <h2 style={{ color: "#e1bb3e", marginBottom: 24 }}>All Products</h2>
-              {useMasonry ? (
-                <Masonry
-                  breakpointCols={breakpointCols}
-                  className="product-grid"
-                  columnClassName="product-grid-column"
-                >
-                  {filteredProducts.map((product) => (
-                    <div key={product._id} className="product-wrapper">
-                      <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
-                      <div className="product-actions">
-                        {isAdmin && (
-                          <>
-                            <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
-                            <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
-                          </>
-                        )}
-                        <button
-                          onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-                          className="reviews-button"
-                        >
-                          Reviews
-                        </button>
-                      </div>
+                {filteredProducts.map((product) => (
+                  <div key={product._id} className="product-wrapper">
+                    <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
+                    <div className="product-actions">
+                      {isAdmin && (
+                        <>
+                          <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                          <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                        className="reviews-button"
+                      >
+                        Reviews
+                      </button>
                     </div>
-                  ))}
-                </Masonry>
-              ) : (
-                <div className="product-grid normal-grid">
-                  {filteredProducts.map((product) => (
-                    <div key={product._id} className="product-wrapper">
-                      <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
-                      <div className="product-actions">
-                        {isAdmin && (
-                          <>
-                            <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
-                            <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
-                          </>
-                        )}
-                        <button
-                          onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-                          className="reviews-button"
-                        >
-                          Reviews
-                        </button>
-                      </div>
+                  </div>
+                ))}
+              </Masonry>
+            ) : (
+              <div className="product-grid normal-grid">
+                {filteredProducts.map((product) => (
+                  <div key={product._id} className="product-wrapper">
+                    <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
+                    <div className="product-actions">
+                      {isAdmin && (
+                        <>
+                          <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
+                          <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
+                        className="reviews-button"
+                      >
+                        Reviews
+                      </button>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            // My Store tab: show only seller's products, admin-style cards
-            <div>
-              <h2 style={{ color: "#e1bb3e", marginBottom: 24 }}>My Store</h2>
-              {myProducts.length === 0 ? (
-                <div style={{ color: "#fff", fontSize: 20, marginTop: 32 }}>
-                  My Store<br />You have no products listed yet.
-                </div>
-              ) : useMasonry ? (
-                <Masonry
-                  breakpointCols={breakpointCols}
-                  className="product-grid"
-                  columnClassName="product-grid-column"
-                >
-                  {myProducts.map((product) => (
-                    <div key={product._id} className="product-wrapper">
-                      <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
-                      <div className="product-actions">
-                        <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
-                        <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
-                        <button
-                          onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-                          className="reviews-button"
-                        >
-                          Reviews
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </Masonry>
-              ) : (
-                <div className="product-grid normal-grid">
-                  {myProducts.map((product) => (
-                    <div key={product._id} className="product-wrapper">
-                      <ProductCard product={product} onLoginToBuy={handleLoginToBuy} />
-                      <div className="product-actions">
-                        <button onClick={() => handleEditProduct(product)} className="edit-btn">Edit</button>
-                        <button onClick={() => handleDeleteProduct(product._id)} className="delete-btn">Delete</button>
-                        <button
-                          onClick={() => { setSelectedProduct(product); setShowReviewsModal(true); }}
-                          className="reviews-button"
-                        >
-                          Reviews
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        {/* <div className="right-sidebar">
-          <PriceFilterPanel
-            priceSort={priceSort}
-            setPriceSort={setPriceSort}
-            priceRangeIdx={priceRangeIdx}
-            setPriceRangeIdx={setPriceRangeIdx}
-          />
-        </div> */}
       </div>
 
-      {/* AddProductModal for admin and seller */}
-      {(isAdmin || seller) && showAddProductModal && (
+      {isAdmin && showAddProductModal && (
         <AddProductModal
           onClose={() => setShowAddProductModal(false)}
-          onProductAdded={async (product) => {
-            try {
-              // If product is already an object with _id, just add it
-              if (product && product._id) {
-                setProducts(products => [...products, product]);
-                setFilteredProducts(filtered => [...filtered, product]);
-                return;
-              }
-              // Otherwise, POST to backend and handle response
-              const res = await fetch('/api/products', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(product)
-              });
-              if (!res.ok) {
-                const err = await res.text();
-                alert("Error adding product: " + err);
-                return;
-              }
-              const newProduct = await res.json();
-              setProducts(products => [...products, newProduct]);
-              setFilteredProducts(filtered => [...filtered, newProduct]);
-            } catch (err) {
-              alert("Error adding product");
-            }
-          }}
-          seller={seller}
-          // Ensure you pass the correct user info for admin as well
-          admin={isAdmin ? loggedInUser : undefined}
+          onSave={handleProductAdded}
         />
       )}
-      {/* EditProductModal for admin */}
       {isAdmin && showEditProductModal && editProduct && (
         <EditProductModal
           product={editProduct}
