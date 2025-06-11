@@ -236,25 +236,27 @@ const Store = () => {
           <div>
             <h2 style={{ color: "#e1bb3e", marginBottom: 24 }}>All Products</h2>
             {/* --- External Seller Products Section Button --- */}
-            <div style={{ margin: "0 0 32px 0", display: "flex", alignItems: "center" }}>
-              <button
-                style={{
-                  background: "linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)",
-                  color: "#350b0f",
-                  border: "none",
-                  borderRadius: 24,
-                  padding: "14px 32px",
-                  fontWeight: 700,
-                  fontSize: 18,
-                  cursor: "pointer",
-                  boxShadow: "0 2px 8px #e1bb3e22",
-                  marginRight: 18,
-                }}
-                onClick={() => setShowSellerProductsPage(true)}
-              >
-                View External Seller Products
-              </button>
-            </div>
+            {isAdmin && (
+              <div style={{ margin: "0 0 32px 0", display: "flex", alignItems: "center" }}>
+                <button
+                  style={{
+                    background: "linear-gradient(90deg, #e1bb3e 60%, #e35537 100%)",
+                    color: "#350b0f",
+                    border: "none",
+                    borderRadius: 24,
+                    padding: "14px 32px",
+                    fontWeight: 700,
+                    fontSize: 18,
+                    cursor: "pointer",
+                    boxShadow: "0 2px 8px #e1bb3e22",
+                    marginRight: 18,
+                  }}
+                  onClick={() => setShowSellerProductsPage(true)}
+                >
+                  View External Seller Products
+                </button>
+              </div>
+            )}
             {/* Hide main store if viewing seller products */}
             {!showSellerProductsPage && (
               <>
