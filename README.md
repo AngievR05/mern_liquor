@@ -168,6 +168,28 @@ Future: Add automated tests with Vitest or Cypress
 
 ---
 
+## 🧱 Challenges & Struggles Faced
+
+Throughout development, our team encountered several key challenges which we systematically worked through:
+
+### 🔐 1. Authentication Game Integration
+- **Challenge:** Creating a mini-game login system (`Spirited Sign-In`) that was both functional and engaging while still handling actual authentication logic securely.
+- **Solution:** We separated game logic from user authentication logic, triggering user registration only on success while preserving security and flow.
+
+### 📦 2. Image Uploads (Multer)
+- **Challenge:** Product and profile image uploads weren’t saving correctly due to incorrect file paths and static serving misconfigurations.
+- **Solution:** We properly configured `Multer` to store images in `/client/public/uploads` and ensured express was serving this directory statically. We also verified all form submissions were using `FormData`.
+
+### 💾 3. Data Persistence & MongoDB
+- **Challenge:** Certain product updates (like ratings and image paths) weren’t syncing properly with MongoDB due to frontend state issues and API mismatches.
+- **Solution:** We debugged API responses and ensured backend routes used correct Mongoose schema structures. We implemented proper `.then()` chains or `async/await` logic to refresh data states after mutation.
+
+### 🛒 4. Cart & Review System State Sync
+- **Challenge:** Ratings and cart quantities weren’t updating correctly across components when navigating or submitting reviews.
+- **Solution:** We refactored context providers (`CartContext`) and passed callback props to children where needed. Review submissions were followed by API fetch calls to refresh product data in the `Store` page.
+
+---
+
 ## 7. ⚡ Highlights & Challenges
 
 | Highlights                            | Challenges                                         |
