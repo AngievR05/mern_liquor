@@ -1,264 +1,226 @@
+<h1 align="center">🦒 The Drunken Giraffe – Spirited Sign-In</h1>
+<h3 align="center">A playful, accessible MERN stack e-commerce experience that blends gamified UX with robust backend architecture.</h3>
 
-# 🛡️ Creative Authentication System – Spirited Sign-In
-
-A full-stack MERN web app featuring a playful, game-based authentication method called **Spirited Sign-In**, where users sort virtual bottles correctly to gain access. For accessibility, users can also log in through a traditional form-based fallback.
+<p align="center">
+  <img src="./assets/drunken_giraffe_preview.png" width="820" alt="Drunken Giraffe cover image placeholder"/>
+</p>
 
 ---
 
 ## 📌 Table of Contents
-
 1. [About the Project](#1-about-the-project)  
-2. [Getting Started](#2-getting-started)  
-3. [Features & Usage](#3-features--usage)  
-4. [Demonstration](#4-demonstration)  
-5. [Architecture / System Design](#5-architecture--system-design)  
-6. [Testing](#6-testing)  
-7. [Highlights & Challenges](#7-highlights--challenges)  
-8. [Roadmap / Future Improvements](#8-roadmap--future-improvements)  
-9. [Contributing & License](#9-contributing--license)  
-10. [Authors & Contact Info](#10-authors--contact-info)  
-11. [Acknowledgements](#11-acknowledgements)  
+2. [Tech Stack](#2-tech-stack)  
+3. [Getting Started](#3-getting-started)  
+4. [Features & Usage](#4-features--usage)  
+5. [Demonstration](#5-demonstration)  
+6. [Architecture / System Design](#6-architecture--system-design)  
+7. [My Contributions](#7-my-contributions)  
+8. [Testing](#8-testing)  
+9. [Highlights & Challenges](#9-highlights--challenges)  
+10. [Reflection](#10-reflection)  
+11. [Roadmap / Future Improvements](#11-roadmap--future-improvements)  
+12. [Contributing & License](#12-contributing--license)  
+13. [Authors & Contact Info](#13-authors--contact-info)  
+14. [Acknowledgements](#14-acknowledgements)  
 
 ---
 
 ## 1. 🧠 About the Project
 
 ### 1.1 Project Description
-
-A creative authentication MERN app where users sort drink bottles in a game to log in (Spirited Sign-In). Features a fallback login, full store functionality, cart, reviews, and a live chatbot.
-
-### 1.2 Built With
-
-- React, Node.js, Express, MongoDB Atlas
-- JWT, bcrypt, Multer, Nodemailer, Socket.io, Swagger
+**The Drunken Giraffe** is a creative full-stack MERN e-commerce app that introduces **Spirited Sign-In** — a gamified authentication experience where users must sort virtual bottles correctly to access the store.  
+For accessibility, a traditional form-based login fallback is provided. The project demonstrates a balance between creative UX design and secure backend logic.
 
 ---
 
-## 2. 🚀 Getting Started
+## 2. ⚙️ Tech Stack
 
-### 2.1 Prerequisites
+<div align="center">
 
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=000)
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=fff)
+![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=fff)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=fff)
+![JWT](https://img.shields.io/badge/JWT-000?logo=jsonwebtokens&logoColor=fff)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?logo=socket.io&logoColor=fff)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?logo=swagger&logoColor=000)
+![Multer](https://img.shields.io/badge/Multer-FBBF24?logo=multer&logoColor=fff)
+
+</div>
+
+---
+
+## 3. 🚀 Getting Started
+
+### Prerequisites
 - Node.js 18+
 - MongoDB Atlas account
 
-### 2.2 How to Install
-
+### Installation
 ```bash
-# Clone the repo
 git clone https://github.com/AngievR05/mern_liquor.git
 cd mern_liquor/creative-auth-bartender
 
-# Install backend dependencies
+# Backend
 cd server
 npm install
-
-# Setup environment variables
 cp .env.example .env
-# Fill in MONGO_URI, JWT_SECRET, EMAIL_USER, EMAIL_PASS
-
-# Start backend
+# Add MONGO_URI, JWT_SECRET, EMAIL_USER, EMAIL_PASS
 npm run dev
 
-# Install frontend dependencies
+# Frontend
 cd ../client
 npm install
 npm start
 ```
-
-Visit the app at:  
-[http://localhost:3000](http://localhost:3000)
+Visit the app locally at: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 3. ✨ Features & Usage
+## 4. ✨ Features & Usage
 
-| Area           | Features                                                                 |
-|----------------|--------------------------------------------------------------------------|
-| 🔐 Auth        | Game login + accessible fallback                                          |
-| 🛍 Products    | View, add, edit, delete, and like products with image upload support               |
-| 💬 Reviews     | Add star ratings (1–5 in 0.25 steps) and comments per product             |
-| 🛒 Cart        | Local cart, quantity control, order saving, validation, email receipt     |
-| 🤖 Chat Bot    | Typing delay, smart replies, page navigation, iOS-style UI                |
-| 📄 Admin API   | Swagger UI available at `/api-docs`                                       |
+| Area           | Features |
+|----------------|-----------|
+| 🔐 **Auth** | Gamified login (**Spirited Sign-In**) + accessible fallback |
+| 🛍 **Products** | Full CRUD functionality with image upload via Multer |
+| 💬 **Reviews** | Star ratings (1–5 in 0.25 increments) + comments |
+| 🛒 **Cart** | Persistent cart (localStorage), quantity control, validation, and email receipts |
+| 🤖 **Chat Bot** | Typing delay, smart replies, iOS-like chat UI |
+| 📄 **Admin API** | Documented with Swagger at `/api-docs` |
 
 ### Screenshots
+> Replace placeholders with actual images once uploaded.
 
-## Welcome Screenshot
-
-![Welcome](creative-auth-bartender/client/src/assets/screenshots/Welcome.png)
-
-## Game Screenshot
-
-![Game](creative-auth-bartender/client/src/assets/screenshots/Game.png)
-
-## Home Screenshot
-
-![Home](creative-auth-bartender/client/src/assets/screenshots/Home.png)
-
-## Chat Widget Screenshot
-
-![Chat Widget](creative-auth-bartender/client/src/assets/screenshots/Chat.png)
-
-## About Screenshot
-
-![About](creative-auth-bartender/client/src/assets/screenshots/About.png)
-
-## Store Screenshot
-
-![Store](creative-auth-bartender/client/src/assets/screenshots/Store.png)
-
-## Cart Screenshot
-
-![Cart](creative-auth-bartender/client/src/assets/screenshots/Cart.png)
-
-## Checkout Screenshot
-
-![Checkout](creative-auth-bartender/client/src/assets/screenshots/Checkout.png)
-
-## Dashboard Screenshot
-
-![Dashboard](creative-auth-bartender/client/src/assets/screenshots/Dashboard.png)
-
-## Seller Screenshot
-
-![Seller](creative-auth-bartender/client/src/assets/screenshots/Seller.png)
-
-## Application Screenshot
-
-![Application](creative-auth-bartender/client/src/assets/screenshots/Application.png)
+<p align="center">
+  <img src="./assets/welcome.png" alt="Welcome Screenshot" width="820"><br/>
+  <img src="./assets/game.png" alt="Game Screenshot" width="820"><br/>
+  <img src="./assets/home.png" alt="Home Screenshot" width="820"><br/>
+  <img src="./assets/chat.png" alt="Chat Screenshot" width="820"><br/>
+  <img src="./assets/store.png" alt="Store Screenshot" width="820"><br/>
+</p>
 
 ---
 
-## 4. 🎥 Demonstration
+## 5. 🎥 Demonstration
+🎬 [View Demo Video](https://drive.google.com/file/d/16Sv2tlr-Nr2eCJgAm2r7PXTFBhzCyIqj/view?usp=drive_link)
 
-[View Demo Video](https://drive.google.com/file/d/16Sv2tlr-Nr2eCJgAm2r7PXTFBhzCyIqj/view?usp=drive_link)
-
-
-**Covers:**
-
-- Registering and logging in  
-- Spirited Sign-In in action  
-- Cart + checkout + confirmation email  
-- Live chatbot  
-- Admin product management  
+**Covers:**  
+- Game-based login and fallback  
+- Cart + checkout flow  
+- Chatbot interaction  
+- Product management and order creation  
 
 ---
 
-## 5. 🧠 Architecture / System Design
-
-- React handles UI with Context for cart
-- Node/Express REST API for all features
-- MongoDB Atlas stores users, products, orders
-- Multer uploads images to `client/public/uploads`
-- Nodemailer sends order confirmation emails
-- Socket.io powers live chat widget
-
----
-
-## 6. 🧪 Testing
-
-Manual testing done for:
-
-- ✅ Game login logic
-- ✅ Auth & token logic
-- ✅ Cart price calculation
-- ✅ Order creation & saving
-
-Future: Add automated tests with Vitest or Cypress
+## 6. 🧩 Architecture / System Design
+- **Frontend:** React for UI, Context API for cart & global state  
+- **Backend:** Node.js/Express REST API  
+- **Database:** MongoDB Atlas for persistent data storage  
+- **File Handling:** Multer for uploads (`client/public/uploads`)  
+- **Notifications:** Nodemailer for order confirmations  
+- **Real-Time:** Socket.io for chatbot events  
 
 ---
 
-## 🧱 Challenges & Struggles Faced
+## 7. 👩‍💻 My Contributions – *Angie van Rooyen*
+As part of **Team Bug Squashers**, I led front-end integration and assisted with back-end configuration.  
+My contributions included:
 
-Throughout development, our team encountered several key challenges which we systematically worked through:
-
-### 🔐 1. Authentication Game Integration
-- **Challenge:** Creating a mini-game login system (`Spirited Sign-In`) that was both functional and engaging while still handling actual authentication logic securely.
-- **Solution:** We separated game logic from user authentication logic, triggering user registration only on success while preserving security and flow.
-
-### 📦 2. Image Uploads (Multer)
-- **Challenge:** Product and profile image uploads weren’t saving correctly due to incorrect file paths and static serving misconfigurations.
-- **Solution:** We properly configured `Multer` to store images in `/client/public/uploads` and ensured express was serving this directory statically. We also verified all form submissions were using `FormData`.
-
-### 💾 3. Data Persistence & MongoDB
-- **Challenge:** Certain product updates (like ratings and image paths) weren’t syncing properly with MongoDB due to frontend state issues and API mismatches.
-- **Solution:** We debugged API responses and ensured backend routes used correct Mongoose schema structures. We implemented proper `.then()` chains or `async/await` logic to refresh data states after mutation.
-
-### 🛒 4. Cart & Review System State Sync
-- **Challenge:** Ratings and cart quantities weren’t updating correctly across components when navigating or submitting reviews.
-- **Solution:** We refactored context providers (`CartContext`) and passed callback props to children where needed. Review submissions were followed by API fetch calls to refresh product data in the `Store` page.
+- UI Components: `ChatWidget`, `CheckoutForm`, `SearchBar`, `FilterPanel`, `ReviewForm`, `ProductCard`
+- State Management: `CartContext`, `Cart`, `Checkout`, accessibility-focused login, and **GameScreens** (`GameFailure`, `GameSuccess`)
+- Backend Routes & Controllers: `productController`, `registerUser`, `authMiddleware`, `gameRoutes`, `orderRoutes`, `uploadRoutes`
+- Infrastructure: Assisted in configuring and maintaining **server.js** with Express middleware and route integration
 
 ---
 
-## 7. ⚡ Highlights & Challenges
+## 8. 🧪 Testing
 
-| Highlights                            | Challenges                                         |
-|---------------------------------------|----------------------------------------------------|
-| Spirited Sign-In game login UX        | Uploading images to local storage safely          |
-| Star rating and comment UX            | Bot response delays + dynamic page routing        |
-| Cart persistence (localStorage)       | Validating checkout + error handling              |
-| Autocomplete product search           | Styling chat to feel like native iOS messaging    |
+Manual testing performed on:
+- Spirited Sign-In game logic  
+- Authentication and token persistence  
+- Cart operations, total calculation, and checkout validation  
+- Order creation and email verification  
 
----
-
-## 8. 🔭 Roadmap / Future Improvements
-
-- [ ] User dashboard to track orders   
-- [ ] Upload profile pictures to database    
-- [ ] Deployment to Render/Vercel/Mongo Atlas  
+*Future Work:* Add automated integration tests using Vitest or Cypress.
 
 ---
 
-## 9. 🤝 Contributing & License
+## 9. ⚡ Highlights & Challenges
+
+| Highlights | Challenges |
+|-------------|-------------|
+| Gamified authentication system (Spirited Sign-In) | Ensuring accessibility for users unable to play the game |
+| Socket.io chatbot with personality | Upload reliability via Multer |
+| LocalStorage-powered cart | Review and cart state synchronization |
+| iOS-style chat aesthetics | Performance under concurrent user sessions |
+
+---
+
+## 10. 🎓 Reflection – *Angie van Rooyen*
+
+Developing **The Drunken Giraffe** taught me how to balance **playful, creative UX concepts** with **serious security and accessibility requirements**.  
+I learned to:
+- Implement a gamified authentication flow while maintaining data integrity.
+- Architect complex React-Express data flows in a multi-developer environment.
+- Debug concurrency, routing, and upload challenges across a live development team.
+- Approach software design holistically — blending aesthetics, logic, and empathy.
+
+This project reinforced my belief that **technical systems can and should evoke joy**, and that playfulness in design doesn’t have to compromise performance or inclusivity.
+
+---
+
+## 11. 🔭 Roadmap / Future Improvements
+- Add user dashboards and order history  
+- Store profile images in database instead of local storage  
+- Deploy to Render/Vercel with cloud MongoDB integration  
+- Implement full test coverage  
+
+---
+
+## 12. 🤝 Contributing & License
 
 ### Contributing
-
-Contributions are welcome!
-
+Contributions welcome:
 ```bash
-git checkout -b feature/cool-feature
-git commit -m "Added something awesome"
-git push origin feature/cool-feature
+git checkout -b feature/awesome-feature
+git commit -m "Added something new"
+git push origin feature/awesome-feature
 ```
-
 Then open a pull request.
 
 ### License
-
-This project is **not open source** and is intended for **educational portfolio use only**.
-
-© Bug Squashers 2025. All rights reserved.  
-*No redistribution or commercial use permitted.*
+This project is **educational** and part of the **Open Window DV200 portfolio**.  
+© Bug Squashers 2025 – All rights reserved.  
+No redistribution or commercial use permitted.
 
 ---
 
-## 10. 👩‍💻 Authors & Contact Info
+## 13. 👥 Authors & Contact Info
 
 **Angie van Rooyen**  
-📧 Email: [241077@virtualwindow.co.za](mailto:241077@virtualwindow.co.za)  
-🔗 GitHub: [AngievR05](https://github.com/AngievR05)
+📧 241077@virtualwindow.co.za  
+🔗 [GitHub](https://github.com/AngievR05)
 
 **Xander Poalses**  
-📧 Email: [241322@virtualwindow.co.za](mailto:241322@virtualwindow.co.za)  
-🔗 GitHub: [241322](https://github.com/241322)
+📧 241322@virtualwindow.co.za  
+🔗 [GitHub](https://github.com/241322)
 
 **Dhiali Chetty**  
-📧 Email: [231299@virtualwindow.co.za](mailto:231299@virtualwindow.co.za)  
-🔗 GitHub: [Dhiali](https://github.com/Dhiali)
+📧 231299@virtualwindow.co.za  
+🔗 [GitHub](https://github.com/Dhiali)
 
 **Tsungai Katsuro**  
-📧 Email: [tsungai@openwindow.co.za](mailto:tsungai@openwindow.co.za)  
-🔗 GitHub: [TsungaiKats](https://github.com/TsungaiKats)
+📧 tsungai@openwindow.co.za  
+🔗 [GitHub](https://github.com/TsungaiKats)
 
 ---
 
-## 11. 🙏 Acknowledgements
+## 14. 🙏 Acknowledgements
 
 - Open Window Creative Computing Faculty  
-- Stack Overflow, GitHub Copilot, MDN  
-- Nodemailer + Socket.io Docs  
-- The React community  
-- Bugs squashed, lessons learned 🐞
+- Stack Overflow, GitHub Copilot, MDN Docs  
+- Nodemailer + Socket.io communities  
+- Chart.js + Swagger contributors  
+- Every bug that made us better 🐞  
 
-> 💡 *“Documentation is the difference between a side project and a usable product.”*  
-> — Every senior dev ever
+> 💡 *“Playfulness in design isn’t frivolous — it’s human.”*
