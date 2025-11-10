@@ -1,10 +1,10 @@
-# 🛡️ Creative Authentication System – Spirited Sign-In  
+# 🛡️ Creative Authentication System – The Drunken Giraffe
 
 A full-stack MERN web app featuring a playful, game-based authentication method called **Spirited Sign-In**, where users sort virtual bottles correctly to gain access.  
 For accessibility, users can also log in through a traditional form-based fallback.
 
 <p align="center">
-  <img src="creative-auth-bartender/client/src/assets/screenshots/Welcome.png" width="820" alt="Drunken Giraffe Cover Image"/>
+  <img src="https://github.com/AngievR05/mern_liquor/blob/main/creative-auth-bartender/client/assets/MacBook%20Air%20-%206.png" width="950" alt="Drunken Giraffe Cover Image"/>
 </p>
 
 ---
