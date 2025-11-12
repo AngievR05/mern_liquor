@@ -1,4 +1,4 @@
-# 🛡️ Creative Authentication System – The Drunken Giraffe
+# 🛡️ The Drunken Giraffe - Creative Authentication System 
 
 A full-stack MERN web app featuring a playful, game-based authentication method called **Spirited Sign-In**, where users sort virtual bottles correctly to gain access.  
 For accessibility, users can also log in through a traditional form-based fallback.
@@ -137,7 +137,7 @@ Visit the app at: [http://localhost:3000](http://localhost:3000)
 - MongoDB Atlas stores users, products, orders  
 - Multer uploads images to `client/public/uploads`  
 - Nodemailer sends order confirmation emails  
-- Socket.io powers live chat widget  
+- Socket.io powers the live chat widget  
 
 ---
 
@@ -175,7 +175,7 @@ Manual testing done for:
 
 ## 9. 🎓 Reflection – *Angie van Rooyen*  
 Building **The Drunken Giraffe** taught me to merge **playful UX design** with **secure backend logic** while maintaining accessibility.  
-I gained experience in designing multi-layered systems, managing a collaborative Git workflow, and debugging full-stack synchronization challenges.  
+I gained experience in designing multi-layered systems, managing a collaborative Git workflow, and debugging full-stack synchronisation challenges.  
 
 This project strengthened my skills in:  
 - UX-focused development and gamified interactions  
@@ -188,7 +188,7 @@ This project strengthened my skills in:
 
 ## 10. 🔭 Roadmap / Future Improvements  
 - [ ] User dashboard to track orders  
-- [ ] Upload profile pictures to database  
+- [ ] Upload profile pictures to the database  
 - [ ] Deployment to Render/Vercel/Mongo Atlas  
 
 ---
